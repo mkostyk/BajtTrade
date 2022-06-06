@@ -16,6 +16,6 @@ public class Zmechanizowany extends Czyścioszek {
     @Override
     public void dokonajZakupów() {
         super.dokonajZakupów();
-        robotnik.podajGiełdę().dodajOfertęKupnaRobotnika(new OfertaRobotnika(NARZĘDZIA, liczbaNarzędzi));
+        robotnik.podajGiełdę().dodajOfertęKupnaRobotnika(new OfertaRobotnika(NARZĘDZIA, liczbaNarzędzi, robotnik));
     }
 }

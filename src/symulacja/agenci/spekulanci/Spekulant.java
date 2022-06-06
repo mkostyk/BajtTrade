@@ -9,12 +9,12 @@ public abstract class Spekulant extends Agent {
     public abstract void wystawOferty();
 
     public void dodajOfertęKupna(Symulacja.TypyProduktów produkt, double cenaBazowa, double marża) {
-        OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, 100, 0, cenaBazowa * (1 - marża));
+        OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, 100, 0, cenaBazowa * (1 - marża), this);
         this.podajGiełdę().dodajOfertęKupnaSpekulanta(oferta);
     }
 
     public void dodajOfertęSprzedaży(Symulacja.TypyProduktów produkt, double cenaBazowa, double marża) {
-        OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, this.ileProduktów(produkt), 0, cenaBazowa * (1 + marża));
+        OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, this.ileProduktów(produkt), 0, cenaBazowa * (1 + marża), this);
         this.podajGiełdę().dodajOfertęSprzedażySpekulanta(oferta);
     }
 }

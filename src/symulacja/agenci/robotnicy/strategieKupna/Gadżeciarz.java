@@ -14,6 +14,6 @@ public class Gadżeciarz extends Zmechanizowany {
     @Override
     public void dokonajZakupów() {
         super.dokonajZakupów();
-        robotnik.podajGiełdę().dodajOfertęKupnaRobotnika(new OfertaRobotnika(PROGRAMY, robotnik.ileProgramówBrakuje()));
+        robotnik.podajGiełdę().dodajOfertęKupnaRobotnika(new OfertaRobotnika(PROGRAMY, robotnik.ileProgramówBrakuje(), robotnik));
     }
 }

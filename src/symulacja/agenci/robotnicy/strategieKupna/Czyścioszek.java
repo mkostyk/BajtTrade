@@ -14,6 +14,6 @@ public class Czyścioszek extends Technofob {
     public void dokonajZakupów() {
         super.dokonajZakupów();
         int ileUbrańPotrzebne = Math.max(0, 100 - robotnik.ileUbrańJutro());
-        robotnik.podajGiełdę().dodajOfertęKupnaRobotnika(new OfertaRobotnika(UBRANIA, ileUbrańPotrzebne));
+        robotnik.podajGiełdę().dodajOfertęKupnaRobotnika(new OfertaRobotnika(UBRANIA, ileUbrańPotrzebne, robotnik));
     }
 }

@@ -12,6 +12,6 @@ public class Technofob extends StrategiaKupna {
 
     @Override
     public void dokonajZakupów() {
-        robotnik.podajGiełdę().dodajOfertęKupnaRobotnika(new OfertaRobotnika(JEDZENIE, 100));
+        robotnik.podajGiełdę().dodajOfertęKupnaRobotnika(new OfertaRobotnika(JEDZENIE, 100, robotnik));
     }
 }
