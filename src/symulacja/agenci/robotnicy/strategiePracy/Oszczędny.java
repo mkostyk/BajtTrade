@@ -1,0 +1,17 @@
+package symulacja.agenci.robotnicy.strategiePracy;
+
+import symulacja.agenci.robotnicy.Robotnik;
+
+public class Oszczędny extends StrategiaPracy {
+    private final double limitDiamentów;
+
+    public Oszczędny(Robotnik robotnik, double limitDiamentów) {
+        super(robotnik);
+        this.limitDiamentów = limitDiamentów;
+    }
+
+    @Override
+    public boolean czyPracuje() {
+        return (robotnik.ileDiamentów() <= limitDiamentów);
+    }
+}
