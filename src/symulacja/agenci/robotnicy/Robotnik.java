@@ -1,5 +1,6 @@
 package symulacja.agenci.robotnicy;
 
+import symulacja.Symulacja;
 import symulacja.agenci.Agent;
 import symulacja.agenci.robotnicy.scieżkiKariery.ŚcieżkaKariery;
 import symulacja.agenci.robotnicy.strategieKariery.StrategiaKariery;
@@ -19,6 +20,10 @@ public abstract class Robotnik extends Agent {
     protected int[] produktywność;
 
     public abstract Giełda podajGiełdę();
-    public abstract int podajProduktywność(String produkt);
+    public abstract int podajProduktywność(Symulacja.TypyProduktów produkt);
     public abstract int podajDzień();
+    public abstract int podajID();
+
+    public abstract int ileUbrańJutro();
+    public abstract int ileProgramówBrakuje();
 }

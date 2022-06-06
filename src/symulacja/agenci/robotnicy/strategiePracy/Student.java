@@ -1,7 +1,10 @@
 package symulacja.agenci.robotnicy.strategiePracy;
 
+import symulacja.Symulacja;
 import symulacja.agenci.robotnicy.Robotnik;
 import symulacja.utils.PodsumowanieDnia;
+import static symulacja.Symulacja.TypyProduktów.*;
+
 
 import java.util.Arrays;
 
@@ -17,16 +20,12 @@ public class Student extends StrategiaPracy {
 
     @Override
     public boolean czyPracuje() {
-        PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięCen();
+        PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięOstatnichDni(okres);
 
-        int dzieńKońcowy = dane.length - 1;
-        int dzieńStartowy = Math.max(dane.length - zapas, 0);
-
-        PodsumowanieDnia[] potrzebneDane = Arrays.copyOfRange(dane, dzieńStartowy, dzieńKońcowy);
         double cenaJedzenia = 0;
 
-        for(PodsumowanieDnia dzień: potrzebneDane) {
-            cenaJedzenia += dzień.podajŚredniąCenę("Jedzenie");
+        for(PodsumowanieDnia dzień: dane) {
+            cenaJedzenia += dzień.podajŚredniąCenę(JEDZENIE);
         }
 
         cenaJedzenia /= okres;

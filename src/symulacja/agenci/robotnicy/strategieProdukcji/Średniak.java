@@ -15,19 +15,14 @@ public class Średniak extends StrategiaProdukcji {
     }
 
     @Override
-    public String wyprodukuj() {
-        PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięCen();
-        assert (dane != null);
+    public Symulacja.TypyProduktów wyprodukuj() {
+        PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięOstatnichDni(ileDni);
 
-        int dzieńKońcowy = dane.length - 1;
-        int dzieńStartowy = Math.max(dane.length - ileDni, 0);
-
-        PodsumowanieDnia[] potrzebneDane = Arrays.copyOfRange(dane, dzieńStartowy, dzieńKońcowy);
         double najlepszaCena = 0;
-        String najlepszyProdukt = "";
+        Symulacja.TypyProduktów najlepszyProdukt = null;
 
-        for (PodsumowanieDnia dzień: potrzebneDane) {
-            for (String produkt: Symulacja.Produkty) {
+        for (PodsumowanieDnia dzień: dane) {
+            for (Symulacja.TypyProduktów produkt: Symulacja.TypyProduktów.values()) {
                 if (dzień.podajŚredniąCenę(produkt) > najlepszaCena) {
                     najlepszaCena = dzień.podajŚredniąCenę(produkt);
                     najlepszyProdukt = produkt;

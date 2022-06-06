@@ -10,15 +10,13 @@ public class Chciwy extends StrategiaProdukcji {
     }
 
     @Override
-    public String wyprodukuj() {
-        PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięCen();
-        assert (dane != null);
+    public Symulacja.TypyProduktów wyprodukuj() {
+        PodsumowanieDnia ostatniDzień = robotnik.podajGiełdę().podajHistorięOstatnichDni(1)[0];
 
-        PodsumowanieDnia ostatniDzień = dane[dane.length - 1];
         double największyZysk = 0;
-        String najlepszyProdukt = "";
+        Symulacja.TypyProduktów najlepszyProdukt = null;
 
-        for (String produkt: Symulacja.Produkty) {
+        for (Symulacja.TypyProduktów produkt: Symulacja.TypyProduktów.values()) {
             double zysk = ostatniDzień.podajŚredniąCenę(produkt) * robotnik.podajProduktywność(produkt);
             if (zysk > największyZysk) {
                 największyZysk = zysk;

@@ -5,7 +5,7 @@ import symulacja.agenci.robotnicy.Robotnik;
 import symulacja.utils.PodsumowanieDnia;
 
 public class Perspektywiczny extends StrategiaProdukcji {
-    private int ileDni;
+    private final int ileDni;
 
     public Perspektywiczny(Robotnik robotnik, int ileDni) {
         super(robotnik);
@@ -13,20 +13,19 @@ public class Perspektywiczny extends StrategiaProdukcji {
     }
 
     @Override
-    public String wyprodukuj() {
-        PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięCen();
-        assert (dane != null);
+    public Symulacja.TypyProduktów wyprodukuj() {
+        PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięOstatnichDni(ileDni);
 
-        int dzieńKońcowy = dane.length - 1;
-        int dzieńStartowy = Math.max(dane.length - ileDni, 0);
+        int dzieńKońcowy = dane.length;
+        int dzieńStartowy = Math.min(dane.length, ileDni);
 
-        PodsumowanieDnia stareCeny = dane[dzieńStartowy];
-        PodsumowanieDnia noweCeny = dane[dzieńKońcowy];
+        PodsumowanieDnia stareCeny = dane[dzieńStartowy - 1];
+        PodsumowanieDnia noweCeny = dane[dzieńKońcowy - 1];
 
         double największyWzrost = -Symulacja.INFINITY;
-        String najlepszyProdukt = "";
+        Symulacja.TypyProduktów najlepszyProdukt = null;
 
-        for (String produkt: Symulacja.Produkty) {
+        for (Symulacja.TypyProduktów produkt: Symulacja.TypyProduktów.values()) {
             double wzrost = noweCeny.podajŚredniąCenę(produkt) - stareCeny.podajŚredniąCenę(produkt);
             if (wzrost > największyWzrost) {
                 największyWzrost = wzrost;

@@ -1,8 +1,7 @@
 package symulacja.agenci.robotnicy.strategieProdukcji;
 
+import symulacja.Symulacja.TypyProduktów;
 import symulacja.agenci.robotnicy.Robotnik;
-import symulacja.produkty.Produkt;
-import symulacja.utils.PodsumowanieDnia;
 
 public abstract class StrategiaProdukcji {
     public StrategiaProdukcji (Robotnik robotnik) {
@@ -10,5 +9,5 @@ public abstract class StrategiaProdukcji {
     }
 
     protected Robotnik robotnik;
-    public abstract String wyprodukuj();
+    public abstract TypyProduktów wyprodukuj();
 }

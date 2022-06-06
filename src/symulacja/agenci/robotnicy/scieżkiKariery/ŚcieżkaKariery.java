@@ -4,6 +4,6 @@ public abstract class ŚcieżkaKariery {
     private int poziom;
 
     public int podajBonus() {
-        
+        return 0;
     }
 }
