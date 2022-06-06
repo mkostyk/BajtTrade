@@ -7,6 +7,8 @@ import static symulacja.Symulacja.TypyProduktów.*;
 import static symulacja.Symulacja.Zawody.*;
 
 public class Symulacja {
+    // TODO - konstruktory klas abstrakcyjnych protected
+    // TODO - produkty czy enumy produktów?
     public static int ILE_PRODUKTÓW = 5;
     public static int ILE_ZAWODÓW = 5;
     public enum TypyProduktów {NARZĘDZIA, PROGRAMY, JEDZENIE, UBRANIA, DIAMENTY}

@@ -20,15 +20,7 @@ public class Student extends StrategiaPracy {
 
     @Override
     public boolean czyPracuje() {
-        PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięOstatnichDni(okres);
-
-        double cenaJedzenia = 0;
-
-        for(PodsumowanieDnia dzień: dane) {
-            cenaJedzenia += dzień.podajŚredniąCenę(JEDZENIE);
-        }
-
-        cenaJedzenia /= okres;
+        double cenaJedzenia = robotnik.podajGiełdę().podajŚredniąCenęProduktu(okres, JEDZENIE);
         return (robotnik.ileDiamentów() <= zapas * 100 * cenaJedzenia);
     }
 }

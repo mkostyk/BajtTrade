@@ -1,6 +1,5 @@
 package symulacja.agenci.robotnicy.strategieKupna;
 
-import symulacja.Symulacja;
 import symulacja.agenci.robotnicy.Robotnik;
 import symulacja.giełda.oferty.OfertaRobotnika;
 

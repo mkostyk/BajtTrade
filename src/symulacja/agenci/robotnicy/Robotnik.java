@@ -16,13 +16,9 @@ public abstract class Robotnik extends Agent {
     protected StrategiaKupna strategiaKupna;
     protected StrategiaPracy strategiaPracy;
     protected StrategiaProdukcji strategiaProdukcji;
-    protected Giełda giełda;
     protected int[] produktywność;
 
-    public abstract Giełda podajGiełdę();
     public abstract int podajProduktywność(Symulacja.TypyProduktów produkt);
-    public abstract int podajDzień();
-    public abstract int podajID();
 
     public abstract int ileUbrańJutro();
     public abstract int ileProgramówBrakuje();
