@@ -1,5 +1,10 @@
 package symulacja;
 
+import symulacja.agenci.robotnicy.Robotnik;
+import symulacja.agenci.spekulanci.Spekulant;
+import symulacja.giełda.Giełda;
+
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -8,7 +13,8 @@ import static symulacja.Symulacja.Zawody.*;
 
 public class Symulacja {
     // TODO - konstruktory klas abstrakcyjnych protected
-    // TODO - produkty czy enumy produktów?
+    // TODO - produkty czy enum produktów? (oferty na pewno jako produkty - do poprawki)
+    // TODO - konstruktory in general
     public static int ILE_PRODUKTÓW = 5;
     public static int ILE_ZAWODÓW = 5;
     public enum TypyProduktów {NARZĘDZIA, PROGRAMY, JEDZENIE, UBRANIA, DIAMENTY}
@@ -30,6 +36,33 @@ public class Symulacja {
     );
     public static double INFINITY = 1e300;
     public static Random RNG = new Random();
+
+    private ArrayList<Robotnik> robotnicy;
+    private ArrayList<Spekulant> spekulanci;
+    private Giełda giełda;
+
+    private void dzień() {
+        // Robotnicy (pkt 1)
+        for (Robotnik robotnik: robotnicy) {
+            if (!robotnik.przeżyjDzień()) {
+                robotnicy.remove(robotnik);
+            }
+        }
+
+        // Spekulanci (pkt 2)
+        for (Spekulant spekulant: spekulanci) {
+            spekulant.wystawOferty();
+        }
+
+        // Giełda (pkt 3 i 4)
+        giełda.dopasujOferty();
+        giełda.skupOferty();
+        giełda.podsumujDzień();
+
+        for (Robotnik robotnik: robotnicy) {
+            robotnik.zużyjPrzedmioty();
+        }
+    }
 
     public static void main(String[] args) {
 

@@ -12,18 +12,19 @@ import java.util.Arrays;
 import static symulacja.Symulacja.ILE_PRODUKTÓW;
 
 public abstract class Giełda {
-    private ArrayList <OfertaRobotnika> ofertyKupnaRobotników;
-    private ArrayList <OfertaRobotnika> ofertySprzedażyRobotników;
+    private ArrayList <OfertaRobotnika> ofertyKupnaRobotników = new ArrayList<OfertaRobotnika>();
+    private ArrayList <OfertaRobotnika> ofertySprzedażyRobotników = new ArrayList<OfertaRobotnika>();
 
-    private ArrayList <OfertaSpekulanta> ofertyKupnaSpekulantów;
-    private ArrayList <OfertaSpekulanta> ofertySprzedażySpekulantów;
+    private ArrayList <OfertaSpekulanta> ofertyKupnaSpekulantów = new ArrayList<OfertaSpekulanta>();
+    private ArrayList <OfertaSpekulanta> ofertySprzedażySpekulantów = new ArrayList<OfertaSpekulanta>();
     private ArrayList <PodsumowanieDnia> historia;
+    private ArrayList <OfertaSpekulanta> dokonaneSprzedaże;
 
     private int dzień;
     private int[] ileOfertSprzedażySpekulantów = new int[ILE_PRODUKTÓW];
     private int[] ileOfertSprzedażyRobotników = new int[ILE_PRODUKTÓW];
 
-
+    // TODO
     protected Giełda() {
 
     }
@@ -34,7 +35,7 @@ public abstract class Giełda {
 
     public void dodajOfertęSprzedażyRobotnika(OfertaRobotnika ofertaSprzedaży) {
         ofertySprzedażyRobotników.add(ofertaSprzedaży);
-        ileOfertSprzedażyRobotników[ofertaSprzedaży.typID()] += ofertaSprzedaży.ile();
+        ileOfertSprzedażyRobotników[ofertaSprzedaży.typID()] += ofertaSprzedaży.podajIle();
     }
 
     public void dodajOfertęKupnaSpekulanta(OfertaSpekulanta ofertaKupna) {
@@ -43,7 +44,7 @@ public abstract class Giełda {
 
     public void dodajOfertęSprzedażySpekulanta(OfertaSpekulanta ofertaSprzedaży) {
         ofertySprzedażySpekulantów.add(ofertaSprzedaży);
-        ileOfertSprzedażySpekulantów[ofertaSprzedaży.typID()] += ofertaSprzedaży.ile();
+        ileOfertSprzedażySpekulantów[ofertaSprzedaży.typID()] += ofertaSprzedaży.podajIle();
     }
 
     public int podajDzień() {
@@ -73,14 +74,17 @@ public abstract class Giełda {
         return ileOfertSprzedażyRobotników[Symulacja.ID_PRODUKTU.get(produkt)];
     }
 
-    public void podsumujDzień(ArrayList <OfertaSpekulanta> dokonaneSprzedaże) {
+    // TODO
+    public abstract void dopasujOferty();
+    public abstract void skupOferty();
+    public void podsumujDzień() {
         double obrót[] = new double[ILE_PRODUKTÓW];
         double ile[] = new double[ILE_PRODUKTÓW];
         double średnie[] = new double[ILE_PRODUKTÓW];
 
         for (OfertaSpekulanta oferta: dokonaneSprzedaże) {
-            obrót[oferta.typID()] += oferta.ile() * oferta.cena();
-            ile[oferta.typID()] += oferta.ile();
+            obrót[oferta.typID()] += oferta.podajIle() * oferta.cena();
+            ile[oferta.typID()] += oferta.podajIle();
         }
 
         for (Symulacja.TypyProduktów produkt: Symulacja.TypyProduktów.values()) {

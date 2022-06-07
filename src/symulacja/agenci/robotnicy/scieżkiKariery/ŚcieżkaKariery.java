@@ -19,7 +19,13 @@ public abstract class ŚcieżkaKariery {
         }
     }
 
+    public abstract int podajBonus(Symulacja.TypyProduktów produkt);
+
     public void dodajPoziom() {
         poziom++;
+    }
+
+    public int podajPoziom() {
+        return poziom;
     }
 }

@@ -2,19 +2,31 @@ package symulacja.produkty;
 
 import symulacja.Symulacja;
 
-public abstract class Produkt {
-    // TODO - jak diaxy osobno to może int?
+import static symulacja.Symulacja.TypyProduktów.*;
+
+public class Produkt {
+    private Symulacja.TypyProduktów typ;
     private int ile;
     private int poziom;
 
-    public Produkt(int ile, int poziom) {
+    public Produkt(Symulacja.TypyProduktów typ, int ile, int poziom) {
+        this.typ = typ;
         this.ile = ile;
         this.poziom = poziom;
+
+        if (typ == JEDZENIE || typ == DIAMENTY) {
+            this.poziom = 0;
+        }
     }
 
-    public abstract Symulacja.TypyProduktów podajTyp();
-    public int ile() {
+    public Symulacja.TypyProduktów podajTyp() {
+        return typ;
+    }
+    public int podajIle() {
         return ile;
+    }
+    public int podajPoziom() {
+        return poziom;
     }
 
     public void zmniejsz(double ile) {

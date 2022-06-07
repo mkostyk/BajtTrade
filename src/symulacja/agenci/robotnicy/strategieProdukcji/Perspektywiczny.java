@@ -2,6 +2,7 @@ package symulacja.agenci.robotnicy.strategieProdukcji;
 
 import symulacja.Symulacja;
 import symulacja.agenci.robotnicy.Robotnik;
+import symulacja.produkty.Produkt;
 import symulacja.utils.PodsumowanieDnia;
 
 public class Perspektywiczny extends StrategiaProdukcji {
@@ -13,7 +14,7 @@ public class Perspektywiczny extends StrategiaProdukcji {
     }
 
     @Override
-    public Symulacja.TypyProduktów wyprodukuj() {
+    public Produkt wyprodukuj() {
         PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięOstatnichDni(ileDni);
 
         int dzieńKońcowy = dane.length;
@@ -33,6 +34,9 @@ public class Perspektywiczny extends StrategiaProdukcji {
             }
         }
 
-        return najlepszyProdukt;
+        int produktywność = robotnik.podajProduktywność(najlepszyProdukt);
+        int poziom = robotnik.podajPoziomyŚcieżek()[Symulacja.ID_PRODUKTU.get(najlepszyProdukt)];
+
+        return new Produkt(najlepszyProdukt, produktywność, poziom);
     }
 }

@@ -4,26 +4,26 @@ import symulacja.Symulacja;
 import symulacja.giełda.Giełda;
 import symulacja.produkty.Produkt;
 
+import java.util.ArrayList;
+
 public abstract class Agent {
-    private double diamenty; // TODO
-    private Produkt[] produkty;
-    private Giełda giełda;
-    private int agentID;
+    protected double diamenty;
+    protected ArrayList<Produkt> produkty;
+    protected Giełda giełda;
+    protected int agentID;
 
     public double ileDiamentów() {
         return diamenty;
     }
     public int ileProduktów(Symulacja.TypyProduktów produkt) {
-        int id = Symulacja.ID_PRODUKTU.get(produkt);
-        return produkty[id].ile();
+        return 0; // TODO
     }
 
     public void dodajDiamenty (double ile) {
         diamenty += ile;
     }
     public void dodajProdukty (double ile, Symulacja.TypyProduktów produkt) {
-        int id = Symulacja.ID_PRODUKTU.get(produkt);
-        produkty[id].zmniejsz(ile);
+        // TODO
     }
 
     public Giełda podajGiełdę() {

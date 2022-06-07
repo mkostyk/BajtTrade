@@ -2,25 +2,22 @@ package symulacja.giełda.oferty;
 
 import symulacja.Symulacja;
 import symulacja.agenci.Agent;
+import symulacja.produkty.Produkt;
 
 public abstract class Oferta {
-    protected Symulacja.TypyProduktów typ;
-    protected int ile;
-    protected int poziom;
+    protected Produkt produkt;
     private Agent twórca;
 
-    public Oferta(Symulacja.TypyProduktów typ, int ile, int poziom, Agent twórca) {
-        this.typ = typ;
-        this.ile = ile;
-        this.poziom = poziom;
+    public Oferta(Produkt produkt, Agent twórca) {
+        this.produkt = produkt;
         this.twórca = twórca;
     }
 
-    public int ile() {
-        return ile;
+    public int podajIle() {
+        return produkt.podajIle();
     }
 
     public int typID() {
-        return Symulacja.ID_PRODUKTU.get(typ);
+        return Symulacja.ID_PRODUKTU.get(produkt.podajTyp());
     }
 }

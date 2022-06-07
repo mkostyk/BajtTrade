@@ -2,7 +2,10 @@ package symulacja.agenci.robotnicy.strategieProdukcji;
 
 import symulacja.Symulacja;
 import symulacja.agenci.robotnicy.Robotnik;
+import symulacja.produkty.Produkt;
 import symulacja.utils.PodsumowanieDnia;
+
+import static symulacja.Symulacja.TypyProduktów.*;
 
 public class Chciwy extends StrategiaProdukcji {
     public Chciwy(Robotnik robotnik) {
@@ -10,7 +13,7 @@ public class Chciwy extends StrategiaProdukcji {
     }
 
     @Override
-    public Symulacja.TypyProduktów wyprodukuj() {
+    public Produkt wyprodukuj() {
         PodsumowanieDnia ostatniDzień = robotnik.podajGiełdę().podajHistorięOstatnichDni(1)[0];
 
         double największyZysk = 0;
@@ -24,6 +27,9 @@ public class Chciwy extends StrategiaProdukcji {
             }
         }
 
-        return najlepszyProdukt;
+        int produktywność = robotnik.podajProduktywność(najlepszyProdukt);
+        int poziom = robotnik.podajPoziomyŚcieżek()[Symulacja.ID_PRODUKTU.get(najlepszyProdukt)];
+
+        return new Produkt(najlepszyProdukt, produktywność, poziom);
     }
 }
