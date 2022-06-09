@@ -1,4 +1,4 @@
-package main.symulacja.agenci.robotnicy.strategieKariery;
+package main.symulacja.strategieRobotników.strategieKariery;
 
 import main.symulacja.Symulacja;
 

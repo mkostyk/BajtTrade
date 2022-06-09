@@ -8,12 +8,12 @@ import static main.symulacja.Symulacja.MAX_POZIOM;
 
 public class OfertaRobotnika extends Oferta {
     // Oferty sprzedaży
-    public OfertaRobotnika(Produkt produkt, Agent twórca) {
-        super(produkt, twórca);
+    public OfertaRobotnika(Produkt produkt, int ile, Agent twórca) {
+        super(produkt, ile, twórca);
     }
 
     // Oferty kupna
     public OfertaRobotnika(Symulacja.TypyProduktów typ, int ile, Agent twórca) {
-        super(new Produkt(typ, ile, MAX_POZIOM), twórca);
+        super(new Produkt(typ, MAX_POZIOM), ile, twórca);
     }
 }

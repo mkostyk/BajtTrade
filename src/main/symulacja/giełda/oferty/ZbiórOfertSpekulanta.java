@@ -8,16 +8,16 @@ import java.util.*;
 import static main.symulacja.Symulacja.INFINITY;
 
 public class ZbiórOfertSpekulanta {
-    private ArrayList<OfertaSpekulanta> listaOfert = new ArrayList<OfertaSpekulanta>();
+    private ArrayList<OfertaSpekulanta> listaOfert = new ArrayList<>();
 
     public int znajdźNajlepsząOfertęKupna(OfertaRobotnika oferta) {
-        OfertaSpekulanta tmp = new OfertaSpekulanta(oferta.produkt, INFINITY, oferta.podajTwórcę());
-        return Collections.binarySearch(listaOfert, tmp, new KomparatorOfertKupnaSpekulantów());
+        OfertaSpekulanta tmp = new OfertaSpekulanta(oferta.produkt, oferta.podajIle(), INFINITY, oferta.podajTwórcę());
+        return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertKupnaSpekulantów()) + 2); // TODO nie jestem pewien tego +2
     }
 
     public int znajdźNajlepsząOfertęSprzedaży(OfertaRobotnika oferta) {
-        OfertaSpekulanta tmp = new OfertaSpekulanta(oferta.produkt, 0, oferta.podajTwórcę());
-        return Collections.binarySearch(listaOfert, tmp, new KomparatorOfertSprzedażySpekulantów());
+        OfertaSpekulanta tmp = new OfertaSpekulanta(oferta.produkt, oferta.podajIle(), 0, oferta.podajTwórcę());
+        return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertSprzedażySpekulantów()) + 2);
     }
 
     public OfertaSpekulanta podajOfertę(int pozycja) {
@@ -30,5 +30,14 @@ public class ZbiórOfertSpekulanta {
 
     public void posortujOferty() {
         listaOfert.sort(new KomparatorOfertKupnaSpekulantów());
+    }
+
+    public int size() {
+        return listaOfert.size();
+    }
+
+    // TODO - testing
+    public ArrayList<OfertaSpekulanta> podajWszystkieOferty() {
+        return listaOfert;
     }
 }

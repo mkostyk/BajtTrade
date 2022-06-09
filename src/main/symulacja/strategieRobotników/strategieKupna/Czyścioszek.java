@@ -1,4 +1,4 @@
-package main.symulacja.agenci.robotnicy.strategieKupna;
+package main.symulacja.strategieRobotników.strategieKupna;
 
 import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
@@ -6,10 +6,6 @@ import main.symulacja.giełda.oferty.OfertaRobotnika;
 import static main.symulacja.Symulacja.TypyProduktów.*;
 
 public class Czyścioszek extends Technofob {
-    public Czyścioszek(Robotnik robotnik) {
-        super(robotnik);
-    }
-
     @Override
     public void dokonajZakupów() {
         super.dokonajZakupów();

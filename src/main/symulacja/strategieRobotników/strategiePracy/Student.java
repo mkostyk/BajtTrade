@@ -1,4 +1,4 @@
-package main.symulacja.agenci.robotnicy.strategiePracy;
+package main.symulacja.strategieRobotników.strategiePracy;
 
 import main.symulacja.agenci.robotnicy.Robotnik;
 
@@ -8,15 +8,14 @@ public class Student extends StrategiaPracy {
     private final int zapas;
     private final int okres;
 
-    public Student(Robotnik robotnik, int zapas, int okres) {
-        super(robotnik);
+    public Student(int zapas, int okres) {
         this.zapas = zapas;
         this.okres = okres;
     }
 
     @Override
     public boolean czyPracuje() {
-        double cenaJedzenia = robotnik.podajGiełdę().podajŚredniąCenęProduktu(okres, JEDZENIE);
+        double cenaJedzenia = robotnik.podajGiełdę().podajŚredniąCenęProduktu(okres, JEDZENIE, 1);
         return (robotnik.ileDiamentów() <= zapas * 100 * cenaJedzenia);
     }
 }

@@ -1,6 +1,7 @@
-package main.symulacja.agenci.robotnicy.strategieKariery;
+package main.symulacja.strategieRobotników.strategieKariery;
 
 import main.symulacja.Symulacja;
+import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.utils.PodsumowanieDnia;
 
 import static main.symulacja.Symulacja.ILE_PRODUKTÓW;
@@ -13,10 +14,9 @@ public class Rewolucjonista extends StrategiaKariery {
 
     @Override
     public Symulacja.Zawody podajNowyZawód() {
-        int dni = robotnik.podajID() % 17;
+        int dni = Math.max(1, robotnik.podajID() % 17);
         PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięOstatnichDni(dni);
         int[] oferty = new int[ILE_PRODUKTÓW];
-        // TODO dni = 0????
 
         for (PodsumowanieDnia dzień: dane) {
             for (Symulacja.TypyProduktów produkt: Symulacja.TypyProduktów.values()) {

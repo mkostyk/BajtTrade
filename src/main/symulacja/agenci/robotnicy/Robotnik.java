@@ -3,16 +3,24 @@ package main.symulacja.agenci.robotnicy;
 import main.symulacja.Symulacja;
 import main.symulacja.agenci.Agent;
 import main.symulacja.agenci.robotnicy.scieżkiKariery.ŚcieżkaKariery;
-import main.symulacja.agenci.robotnicy.strategieKariery.StrategiaKariery;
-import main.symulacja.agenci.robotnicy.strategieKupna.StrategiaKupna;
-import main.symulacja.agenci.robotnicy.strategiePracy.StrategiaPracy;
-import main.symulacja.agenci.robotnicy.strategieProdukcji.StrategiaProdukcji;
+import main.symulacja.giełda.Giełda;
+import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
+import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
+import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
+import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji;
+import main.symulacja.fabryka.Fabryka;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.produkty.Produkt;
 
-import static main.symulacja.Symulacja.ILE_ZAWODÓW;
+import java.util.Locale;
 
-public abstract class Robotnik extends Agent {
+import static main.symulacja.Symulacja.ILE_PRODUKTÓW;
+import static main.symulacja.Symulacja.ILE_ZAWODÓW;
+import static main.symulacja.Symulacja.TypyProduktów.*;
+
+// TODO
+public class Robotnik extends Agent {
+    // TODO private
     protected ŚcieżkaKariery[] ścieżki;
     protected ŚcieżkaKariery obecnaŚcieżka;
     protected StrategiaKariery strategiaKariery;
@@ -23,10 +31,49 @@ public abstract class Robotnik extends Agent {
 
     private int licznikGłodu;
 
-    public abstract int podajProduktywność(Symulacja.TypyProduktów produkt);
+    public Robotnik (Symulacja.Zawody kariera, StrategiaKariery strategiaKariery,
+                        StrategiaKupna strategiaKupna, StrategiaPracy strategiaPracy,
+                        StrategiaProdukcji strategiaProdukcji, int idRobotnika, Giełda giełda) {
+        this.ścieżki = new ŚcieżkaKariery[ILE_ZAWODÓW];
+        for (Symulacja.Zawody zawód: Symulacja.Zawody.values()) {
+            int id = Symulacja.ID_KARIERY.get(zawód);
+            // TODO - temp fix
+            this.ścieżki[id] = Fabryka.stwórzŚcieżkęKariery(zawód.toString().toLowerCase(Locale.ROOT));
 
-    public abstract int ileUbrańJutro();
-    public abstract int ileProgramówBrakuje();
+            if (kariera == zawód) {
+                this.obecnaŚcieżka = this.ścieżki[id];
+            }
+        }
+
+        this.strategiaKariery = strategiaKariery;
+        this.strategiaKupna = strategiaKupna;
+        this.strategiaPracy = strategiaPracy;
+        this.strategiaProdukcji = strategiaProdukcji;
+        this.produktywność = new int[ILE_PRODUKTÓW];
+        this.licznikGłodu = 0;
+        this.agentID = idRobotnika;
+        this.giełda = giełda;
+
+        this.strategiaKariery.ustawRobotnika(this);
+        this.strategiaKupna.ustawRobotnika(this);
+        this.strategiaPracy.ustawRobotnika(this);
+        this.strategiaProdukcji.ustawRobotnika(this);
+    }
+
+    public int podajProduktywność(Symulacja.TypyProduktów produkt) {
+        int id = Symulacja.ID_PRODUKTU.get(produkt);
+        return produktywność[id];
+    }
+
+    // TODO
+    public int ileUbrańJutro() {
+        return 0;
+    };
+
+    // TODO
+    public int ileProgramówBrakuje() {
+        return 0;
+    };
 
     public int[] podajPoziomyŚcieżek() {
         int[] wynik = new int[ILE_ZAWODÓW];
@@ -39,9 +86,9 @@ public abstract class Robotnik extends Agent {
 
     private int podajBonusZNarzędzi() {
         int bonus = 0;
-        for (Produkt produkt: produkty) {
+        for (Produkt produkt: produkty.keySet()) {
             if (produkt.podajTyp() == Symulacja.TypyProduktów.NARZĘDZIA) {
-                bonus += produkt.podajIle() * produkt.podajPoziom();
+                bonus += produkty.get(produkt) * produkt.podajPoziom();
             }
         }
 
@@ -67,15 +114,7 @@ public abstract class Robotnik extends Agent {
     public void pracuj() {
         // TODO - poziomy zmienione przez programy komputerowe
         policzProduktywność();
-        Produkt noweProdukty = strategiaProdukcji.wyprodukuj();
-
-        // Wystawienie na giełdzie
-        if (noweProdukty.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
-            diamenty += noweProdukty.podajIle();
-        } else {
-            giełda.dodajOfertęSprzedażyRobotnika(new OfertaRobotnika(noweProdukty, this));
-        }
-
+        strategiaProdukcji.wyprodukuj();
         strategiaKupna.dokonajZakupów();
     }
 
@@ -102,5 +141,20 @@ public abstract class Robotnik extends Agent {
         return true;
     }
 
-    public abstract void zużyjPrzedmioty();
+    // TODO (+głodowanie)
+    public void zużyjPrzedmioty() {
+        // JEDZENIE
+        if (!zużyjProdukty(100, new Produkt(JEDZENIE, 1))) {
+            licznikGłodu++;
+        }
+
+
+    };
+
+    @Override
+    public String toString() {
+        return "Robotnik{" +
+                "idRobotnika=" + agentID +
+                '}';
+    }
 }

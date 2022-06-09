@@ -1,12 +1,11 @@
-package main.symulacja.agenci.robotnicy.strategiePracy;
+package main.symulacja.strategieRobotników.strategiePracy;
 
 import main.symulacja.agenci.robotnicy.Robotnik;
 
 public class Oszczędny extends StrategiaPracy {
     private final double limitDiamentów;
 
-    public Oszczędny(Robotnik robotnik, double limitDiamentów) {
-        super(robotnik);
+    public Oszczędny(double limitDiamentów) {
         this.limitDiamentów = limitDiamentów;
     }
 

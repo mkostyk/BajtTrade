@@ -35,10 +35,16 @@ public class Symulacja {
     public static double INFINITY = 1e300;
     public static int MAX_POZIOM = Integer.MAX_VALUE;
     public static Random RNG = new Random();
-
+    
     private ArrayList<Robotnik> robotnicy;
     private ArrayList<Spekulant> spekulanci;
     private Giełda giełda;
+
+    public Symulacja (ArrayList<Robotnik> robotnicy, ArrayList<Spekulant> spekulanci, Giełda giełda) {
+        this.robotnicy = robotnicy;
+        this.spekulanci = spekulanci;
+        this.giełda = giełda;
+    }
 
     private void wypiszDzień() {
         // TODO

@@ -1,12 +1,8 @@
-package main.symulacja.agenci.robotnicy.strategiePracy;
+package main.symulacja.strategieRobotników.strategiePracy;
 
 import main.symulacja.agenci.robotnicy.Robotnik;
 
 public class Pracuś extends StrategiaPracy {
-    public Pracuś(Robotnik robotnik) {
-        super(robotnik);
-    }
-
     @Override
     public boolean czyPracuje() {
         return true;

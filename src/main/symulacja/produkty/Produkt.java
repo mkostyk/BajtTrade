@@ -6,30 +6,33 @@ import static main.symulacja.Symulacja.TypyProduktów.*;
 
 public class Produkt {
     private Symulacja.TypyProduktów typ;
-    private int ile;
     private int poziom;
 
-    public Produkt(Symulacja.TypyProduktów typ, int ile, int poziom) {
+    public Produkt(Symulacja.TypyProduktów typ, int poziom) {
         this.typ = typ;
-        this.ile = ile;
         this.poziom = poziom;
 
         if (typ == JEDZENIE || typ == DIAMENTY) {
-            this.poziom = 0;
+            this.poziom = 1;
         }
     }
 
     public Symulacja.TypyProduktów podajTyp() {
         return typ;
     }
-    public int podajIle() {
-        return ile;
+    public int typID() {
+        return Symulacja.ID_PRODUKTU.get(podajTyp());
     }
     public int podajPoziom() {
         return poziom;
     }
 
-    public void zmniejsz(double ile) {
-        this.ile -= ile;
+
+    @Override
+    public String toString() {
+        return "Produkt{" +
+                "typ=" + typ +
+                ", poziom=" + poziom +
+                '}';
     }
 }
