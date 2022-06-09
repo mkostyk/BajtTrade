@@ -14,7 +14,6 @@ public class PodsumowanieDnia {
     private final int[] ofertySprzedażySpekulantów;
     private final int[] ofertySprzedażyRobotników;
 
-    // TODO - średnie muszą mieć komparator
     public PodsumowanieDnia(TreeMap<Produkt, Double> średnie, int[] ofertySprzedażySpekulantów, int[] ofertySprzedażyRobotników) {
         this.średnie = średnie;
         this.ofertySprzedażySpekulantów = ofertySprzedażySpekulantów;

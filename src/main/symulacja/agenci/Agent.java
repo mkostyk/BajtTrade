@@ -35,6 +35,11 @@ public abstract class Agent {
         produkty.merge(produkt, ile, Double::sum);
     }
 
+    public void zużyjDiamenty(double ile) {
+        Produkt produkt = new Produkt(DIAMENTY, 1);
+        zużyjProdukty(ile, produkt);
+    }
+
     public boolean zużyjProdukty(double ile, Produkt produkt) {
         if (produkty.get(produkt) == null || produkty.get(produkt) < ile) {
             produkty.put(produkt, 0.0);

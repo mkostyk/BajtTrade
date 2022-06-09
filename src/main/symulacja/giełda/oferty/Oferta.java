@@ -20,11 +20,13 @@ public abstract class Oferta {
     }
     public Symulacja.TypyProduktów podajTyp() {
         return produkt.podajTyp();
-    } // TODO - potencjalnie do wyjebania
+    }
     public int podajPoziom() {
         return produkt.podajPoziom();
     }
-    public Produkt podajProdukt() {return produkt;}
+    public Produkt podajProdukt() {
+        return produkt;
+    }
 
     public void zmniejszWielkość(int ile) {
         this.ile -= ile;
@@ -34,8 +36,6 @@ public abstract class Oferta {
         return Symulacja.ID_PRODUKTU.get(produkt.podajTyp());
     }
     public Agent podajTwórcę() {return twórca;}
-
-    // TODO
 
     @Override
     public String toString() {

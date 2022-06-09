@@ -20,14 +20,13 @@ import static main.symulacja.Symulacja.TypyProduktów.*;
 
 // TODO
 public class Robotnik extends Agent {
-    // TODO private
-    protected ŚcieżkaKariery[] ścieżki;
-    protected ŚcieżkaKariery obecnaŚcieżka;
-    protected StrategiaKariery strategiaKariery;
-    protected StrategiaKupna strategiaKupna;
-    protected StrategiaPracy strategiaPracy;
-    protected StrategiaProdukcji strategiaProdukcji;
-    protected int[] produktywność;
+    private ŚcieżkaKariery[] ścieżki;
+    private ŚcieżkaKariery obecnaŚcieżka;
+    private StrategiaKariery strategiaKariery;
+    private StrategiaKupna strategiaKupna;
+    private StrategiaPracy strategiaPracy;
+    private StrategiaProdukcji strategiaProdukcji;
+    private int[] produktywność;
 
     private int licznikGłodu;
 
@@ -123,7 +122,9 @@ public class Robotnik extends Agent {
             int idNowejKariery = Symulacja.ID_KARIERY.get(strategiaKariery.podajNowyZawód());
             obecnaŚcieżka = ścieżki[idNowejKariery];
         } else {
+            int idObecnejKariery = Symulacja.ID_KARIERY.get(obecnaŚcieżka.podajZawód());
             obecnaŚcieżka.dodajPoziom();
+            ścieżki[idObecnejKariery] = obecnaŚcieżka;
         }
     }
 
@@ -141,12 +142,21 @@ public class Robotnik extends Agent {
         return true;
     }
 
+    // TODO
+    /*public void zużyjUbrania() {
+        int licznikZużytych = 0;
+        while (licznikZużytych < 100) {
+            Itera
+        }
+    }*/
+
     // TODO (+głodowanie)
     public void zużyjPrzedmioty() {
         // JEDZENIE
         if (!zużyjProdukty(100, new Produkt(JEDZENIE, 1))) {
             licznikGłodu++;
         }
+
 
 
     };

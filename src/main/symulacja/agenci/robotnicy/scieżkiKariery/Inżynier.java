@@ -9,7 +9,7 @@ public class Inżynier extends ŚcieżkaKariery {
         poziom = 1;
     }
 
-    public int podajBonus(Symulacja.TypyProduktów produkt) {
-        return super.podajBonus(produkt, INŻYNIER);
+    public Symulacja.Zawody podajZawód() {
+        return INŻYNIER;
     }
 }

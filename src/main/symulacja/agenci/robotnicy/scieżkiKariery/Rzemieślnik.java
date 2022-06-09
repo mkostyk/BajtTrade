@@ -9,7 +9,7 @@ public class Rzemieślnik extends ŚcieżkaKariery {
         poziom = 1;
     }
 
-    public int podajBonus(Symulacja.TypyProduktów produkt) {
-        return super.podajBonus(produkt, RZEMIEŚLNIK);
+    public Symulacja.Zawody podajZawód() {
+        return RZEMIEŚLNIK;
     }
 }

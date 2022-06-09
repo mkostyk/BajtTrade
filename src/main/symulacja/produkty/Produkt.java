@@ -5,15 +5,23 @@ import main.symulacja.Symulacja;
 import static main.symulacja.Symulacja.TypyProduktów.*;
 
 public class Produkt {
-    private Symulacja.TypyProduktów typ;
-    private int poziom;
+    private final Symulacja.TypyProduktów typ;
+    private final int poziom;
+    private final int wytrzymałość;
 
+    // TODO - osobne klasy?
     public Produkt(Symulacja.TypyProduktów typ, int poziom) {
         this.typ = typ;
-        this.poziom = poziom;
+        if (typ == UBRANIA) {
+            this.wytrzymałość = poziom * poziom;
+        } else {
+            this.wytrzymałość = 1;
+        }
 
         if (typ == JEDZENIE || typ == DIAMENTY) {
             this.poziom = 1;
+        } else {
+            this.poziom = poziom;
         }
     }
 
@@ -25,6 +33,9 @@ public class Produkt {
     }
     public int podajPoziom() {
         return poziom;
+    }
+    public int podajWytrzymałość() {
+        return wytrzymałość;
     }
 
 

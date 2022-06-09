@@ -9,7 +9,7 @@ public class Górnik extends ŚcieżkaKariery {
         poziom = 1;
     }
 
-    public int podajBonus(Symulacja.TypyProduktów produkt) {
-        return super.podajBonus(produkt, GÓRNIK);
+    public Symulacja.Zawody podajZawód() {
+        return GÓRNIK;
     }
 }

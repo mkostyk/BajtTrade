@@ -16,8 +16,7 @@ import java.util.TreeMap;
 
 import static main.symulacja.Symulacja.ILE_PRODUKTÓW;
 
-// TODO - powinien być abstract
-public class Giełda {
+public abstract class Giełda {
     protected ArrayList <OfertaRobotnika> ofertyKupnaRobotników = new ArrayList<>();
     protected ArrayList <OfertaRobotnika> ofertySprzedażyRobotników = new ArrayList<>();
 
@@ -30,7 +29,6 @@ public class Giełda {
     private int[] ileOfertSprzedażySpekulantów = new int[ILE_PRODUKTÓW];
     private int[] ileOfertSprzedażyRobotników = new int[ILE_PRODUKTÓW];
 
-    // TODO - konstruktor protected
     protected Giełda(TreeMap<Produkt, Double> cenyZerowe) {
         int[] sprzedażDniaZerowego = new int[ILE_PRODUKTÓW];
         Arrays.fill(sprzedażDniaZerowego, 0);
@@ -39,6 +37,8 @@ public class Giełda {
         ileOfertSprzedażyRobotników = sprzedażDniaZerowego;
         ileOfertSprzedażySpekulantów = sprzedażDniaZerowego;
     }
+
+    public abstract void posortujOferty();
 
     public void dodajOfertęKupnaRobotnika(OfertaRobotnika ofertaKupna) {
         ofertyKupnaRobotników.add(ofertaKupna);
@@ -71,20 +71,13 @@ public class Giełda {
         int początkowyDzień = Math.max(tablicaHistorii.length - ileDni, 0);
         int końcowyDzień = tablicaHistorii.length - 1;
 
-        // TODO - testing
-        //System.out.println(początkowyDzień + " " + końcowyDzień);
-
-        //PodsumowanieDnia[] test = Arrays.copyOfRange(tablicaHistorii, początkowyDzień, końcowyDzień);
-        //System.out.println(Arrays.toString(tablicaHistorii));
-
         return Arrays.copyOfRange(tablicaHistorii, początkowyDzień, końcowyDzień + 1);
     }
 
     public double podajŚredniąCenęProduktu(int ileDni, Symulacja.TypyProduktów typ, int poziom) {
         double suma = 0;
         PodsumowanieDnia[] dane = podajHistorięOstatnichDni(ileDni);
-        // TODO - testing
-        //System.out.println(Arrays.toString(dane));
+
         for (PodsumowanieDnia dzień: dane) {
             suma += dzień.podajŚredniąCenę(typ, poziom);
         }
@@ -96,49 +89,52 @@ public class Giełda {
         return ileOfertSprzedażyRobotników[Symulacja.ID_PRODUKTU.get(produkt)];
     }
 
-    // TODO
-    public void posortujOferty() {
-
-    }
-
-    public void wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, double cena) {
-        // TODO - przerwać kupowanie w razie braku diamentów
+    public boolean wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, double cena) {
         double dostępneDiamenty = ofertaZakupu.podajTwórcę().ileDiamentów();
+        Produkt produkt = ofertaZakupu.podajProdukt();
+
         int zakup = Math.min(ofertaZakupu.podajIle(), ofertaSprzedaży.podajIle());
         zakup = (int) Math.min(zakup, Math.floor(dostępneDiamenty / cena));
+        zakup = (int) Math.min(zakup, ofertaSprzedaży.podajTwórcę().ileProduktów(produkt));
 
         double wartośćZakupu = zakup * cena;
 
-        // TODO - ten if powinien zawsze się wykonać
-        if (ofertaZakupu.podajTwórcę().ileDiamentów() >= wartośćZakupu && zakup > 0) {
-            ofertaZakupu.podajTwórcę().dodajDiamenty(-wartośćZakupu);
-            ofertaSprzedaży.podajTwórcę().dodajDiamenty(wartośćZakupu);
-            // TODO - testing
-            //System.out.println(ofertaZakupu.podajTwórcę().ileDiamentów());
-            //System.out.println(ofertaSprzedaży.podajTwórcę().ileDiamentów());
+        ofertaZakupu.podajTwórcę().zużyjDiamenty(wartośćZakupu);
+        ofertaZakupu.podajTwórcę().dodajProdukty(zakup, produkt);
 
-            ofertaZakupu.zmniejszWielkość(zakup);
-            ofertaSprzedaży.zmniejszWielkość(zakup);
-        }
+        ofertaSprzedaży.podajTwórcę().dodajDiamenty(wartośćZakupu);
+        ofertaSprzedaży.podajTwórcę().zużyjProdukty(zakup, produkt);
+
+        ofertaZakupu.zmniejszWielkość(zakup);
+        ofertaSprzedaży.zmniejszWielkość(zakup);
+
+        return zakup > 0;
     }
 
 
     public void dopasujOferty() {
         posortujOferty();
+        ofertyKupnaSpekulantów.posortujOferty();
+        ofertySprzedażySpekulantów.posortujOferty();
+
         // Sprzedaż robotników
         for (OfertaRobotnika oferta: ofertySprzedażyRobotników) {
             int obecnaPozycja = ofertyKupnaSpekulantów.znajdźNajlepsząOfertęKupna(oferta);
-            //System.out.println("POZYCJA1: " + obecnaPozycja);
             if (obecnaPozycja >= ofertyKupnaSpekulantów.size()) {
                 continue;
             }
+
+            // Znajdujemy najlepszą ofertę
             OfertaSpekulanta ofertaZakupu = ofertyKupnaSpekulantów.podajOfertę(obecnaPozycja);
 
             while (oferta.podajIle() > 0 && oferta.typID() == ofertaZakupu.typID()
                    && oferta.podajPoziom() == ofertaZakupu.podajPoziom() &&
                    obecnaPozycja < ofertyKupnaSpekulantów.size()) {
-                // Znajdujemy najlepszą ofertę
-                wykonajOfertę(ofertaZakupu, oferta, ofertaZakupu.podajCenę());
+
+                // Wykonujemy ofertę
+                if (!wykonajOfertę(ofertaZakupu, oferta, ofertaZakupu.podajCenę())) {
+                    break;
+                }
 
                 // Oferty wcześniejsze są niezgodne z obecną
                 obecnaPozycja++;
@@ -151,7 +147,6 @@ public class Giełda {
         // Zakupy robotników
         for (OfertaRobotnika oferta: ofertyKupnaRobotników) {
             int obecnaPozycja = ofertySprzedażySpekulantów.znajdźNajlepsząOfertęSprzedaży(oferta);
-            //System.out.println("POZYCJA2: " + obecnaPozycja);
             if (obecnaPozycja >= ofertySprzedażySpekulantów.size()) {
                 continue;
             }
@@ -159,8 +154,11 @@ public class Giełda {
             OfertaSpekulanta ofertaSprzedaży = ofertySprzedażySpekulantów.podajOfertę(obecnaPozycja);
 
             while (oferta.podajIle() > 0 && oferta.typID() == ofertaSprzedaży.typID() &&
-                    obecnaPozycja < ofertySprzedażySpekulantów.size()) {
-                wykonajOfertę(oferta, ofertaSprzedaży, ofertaSprzedaży.podajCenę());
+                   obecnaPozycja < ofertySprzedażySpekulantów.size()) {
+
+                if(!wykonajOfertę(oferta, ofertaSprzedaży, ofertaSprzedaży.podajCenę())) {
+                    break;
+                }
 
                 // Oferty wcześniejsze są niezgodne z obecną
                 obecnaPozycja++;
@@ -214,7 +212,7 @@ public class Giełda {
         ofertySprzedażySpekulantów = new ZbiórOfertSpekulanta();
     }
 
-    // TODO - testing
+
     public void wypisz() {
         System.out.println("---------- OFERTY ROBOTNIKÓW ----------");
         System.out.println("ZAKUPU: ");
@@ -244,8 +242,6 @@ public class Giełda {
             System.out.println(oferta);
         }
     }
-
-    // TODO - testing
 
     public void ustawDzień(int dzień) {
         this.dzień = dzień;

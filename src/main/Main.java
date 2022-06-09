@@ -24,8 +24,6 @@ public class Main {
     // TODO - konstruktory in general
     // TODO - JSON
     // TODO - zgadzające się nazwy parametrów
-    // TODO - klasa Strategia?
-    // TODO - zużywanie rzeczy
     // TODO - kolejność
     public static void main(String[] args) {
         TreeMap<Produkt, Double> ceny = new TreeMap<>(new KomparatorProduktów());
@@ -59,10 +57,14 @@ public class Main {
         //giełda.wypisz();
 
         Spekulant spekulant = Fabryka.stwórzSpekulanta("średni", 11, giełda);
+
+        spekulant.dodajProdukty(50, new Produkt(JEDZENIE, 1));
+        spekulant.dodajProdukty(200, new Produkt(UBRANIA, 1));
+        spekulant.dodajProdukty(200, new Produkt(NARZĘDZIA, 1));
+        spekulant.dodajProdukty(200, new Produkt(PROGRAMY, 1));
+
         spekulant.dodajDiamenty(1000);
         spekulant.wystawOferty();
-
-        spekulant.dodajOfertęSprzedaży(JEDZENIE, 1, 0.475, 0.23);
 
         giełda.wypisz();
         System.out.println();

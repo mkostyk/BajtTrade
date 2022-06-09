@@ -7,7 +7,6 @@ import main.symulacja.produkty.Produkt;
 import main.symulacja.strategieRobotników.Strategia;
 
 public abstract class StrategiaProdukcji extends Strategia {
-    // TODO - może produkty jako osobne klasy
     public abstract void wyprodukuj();
     public void wystawProdukty(Produkt produkt, int ile) {
         if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {

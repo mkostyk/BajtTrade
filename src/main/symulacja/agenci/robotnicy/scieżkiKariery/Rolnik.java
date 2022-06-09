@@ -9,7 +9,7 @@ public class Rolnik extends ŚcieżkaKariery {
         poziom = 1;
     }
 
-    public int podajBonus(Symulacja.TypyProduktów produkt) {
-        return super.podajBonus(produkt, ROLNIK);
+    public Symulacja.Zawody podajZawód() {
+        return ROLNIK;
     }
 }

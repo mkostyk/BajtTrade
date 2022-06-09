@@ -9,7 +9,7 @@ public class Programista extends ŚcieżkaKariery {
         poziom = 1;
     }
 
-    public int podajBonus(Symulacja.TypyProduktów produkt) {
-        return super.podajBonus(produkt, PROGRAMISTA);
+    public Symulacja.Zawody podajZawód() {
+        return PROGRAMISTA;
     }
 }

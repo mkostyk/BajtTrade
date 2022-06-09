@@ -36,7 +36,6 @@ public class ZbiórOfertSpekulanta {
         return listaOfert.size();
     }
 
-    // TODO - testing
     public ArrayList<OfertaSpekulanta> podajWszystkieOferty() {
         return listaOfert;
     }

@@ -10,15 +10,12 @@ public abstract class Spekulant extends Agent {
     protected Spekulant(Giełda giełda) {
         this.giełda = giełda;
     }
-    // TODO - poziomy to inne produkty
     public abstract void wystawOferty();
 
-    // TODO - fajnie jakby to jednak zabierało zasoby
     public void dodajOfertęKupna(Symulacja.TypyProduktów typ, int poziom, double cenaBazowa, double marża) {
         if (typ == Symulacja.TypyProduktów.DIAMENTY) {
             return;
         }
-        // TODO - testing
         Produkt produkt = new Produkt(typ, poziom);
         OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, 100, cenaBazowa * (1 - marża), this);
         this.podajGiełdę().dodajOfertęKupnaSpekulanta(oferta);
@@ -28,11 +25,10 @@ public abstract class Spekulant extends Agent {
         if (typ == Symulacja.TypyProduktów.DIAMENTY) {
             return;
         }
-        //Produkt produkt = new Produkt(typ, this.ileProduktów(typ), 0);
-        // TODO - testing
+
         Produkt produkt = new Produkt(typ, poziom);
-        // TODO - testing, zamienić 200 na this.ileProduktów(typ)
-        OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, 200, cenaBazowa * (1 + marża), this);
+        // TODO - cast bad
+        OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, (int) this.ileProduktów(produkt), cenaBazowa * (1 + marża), this);
         this.podajGiełdę().dodajOfertęSprzedażySpekulanta(oferta);
     }
 }
