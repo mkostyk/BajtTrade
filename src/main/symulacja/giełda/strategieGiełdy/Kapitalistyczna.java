@@ -8,8 +8,8 @@ import main.symulacja.produkty.Produkt;
 import java.util.TreeMap;
 
 public class Kapitalistyczna extends Giełda {
-    public Kapitalistyczna(TreeMap<Produkt, Double> cenyZerowe) {
-        super(cenyZerowe);
+    public Kapitalistyczna(TreeMap<Produkt, Double> cenyZerowe, int karaZaUbrania) {
+        super(cenyZerowe, karaZaUbrania);
     }
 
     @Override

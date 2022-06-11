@@ -5,8 +5,8 @@ import main.symulacja.Symulacja;
 import static main.symulacja.Symulacja.Zawody.INŻYNIER;
 
 public class Inżynier extends ŚcieżkaKariery {
-    public Inżynier() {
-        poziom = 1;
+    public Inżynier(int poziom) {
+        this.poziom = poziom;
     }
 
     public Symulacja.Zawody podajZawód() {

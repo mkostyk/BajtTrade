@@ -5,25 +5,31 @@ import main.symulacja.giełda.Giełda;
 import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.produkty.Produkt;
 
+import static main.symulacja.Symulacja.ILE_PRODUKTÓW;
 import static main.symulacja.Symulacja.TypyProduktów.*;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 public abstract class Agent {
-    protected TreeMap<Produkt, Double> produkty = new TreeMap<>(new KomparatorProduktów());
+    protected ArrayList<TreeMap<Produkt, Double>> produkty = new ArrayList<>(); // TODO - FIX
     protected Giełda giełda;
-    protected int agentID;
+    protected int id;
+
+    public TreeMap<Produkt, Double> podajProdukty(Symulacja.TypyProduktów typ) {
+        return produkty.get(Symulacja.ID_PRODUKTU.get(typ));
+    }
 
     public double ileDiamentów() {
         return ileProduktów(new Produkt(DIAMENTY, 1));
     }
 
     public double ileProduktów(Produkt produkt) {
-        if (produkty.get(produkt) == null) {
+        if (produkty.get(produkt.typID()).get(produkt) == null) {
             return 0;
         }
 
-        return produkty.get(produkt);
+        return produkty.get(produkt.typID()).get(produkt);
     }
 
     public void dodajDiamenty(double ile) {
@@ -32,7 +38,7 @@ public abstract class Agent {
     }
 
     public void dodajProdukty(double ile, Produkt produkt) {
-        produkty.merge(produkt, ile, Double::sum);
+        produkty.get(produkt.typID()).merge(produkt, ile, Double::sum);
     }
 
     public void zużyjDiamenty(double ile) {
@@ -41,11 +47,11 @@ public abstract class Agent {
     }
 
     public boolean zużyjProdukty(double ile, Produkt produkt) {
-        if (produkty.get(produkt) == null || produkty.get(produkt) < ile) {
-            produkty.put(produkt, 0.0);
+        if (produkty.get(produkt.typID()).get(produkt) == null || produkty.get(produkt.typID()).get(produkt) < ile) {
+            produkty.get(produkt.typID()).put(produkt, 0.0);
             return false;
         } else {
-            produkty.merge(produkt, -ile, Double::sum);
+            produkty.get(produkt.typID()).merge(produkt, -ile, Double::sum);
             return true;
         }
     }
@@ -57,6 +63,6 @@ public abstract class Agent {
         return giełda.podajDzień();
     }
     public int podajID() {
-        return agentID;
+        return id;
     };
 }

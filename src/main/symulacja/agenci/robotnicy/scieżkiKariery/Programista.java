@@ -5,8 +5,8 @@ import main.symulacja.Symulacja;
 import static main.symulacja.Symulacja.Zawody.PROGRAMISTA;
 
 public class Programista extends ŚcieżkaKariery {
-    public Programista() {
-        poziom = 1;
+    public Programista(int poziom) {
+        this.poziom = poziom;
     }
 
     public Symulacja.Zawody podajZawód() {

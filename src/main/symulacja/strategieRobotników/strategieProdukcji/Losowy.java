@@ -15,6 +15,6 @@ public class Losowy extends StrategiaProdukcji {
         int produktywność = robotnik.podajProduktywność(typ);
         int poziom = robotnik.podajPoziomyŚcieżek()[Symulacja.ID_PRODUKTU.get(typ)];
 
-        super.wystawProdukty(new Produkt(typ, poziom), produktywność);
+        użyjProgramówIWystawProdukty(new Produkt(typ, poziom), produktywność);
     }
 }

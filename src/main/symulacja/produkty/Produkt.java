@@ -25,6 +25,12 @@ public class Produkt {
         }
     }
 
+    public Produkt(Symulacja.TypyProduktów typ, int poziom, int wytrzymałość) {
+        this.typ = typ;
+        this.poziom = poziom;
+        this.wytrzymałość = wytrzymałość;
+    }
+
     public Symulacja.TypyProduktów podajTyp() {
         return typ;
     }

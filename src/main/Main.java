@@ -1,22 +1,11 @@
 package main;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import main.symulacja.Symulacja;
-import main.symulacja.agenci.robotnicy.Robotnik;
-import main.symulacja.agenci.spekulanci.Spekulant;
-import main.symulacja.fabryka.Fabryka;
-import main.symulacja.giełda.Giełda;
-import main.symulacja.giełda.oferty.OfertaRobotnika;
-import main.symulacja.komparatory.KomparatorProduktów;
-import main.symulacja.produkty.Produkt;
-import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
-import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
-import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
-import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji;
+import main.symulacja.adapters.SymulacjaAdapter;
 
-import java.util.TreeMap;
-
-import static main.symulacja.Symulacja.TypyProduktów.*;
-import static main.symulacja.Symulacja.Zawody.*;
+import java.io.*;
 
 public class Main {
     // TODO - konstruktory klas abstrakcyjnych protected
@@ -25,14 +14,44 @@ public class Main {
     // TODO - JSON
     // TODO - zgadzające się nazwy parametrów
     // TODO - kolejność
-    public static void main(String[] args) {
-        TreeMap<Produkt, Double> ceny = new TreeMap<>(new KomparatorProduktów());
+    // TODO - czy diaxy osobno? wtedy pozbywamy się troche castów
+    // TODO - lista produktów bez i z poziomami?
+    // TODO - jak najmniej .get, jak najwięcej ileProduktów
+    private static String readFile(String name) {
+        try(BufferedReader br = new BufferedReader(new FileReader(name))) {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+
+            return sb.toString();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        String json = readFile("input.json");
+        Moshi moshi = new Moshi.Builder()
+                .add(new SymulacjaAdapter())
+                .build();
+
+        JsonAdapter<Symulacja> jsonAdapter = moshi.adapter(Symulacja.class);
+        Symulacja symulacja = jsonAdapter.fromJson(json);
+        System.out.println(symulacja);
+
+
+        /*TreeMap<Produkt, Double> ceny = new TreeMap<>(new KomparatorProduktów());
         ceny.put(new Produkt(NARZĘDZIA, 1), 2.0);
         ceny.put(new Produkt(PROGRAMY, 1), 1.3);
         ceny.put(new Produkt(JEDZENIE, 1), 0.5);
         ceny.put(new Produkt(UBRANIA, 1), 5.3);
 
-        Giełda giełda = Fabryka.stwórzGiełdę("kapitalistyczna", ceny);
+        Giełda giełda = Fabryka.stwórzGiełdę("kapitalistyczna", ceny, 30);
         giełda.ustawDzień(1);
 
         StrategiaKariery s1 = Fabryka.stwórzStrategięKariery("konserwatysta");
@@ -79,5 +98,7 @@ public class Main {
         giełda.wypisz();
         System.out.println();
         System.out.println(robol2.ileDiamentów() + " " + spekulant.ileDiamentów());
+
+        robol2.zużyjPrzedmioty();*/
     }
 }

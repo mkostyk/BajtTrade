@@ -26,16 +26,22 @@ public abstract class Giełda {
     private ArrayList <OfertaSpekulanta> dokonaneSprzedaże = new ArrayList<>();
 
     private int dzień;
+    private int karaZaUbrania; // Nie chcemy, żeby robotnik miał dostęp do całej symulacji.
     private int[] ileOfertSprzedażySpekulantów = new int[ILE_PRODUKTÓW];
     private int[] ileOfertSprzedażyRobotników = new int[ILE_PRODUKTÓW];
 
-    protected Giełda(TreeMap<Produkt, Double> cenyZerowe) {
+    protected Giełda(TreeMap<Produkt, Double> cenyZerowe, int karaZaUbrania) {
         int[] sprzedażDniaZerowego = new int[ILE_PRODUKTÓW];
         Arrays.fill(sprzedażDniaZerowego, 0);
         PodsumowanieDnia p = new PodsumowanieDnia(cenyZerowe, sprzedażDniaZerowego, sprzedażDniaZerowego);
         historia.add(p);
         ileOfertSprzedażyRobotników = sprzedażDniaZerowego;
         ileOfertSprzedażySpekulantów = sprzedażDniaZerowego;
+        this.karaZaUbrania = karaZaUbrania;
+    }
+
+    public int podajKaręZaUbrania() {
+        return karaZaUbrania;
     }
 
     public abstract void posortujOferty();

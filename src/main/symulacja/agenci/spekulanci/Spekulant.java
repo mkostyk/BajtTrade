@@ -16,6 +16,7 @@ public abstract class Spekulant extends Agent {
         if (typ == Symulacja.TypyProduktów.DIAMENTY) {
             return;
         }
+
         Produkt produkt = new Produkt(typ, poziom);
         OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, 100, cenaBazowa * (1 - marża), this);
         this.podajGiełdę().dodajOfertęKupnaSpekulanta(oferta);

@@ -21,13 +21,13 @@ import java.util.TreeMap;
 
 public class Fabryka {
     // SCIEŻKI KARIERY
-    public static ŚcieżkaKariery stwórzŚcieżkęKariery(String kariera) {
+    public static ŚcieżkaKariery stwórzŚcieżkęKariery(String kariera, int poziom) {
         return switch (kariera) {
-            case "górnik" -> new Górnik();
-            case "rolnik" -> new Rolnik();
-            case "inżynier" -> new Inżynier();
-            case "programista" -> new Programista();
-            case "rzemieślnik" -> new Rzemieślnik();
+            case "górnik" -> new Górnik(poziom);
+            case "rolnik" -> new Rolnik(poziom);
+            case "inżynier" -> new Inżynier(poziom);
+            case "programista" -> new Programista(poziom);
+            case "rzemieślnik" -> new Rzemieślnik(poziom);
             default -> null;
         };
     }
@@ -103,11 +103,11 @@ public class Fabryka {
     }
 
     // GIEŁDA
-    public static Giełda stwórzGiełdę(String strategia, TreeMap<Produkt, Double> ceny) {
+    public static Giełda stwórzGiełdę(String strategia, TreeMap<Produkt, Double> ceny, int karaZaUbrania) {
         return switch (strategia) {
-            case "kapitalistyczna" -> new Kapitalistyczna(ceny);
-            case "socjalistyczna" -> new Socjalistyczna(ceny);
-            case "zrównoważona" -> new Zrównoważona(ceny);
+            case "kapitalistyczna" -> new Kapitalistyczna(ceny, karaZaUbrania);
+            case "socjalistyczna" -> new Socjalistyczna(ceny, karaZaUbrania);
+            case "zrównoważona" -> new Zrównoważona(ceny, karaZaUbrania);
             default -> null;
         };
     }

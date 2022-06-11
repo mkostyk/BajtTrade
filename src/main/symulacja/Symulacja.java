@@ -1,17 +1,21 @@
 package main.symulacja;
 
+import com.squareup.moshi.FromJson;
+import com.squareup.moshi.ToJson;
 import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.agenci.spekulanci.Spekulant;
+import main.symulacja.fabryka.Fabryka;
 import main.symulacja.giełda.Giełda;
+import main.symulacja.komparatory.KomparatorProduktów;
+import main.symulacja.produkty.Produkt;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static main.symulacja.Symulacja.TypyProduktów.*;
 import static main.symulacja.Symulacja.Zawody.*;
 
 public class Symulacja {
+    public static int DZIENNE_ZUŻYCIE_UBRAŃ = 100;
     public static int ILE_PRODUKTÓW = 5;
     public static int ILE_ZAWODÓW = 5;
     public enum TypyProduktów {NARZĘDZIA, PROGRAMY, JEDZENIE, UBRANIA, DIAMENTY}
@@ -35,15 +39,22 @@ public class Symulacja {
     public static double INFINITY = 1e300;
     public static int MAX_POZIOM = Integer.MAX_VALUE;
     public static Random RNG = new Random();
-    
+
+    private int długość;
     private ArrayList<Robotnik> robotnicy;
     private ArrayList<Spekulant> spekulanci;
     private Giełda giełda;
 
-    public Symulacja (ArrayList<Robotnik> robotnicy, ArrayList<Spekulant> spekulanci, Giełda giełda) {
-        this.robotnicy = robotnicy;
-        this.spekulanci = spekulanci;
-        this.giełda = giełda;
+
+
+    public Symulacja (int długosc, String giełda, int kara_za_brak_ubrań, Map<String, Double> ceny,
+                      List<Robotnik> robotnicy, List<Spekulant> spekulanci) {
+        // TODO
+        this.długość = długosc;
+        this.robotnicy = (ArrayList<Robotnik>) robotnicy;
+        this.spekulanci = (ArrayList<Spekulant>) spekulanci;
+        TreeMap<Produkt, Double> cenyZerowe = new TreeMap<Produkt, Double>(new KomparatorProduktów());
+        this.giełda = Fabryka.stwórzGiełdę(giełda, cenyZerowe, kara_za_brak_ubrań);
     }
 
     private void wypiszDzień() {
@@ -80,5 +91,15 @@ public class Symulacja {
         for (int i = 0; i < dni; i++) {
             dzień();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Symulacja{" +
+                "długość=" + długość +
+                ", robotnicy=" + robotnicy +
+                ", spekulanci=" + spekulanci +
+                ", giełda=" + giełda +
+                '}';
     }
 }

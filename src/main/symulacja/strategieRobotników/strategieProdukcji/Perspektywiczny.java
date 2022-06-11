@@ -38,6 +38,6 @@ public class Perspektywiczny extends StrategiaProdukcji {
         assert najlepszyProdukt != null;
         int produktywność = robotnik.podajProduktywność(najlepszyProdukt.podajTyp());
 
-        super.wystawProdukty(najlepszyProdukt, produktywność);
+        użyjProgramówIWystawProdukty(najlepszyProdukt, produktywność);
     }
 }
