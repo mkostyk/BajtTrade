@@ -14,6 +14,7 @@ public abstract class StrategiaProdukcji extends Strategia {
     public void użyjProgramówIWystawProdukty(Produkt produkt, int ile) {
         robotnik.ustawDzisiejsząProdukcję(ile);
         if (produkt.podajTyp() == JEDZENIE || produkt.podajTyp() == DIAMENTY) {
+            robotnik.dodajProdukty(ile, produkt);
             wystawProdukty(produkt, ile);
             return;
         }
@@ -25,6 +26,8 @@ public abstract class StrategiaProdukcji extends Strategia {
             Produkt nowyProdukt = new Produkt(produkt.podajTyp(), program.podajPoziom());
 
             programy.put(program, programy.get(program) - zużyte);
+            robotnik.dodajProdukty(zużyte, nowyProdukt); // TODO - zamiana argumentów
+            robotnik.zużyjProdukty(zużyte, program);
             wystawProdukty(nowyProdukt, zużyte);
             ileZużytychProgramów += zużyte;
 
@@ -33,6 +36,7 @@ public abstract class StrategiaProdukcji extends Strategia {
             }
         }
 
+        robotnik.dodajProdukty(ile - ileZużytychProgramów, produkt);
         wystawProdukty(produkt, ile - ileZużytychProgramów);
     }
 

@@ -9,7 +9,7 @@ import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
 public class StrategiaKupnaAdapter {
     private static class StrategiaKupnaJson {
         private String typ;
-        private int liczba_narzędzi = -1;
+        private int liczba_narzedzi = -1;
     }
 
     @ToJson
@@ -20,6 +20,6 @@ public class StrategiaKupnaAdapter {
 
     @FromJson
     private StrategiaKupna fromJson(StrategiaKupnaJson zakupy) {
-        return Fabryka.stwórzStrategięKupna(zakupy.typ, zakupy.liczba_narzędzi);
+        return Fabryka.stwórzStrategięKupna(zakupy.typ, zakupy.liczba_narzedzi);
     }
 }

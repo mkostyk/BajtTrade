@@ -16,6 +16,10 @@ public abstract class Agent {
     protected Giełda giełda;
     protected int id;
 
+    public void ustawGiełdę(Giełda giełda) {
+        this.giełda = giełda;
+    }
+
     public TreeMap<Produkt, Double> podajProdukty(Symulacja.TypyProduktów typ) {
         return produkty.get(Symulacja.ID_PRODUKTU.get(typ));
     }
@@ -65,4 +69,13 @@ public abstract class Agent {
     public int podajID() {
         return id;
     };
+
+    @Override
+    public String toString() {
+        return "Agent{" +
+                "produkty=" + produkty +
+                ", giełda=" + giełda +
+                ", id=" + id +
+                '}';
+    }
 }

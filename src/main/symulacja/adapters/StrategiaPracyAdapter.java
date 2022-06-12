@@ -9,10 +9,10 @@ import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji
 public class StrategiaPracyAdapter {
     private static class StrategiaPracyJson {
         private String typ;
-        private int limit_diamentów = -1;
+        private int limit_diamentow = -1;
         private int zapas = -1;
         private int okres = -1;
-        private int okresowość_nauki = -1;
+        private int okresowosc_nauki = -1;
     }
 
     @ToJson
@@ -23,7 +23,7 @@ public class StrategiaPracyAdapter {
 
     @FromJson
     private StrategiaPracy fromJson(StrategiaPracyJson praca) {
-        return Fabryka.stwórzStrategięPracy(praca.typ, praca.limit_diamentów, praca.zapas,
-                                            praca.okres, praca.okresowość_nauki);
+        return Fabryka.stwórzStrategięPracy(praca.typ, praca.limit_diamentow, praca.zapas,
+                                            praca.okres, praca.okresowosc_nauki);
     }
 }

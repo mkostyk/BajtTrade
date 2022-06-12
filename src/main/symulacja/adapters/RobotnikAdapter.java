@@ -13,6 +13,7 @@ import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
 import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
 import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class RobotnikAdapter {
@@ -30,8 +31,7 @@ public class RobotnikAdapter {
 
     @ToJson
     private String toJson(Robotnik robotnik) {
-        // TODO
-        return null;
+        return robotnik.toString();
     }
 
     @FromJson

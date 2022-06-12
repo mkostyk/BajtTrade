@@ -11,11 +11,13 @@ import java.util.TreeMap;
 
 public class PodsumowanieDnia {
     private final TreeMap<Produkt, Double> średnie;
+    private TreeMap<Produkt, Double> cenyZerowe;
     private final int[] ofertySprzedażySpekulantów;
     private final int[] ofertySprzedażyRobotników;
 
-    public PodsumowanieDnia(TreeMap<Produkt, Double> średnie, int[] ofertySprzedażySpekulantów, int[] ofertySprzedażyRobotników) {
+    public PodsumowanieDnia(TreeMap<Produkt, Double> średnie, TreeMap<Produkt, Double> cenyZerowe, int[] ofertySprzedażySpekulantów, int[] ofertySprzedażyRobotników) {
         this.średnie = średnie;
+        this.cenyZerowe = cenyZerowe;
         this.ofertySprzedażySpekulantów = ofertySprzedażySpekulantów;
         this.ofertySprzedażyRobotników = ofertySprzedażyRobotników;
     }
@@ -27,7 +29,16 @@ public class PodsumowanieDnia {
         }
 
         Produkt produkt = new Produkt(typ, poziom);
-        return średnie.get(produkt);
+        if (średnie.get(produkt) == null) {
+            return cenyZerowe.get(new Produkt(typ, 1));
+        } else {
+            return średnie.get(produkt);
+        }
+    }
+
+    // TODO - standaryzacja
+    public double podajŚredniąCenę(Produkt produkt) {
+        return podajŚredniąCenę(produkt.podajTyp(), produkt.podajPoziom());
     }
 
     public int podajLiczbęOfertSprzedażyRobotników(Symulacja.TypyProduktów produkt) {

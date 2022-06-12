@@ -22,22 +22,26 @@ public abstract class Giełda {
 
     private ZbiórOfertSpekulanta ofertyKupnaSpekulantów = new ZbiórOfertSpekulanta();
     private ZbiórOfertSpekulanta ofertySprzedażySpekulantów = new ZbiórOfertSpekulanta();
+    private TreeMap<Produkt, Double> cenyZerowe;
     private ArrayList <PodsumowanieDnia> historia = new ArrayList<>();
     private ArrayList <OfertaSpekulanta> dokonaneSprzedaże = new ArrayList<>();
 
     private int dzień;
     private int karaZaUbrania; // Nie chcemy, żeby robotnik miał dostęp do całej symulacji.
-    private int[] ileOfertSprzedażySpekulantów = new int[ILE_PRODUKTÓW];
-    private int[] ileOfertSprzedażyRobotników = new int[ILE_PRODUKTÓW];
+    private int[] ileOfertSprzedażySpekulantów;
+    private int[] ileOfertSprzedażyRobotników;
 
     protected Giełda(TreeMap<Produkt, Double> cenyZerowe, int karaZaUbrania) {
         int[] sprzedażDniaZerowego = new int[ILE_PRODUKTÓW];
         Arrays.fill(sprzedażDniaZerowego, 0);
-        PodsumowanieDnia p = new PodsumowanieDnia(cenyZerowe, sprzedażDniaZerowego, sprzedażDniaZerowego);
+        PodsumowanieDnia p = new PodsumowanieDnia(cenyZerowe, cenyZerowe, sprzedażDniaZerowego, sprzedażDniaZerowego);
+
         historia.add(p);
         ileOfertSprzedażyRobotników = sprzedażDniaZerowego;
         ileOfertSprzedażySpekulantów = sprzedażDniaZerowego;
         this.karaZaUbrania = karaZaUbrania;
+        this.cenyZerowe = cenyZerowe;
+        this.dzień = 1;
     }
 
     public int podajKaręZaUbrania() {
@@ -91,13 +95,17 @@ public abstract class Giełda {
         return suma / (dane.length);
     }
 
+    // TODO - ustandaryzować i używać jednej
+    public double podajŚredniąCenęProduktu(int ileDni, Produkt produkt) {
+        return podajŚredniąCenęProduktu(ileDni, produkt.podajTyp(), produkt.podajPoziom());
+    }
+
     public int podajObecnąLiczbęOfertSprzedażyRobotników(Symulacja.TypyProduktów produkt) {
         return ileOfertSprzedażyRobotników[Symulacja.ID_PRODUKTU.get(produkt)];
     }
 
-    public boolean wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, double cena) {
+    public boolean wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, Produkt produkt, double cena) {
         double dostępneDiamenty = ofertaZakupu.podajTwórcę().ileDiamentów();
-        Produkt produkt = ofertaZakupu.podajProdukt();
 
         int zakup = Math.min(ofertaZakupu.podajIle(), ofertaSprzedaży.podajIle());
         zakup = (int) Math.min(zakup, Math.floor(dostępneDiamenty / cena));
@@ -113,6 +121,9 @@ public abstract class Giełda {
 
         ofertaZakupu.zmniejszWielkość(zakup);
         ofertaSprzedaży.zmniejszWielkość(zakup);
+
+        // TODO
+        //System.out.println(ofertaZakupu.podajTwórcę().ileDiamentów() + " " + ofertaSprzedaży.podajTwórcę().ileDiamentów());
 
         return zakup > 0;
     }
@@ -136,9 +147,8 @@ public abstract class Giełda {
             while (oferta.podajIle() > 0 && oferta.typID() == ofertaZakupu.typID()
                    && oferta.podajPoziom() == ofertaZakupu.podajPoziom() &&
                    obecnaPozycja < ofertyKupnaSpekulantów.size()) {
-
                 // Wykonujemy ofertę
-                if (!wykonajOfertę(ofertaZakupu, oferta, ofertaZakupu.podajCenę())) {
+                if (!wykonajOfertę(ofertaZakupu, oferta, ofertaZakupu.podajProdukt(), ofertaZakupu.podajCenę())) {
                     break;
                 }
 
@@ -149,6 +159,8 @@ public abstract class Giełda {
                 }
             }
         }
+
+        // TODO - dwie funkcje
 
         // Zakupy robotników
         for (OfertaRobotnika oferta: ofertyKupnaRobotników) {
@@ -161,8 +173,10 @@ public abstract class Giełda {
 
             while (oferta.podajIle() > 0 && oferta.typID() == ofertaSprzedaży.typID() &&
                    obecnaPozycja < ofertySprzedażySpekulantów.size()) {
+                //System.out.println("Pozycja kupna: " + obecnaPozycja);
+                //System.out.println(oferta.podajTwórcę());
 
-                if(!wykonajOfertę(oferta, ofertaSprzedaży, ofertaSprzedaży.podajCenę())) {
+                if(!wykonajOfertę(oferta, ofertaSprzedaży, ofertaSprzedaży.podajProdukt(), ofertaSprzedaży.podajCenę())) {
                     break;
                 }
 
@@ -179,6 +193,7 @@ public abstract class Giełda {
         for (OfertaRobotnika pozostałeOferty: ofertySprzedażyRobotników) {
             double cena = podajŚredniąCenęProduktu(1, pozostałeOferty.podajTyp(), pozostałeOferty.podajPoziom());
             pozostałeOferty.podajTwórcę().dodajDiamenty(cena * pozostałeOferty.podajIle());
+            pozostałeOferty.podajTwórcę().zużyjProdukty(pozostałeOferty.podajIle(), pozostałeOferty.podajProdukt());
         }
 
         ofertySprzedażyRobotników = new ArrayList<>();
@@ -200,22 +215,25 @@ public abstract class Giełda {
         for (int poziom = 1; poziom <= podajMaksymalnyPoziom(); poziom++) {
             for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
                 Produkt produkt = new Produkt(typ, poziom);
-                if (ile.get(produkt) == 0) {
+                if (ile.get(produkt) == null) {
                     // Cena z dnia zerowego.
                     średnie.put(produkt, podajHistorięOstatnichDni(dzień)[0].podajŚredniąCenę(typ, poziom));
+                } else {
+                    średnie.put(produkt, obrót.get(produkt) / ile.get(produkt));
                 }
-                średnie.put(produkt, obrót.get(produkt) / ile.get(produkt));
             }
         }
 
 
-        historia.add(new PodsumowanieDnia(średnie, ileOfertSprzedażySpekulantów, ileOfertSprzedażyRobotników));
+        historia.add(new PodsumowanieDnia(średnie, cenyZerowe, ileOfertSprzedażySpekulantów, ileOfertSprzedażyRobotników));
 
         // Czyszczenie ofert
         ofertyKupnaRobotników = new ArrayList<>();
         ofertySprzedażyRobotników = new ArrayList<>();
         ofertyKupnaSpekulantów = new ZbiórOfertSpekulanta();
         ofertySprzedażySpekulantów = new ZbiórOfertSpekulanta();
+
+        dzień++;
     }
 
 

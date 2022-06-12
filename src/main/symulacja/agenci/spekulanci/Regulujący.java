@@ -13,24 +13,20 @@ public class Regulujący extends Spekulant {
     }
 
     @Override
-    public void wystawOferty() {
+    public void wystawOfertęProduktu(Produkt produkt) {
         if (this.podajDzień() == 1) {
             return;
         }
 
-        for (int poziom = 1; poziom <= giełda.podajMaksymalnyPoziom(); poziom++) {
-            for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
-                Giełda giełda = this.podajGiełdę();
-                double dzisiaj = giełda.podajObecnąLiczbęOfertSprzedażyRobotników(typ);
-                double wczoraj = giełda.podajHistorięOstatnichDni(1)[0].podajLiczbęOfertSprzedażyRobotników(typ);
+        Giełda giełda = this.podajGiełdę();
+        double dzisiaj = giełda.podajObecnąLiczbęOfertSprzedażyRobotników(produkt.podajTyp());
+        double wczoraj = giełda.podajHistorięOstatnichDni(1)[0].podajLiczbęOfertSprzedażyRobotników(produkt.podajTyp());
 
-                double mnożnik = dzisiaj / Math.max(wczoraj, 1);
-                double cenaBazowa = giełda.podajŚredniąCenęProduktu(1, typ, poziom) * mnożnik;
+        double mnożnik = dzisiaj / Math.max(wczoraj, 1);
+        double cenaBazowa = giełda.podajŚredniąCenęProduktu(1, produkt) * mnożnik;
 
-                this.dodajOfertęKupna(typ, poziom, cenaBazowa, 0.1);
-                this.dodajOfertęSprzedaży(typ, poziom, cenaBazowa, 0.1);
-            }
-        }
+        this.dodajOfertęKupna(produkt, cenaBazowa, 0.1);
+        this.dodajOfertęSprzedaży(produkt, cenaBazowa, 0.1);
 
     }
 }

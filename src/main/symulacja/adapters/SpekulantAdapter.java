@@ -23,9 +23,8 @@ public class SpekulantAdapter {
     }
 
     @ToJson
-    private String toJson(Spekulant robotnik) {
-        // TODO
-        return null;
+    private String toJson(Spekulant spekulant) {
+        return spekulant.toString();
     }
 
     @FromJson

@@ -20,7 +20,7 @@ public class SymulacjaAdapter {
     @ToJson
     private String toJson(Symulacja symulacja) {
         // TODO
-        return null;
+        return symulacja.toString();
     }
 
     @FromJson

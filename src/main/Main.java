@@ -4,9 +4,15 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import main.symulacja.Symulacja;
 import main.symulacja.adapters.*;
+import main.symulacja.komparatory.KomparatorProduktów;
+import main.symulacja.produkty.Produkt;
 import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Main {
     // TODO - konstruktory klas abstrakcyjnych protected
@@ -18,6 +24,33 @@ public class Main {
     // TODO - czy diaxy osobno? wtedy pozbywamy się troche castów
     // TODO - lista produktów bez i z poziomami?
     // TODO - jak najmniej .get, jak najwięcej ileProduktów
+    // TODO - string zamiast enum chyba jest lepsze
+
+    public static String typToString(Symulacja.TypyProduktów typ) {
+        return typ.toString().toLowerCase(Locale.ROOT);
+    }
+
+    public static TreeMap<Produkt, Double> stwórzMapęCen(Map<String, Double> mapa) {
+        TreeMap<Produkt, Double> wynik = new TreeMap<>(new KomparatorProduktów());
+
+        for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
+            wynik.put(new Produkt(typ, 1), mapa.get(typToString(typ)));
+        }
+
+        return wynik;
+    }
+
+    public static ArrayList<TreeMap<Produkt, Double>> stwórzListęMapProduktów(Map<String, Double> mapa) {
+        ArrayList<TreeMap<Produkt, Double>> wynik = new ArrayList();
+        for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
+            TreeMap<Produkt, Double> mapaProduktu = new TreeMap<>(new KomparatorProduktów());
+            mapaProduktu.put(new Produkt(typ, 1), mapa.get(typToString(typ)));
+            wynik.add(mapaProduktu);
+        }
+
+        return wynik;
+    }
+
     private static String readFile(String name) {
         try(BufferedReader br = new BufferedReader(new FileReader(name))) {
             StringBuilder sb = new StringBuilder();
@@ -37,7 +70,7 @@ public class Main {
 
     // TODO - exception
     public static void main(String[] args) throws IOException {
-        String json = readFile("wejście_v_1_0_1.json");
+        String json = readFile("input.json");
         Moshi moshi = new Moshi.Builder()
                 .add(new SymulacjaAdapter())
                 .add(new RobotnikAdapter())
@@ -52,6 +85,9 @@ public class Main {
         JsonAdapter<Symulacja> jsonAdapter = moshi.adapter(Symulacja.class);
         Symulacja symulacja = jsonAdapter.fromJson(json);
         System.out.println(symulacja);
+        symulacja.symuluj();
+        String jsonWyjście = jsonAdapter.toJson(symulacja);
+        System.out.println(jsonWyjście);
 
 
         /*TreeMap<Produkt, Double> ceny = new TreeMap<>(new KomparatorProduktów());

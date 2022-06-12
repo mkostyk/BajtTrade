@@ -24,6 +24,7 @@ public class Chciwy extends StrategiaProdukcji {
 
         assert najlepszyProdukt != null;
         int produktywność = robotnik.podajProduktywność(najlepszyProdukt.podajTyp());
+        System.out.println(najlepszyProdukt + " " + produktywność);
 
         użyjProgramówIWystawProdukty(najlepszyProdukt, produktywność);
     }

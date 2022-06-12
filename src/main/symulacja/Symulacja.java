@@ -2,6 +2,7 @@ package main.symulacja;
 
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
+import main.Main;
 import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.agenci.spekulanci.Spekulant;
 import main.symulacja.fabryka.Fabryka;
@@ -18,8 +19,16 @@ public class Symulacja {
     public static int DZIENNE_ZUŻYCIE_UBRAŃ = 100;
     public static int ILE_PRODUKTÓW = 5;
     public static int ILE_ZAWODÓW = 5;
-    public enum TypyProduktów {NARZĘDZIA, PROGRAMY, JEDZENIE, UBRANIA, DIAMENTY}
+    public enum TypyProduktów {NARZEDZIA, PROGRAMY, JEDZENIE, UBRANIA, DIAMENTY}
     public enum Zawody {INZYNIER, PROGRAMISTA, ROLNIK, RZEMIESLNIK, GORNIK}
+
+    public static Map <String, TypyProduktów> PRODUKT_TO_ENUM = Map.ofEntries(
+            Map.entry("narzedzia", NARZEDZIA),
+            Map.entry("programy", PROGRAMY),
+            Map.entry("jedzenie", JEDZENIE),
+            Map.entry("ubrania", UBRANIA),
+            Map.entry("diamenty", DIAMENTY)
+    );
 
     public static Map <Zawody, Integer> ID_KARIERY = Map.ofEntries(
             Map.entry(INZYNIER, 0),
@@ -30,7 +39,7 @@ public class Symulacja {
             );
 
     public static Map <TypyProduktów, Integer> ID_PRODUKTU = Map.ofEntries(
-            Map.entry(NARZĘDZIA, 0),
+            Map.entry(NARZEDZIA, 0),
             Map.entry(PROGRAMY, 1),
             Map.entry(JEDZENIE, 2),
             Map.entry(UBRANIA, 3),
@@ -46,7 +55,6 @@ public class Symulacja {
     private Giełda giełda;
 
 
-
     public Symulacja (int długosc, String giełda, int kara_za_brak_ubrań, Map<String, Double> ceny,
                       List<Robotnik> robotnicy, List<Spekulant> spekulanci) {
         // TODO
@@ -54,20 +62,38 @@ public class Symulacja {
         this.robotnicy = (ArrayList<Robotnik>) robotnicy;
         this.spekulanci = (ArrayList<Spekulant>) spekulanci;
         // TODO
-        TreeMap<Produkt, Double> cenyZerowe = new TreeMap<Produkt, Double>(new KomparatorProduktów());
+        TreeMap<Produkt, Double> cenyZerowe = Main.stwórzMapęCen(ceny);
         //System.out.println(giełda);
         this.giełda = Fabryka.stwórzGiełdę(giełda, cenyZerowe, kara_za_brak_ubrań);
+
+        for (Robotnik robotnik: this.robotnicy) {
+            robotnik.ustawGiełdę(this.giełda);
+        }
+
+        for (Spekulant spekulant: this.spekulanci) {
+            spekulant.ustawGiełdę(this.giełda);
+        }
     }
 
     private void wypiszDzień() {
-        // TODO
+        System.out.println(this);
     }
 
     private void dzień() {
         // Robotnicy (pkt 1)
+        boolean[] umarł = new boolean[robotnicy.size()];
+        int indeks = 0;
+
         for (Robotnik robotnik: robotnicy) {
             if (!robotnik.przeżyjDzień()) {
-                robotnicy.remove(robotnik);
+                umarł[indeks] = true;
+            }
+            indeks++;
+        }
+
+        for (int i = 0; i < umarł.length; i++) {
+            if(umarł[i]) {
+                robotnicy.remove(i);
             }
         }
 
@@ -76,10 +102,16 @@ public class Symulacja {
             spekulant.wystawOferty();
         }
 
+        giełda.wypisz();
+
         // Giełda (pkt 3 i 4)
         giełda.dopasujOferty();
+
+        giełda.wypisz();
+
         giełda.skupOferty();
         giełda.podsumujDzień();
+
 
         // Zużywanie przedmiotów (pkt 5)
         for (Robotnik robotnik: robotnicy) {
@@ -89,8 +121,8 @@ public class Symulacja {
         wypiszDzień();
     }
 
-    public void symuluj(int dni) {
-        for (int i = 0; i < dni; i++) {
+    public void symuluj() {
+        for (int i = 0; i < długość; i++) {
             dzień();
         }
     }

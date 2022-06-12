@@ -16,18 +16,13 @@ public class Średni extends Spekulant {
 
 
     @Override
-    public void wystawOferty() {
-        for (int poziom = 1; poziom <= giełda.podajMaksymalnyPoziom(); poziom++) {
-            for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
-                Produkt produkt = new Produkt(typ, poziom);
-                double średniaCena = podajGiełdę().podajŚredniąCenęProduktu(ileDni, typ, poziom);
-                if (this.ileProduktów(produkt) == 0) {
-                    this.dodajOfertęKupna(typ, poziom, średniaCena, 0.05);
-                } else {
-                    this.dodajOfertęKupna(typ, poziom, średniaCena, 0.1);
-                    this.dodajOfertęSprzedaży(typ, poziom, średniaCena, 0.1);
-                }
-            }
+    public void wystawOfertęProduktu(Produkt produkt) {
+        double średniaCena = podajGiełdę().podajŚredniąCenęProduktu(ileDni, produkt);
+        if (this.ileProduktów(produkt) == 0) {
+            this.dodajOfertęKupna(produkt, średniaCena, 0.05);
+        } else {
+            this.dodajOfertęKupna(produkt, średniaCena, 0.1);
+            this.dodajOfertęSprzedaży(produkt, średniaCena, 0.1);
         }
     }
 }
