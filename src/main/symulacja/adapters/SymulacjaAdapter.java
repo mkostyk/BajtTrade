@@ -8,8 +8,8 @@ import main.symulacja.agenci.spekulanci.Spekulant;
 import main.symulacja.utils.BazoweInformacje;
 
 import java.util.List;
-import java.util.Map;
 
+@SuppressWarnings("UnusedDeclaration")
 public class SymulacjaAdapter {
     private static class SymulacjaJson {
         private BazoweInformacje info;

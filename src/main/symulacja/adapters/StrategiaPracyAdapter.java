@@ -5,13 +5,14 @@ import com.squareup.moshi.ToJson;
 import main.symulacja.fabryka.Fabryka;
 import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
 
+@SuppressWarnings("UnusedDeclaration")
 public class StrategiaPracyAdapter {
     private static class StrategiaPracyJson {
         private String typ;
-        private int limit_diamentow = -1;
-        private int zapas = -1;
-        private int okres = -1;
-        private int okresowosc_nauki = -1;
+        private int limit_diamentow;
+        private int zapas;
+        private int okres;
+        private int okresowosc_nauki;
     }
 
     @ToJson

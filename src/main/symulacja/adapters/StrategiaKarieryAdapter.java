@@ -4,8 +4,8 @@ import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
 import main.symulacja.fabryka.Fabryka;
 import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
-import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
 
+@SuppressWarnings("UnusedDeclaration")
 public class StrategiaKarieryAdapter {
     private static class StrategiaKarieryJson {
         private String typ;
