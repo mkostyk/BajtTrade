@@ -11,13 +11,10 @@ import java.util.Map;
 
 public abstract class Spekulant extends Agent {
     protected Spekulant(int id, Map<String, Double> zasoby) {
-        // TODO - zasoby
-        this.id = id;
-        this.giełda = giełda;
-        this.produkty = Main.stwórzListęMapProduktów(zasoby); // TODO - wrzucić do Agenta
+        super(id, zasoby);
     }
 
-    public abstract void wystawOfertęProduktu(Produkt produkt);
+    protected abstract void wystawOfertęProduktu(Produkt produkt);
 
     public void wystawOferty() {
         for (int poziom = 1; poziom <= giełda.podajMaksymalnyPoziom(); poziom++) {
@@ -32,7 +29,7 @@ public abstract class Spekulant extends Agent {
         }
     }
 
-    public void dodajOfertęKupna(Produkt produkt, double cenaBazowa, double marża) {
+    protected void dodajOfertęKupna(Produkt produkt, double cenaBazowa, double marża) {
         if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
             return;
         }
@@ -41,12 +38,11 @@ public abstract class Spekulant extends Agent {
         this.podajGiełdę().dodajOfertęKupnaSpekulanta(oferta);
     }
 
-    public void dodajOfertęSprzedaży(Produkt produkt, double cenaBazowa, double marża) {
+    protected void dodajOfertęSprzedaży(Produkt produkt, double cenaBazowa, double marża) {
         if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
             return;
         }
 
-        // TODO - cast bad
         OfertaSpekulanta oferta = new OfertaSpekulanta(produkt, (int) this.ileProduktów(produkt), cenaBazowa * (1 + marża), this);
         this.podajGiełdę().dodajOfertęSprzedażySpekulanta(oferta);
     }

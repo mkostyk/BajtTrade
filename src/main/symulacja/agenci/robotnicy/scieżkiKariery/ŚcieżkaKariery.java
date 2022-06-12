@@ -7,9 +7,8 @@ import java.util.Objects;
 public abstract class ŚcieżkaKariery {
     protected int poziom;
 
-    // TODO - wrzucić do funkcji niżej
-    public int podajBonus(Symulacja.TypyProduktów produkt, Symulacja.Zawody zawód) {
-        if (Objects.equals(Symulacja.ID_PRODUKTU.get(produkt), Symulacja.ID_KARIERY.get(zawód))) {
+    public int podajBonus(Symulacja.TypyProduktów produkt) {
+        if (Objects.equals(Symulacja.ID_PRODUKTU.get(produkt), Symulacja.ID_KARIERY.get(this.podajZawód()))) {
             return switch (poziom) {
                 case 1 -> 50;
                 case 2 -> 150;
@@ -18,10 +17,6 @@ public abstract class ŚcieżkaKariery {
         } else {
             return 0;
         }
-    }
-
-    public int podajBonus(Symulacja.TypyProduktów produkt) {
-        return podajBonus(produkt, this.podajZawód());
     }
 
     public void dodajPoziom() {

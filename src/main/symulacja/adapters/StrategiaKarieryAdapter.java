@@ -13,8 +13,7 @@ public class StrategiaKarieryAdapter {
 
     @ToJson
     private String toJson(StrategiaKariery strategiaKariery) {
-        // TODO
-        return null;
+        return strategiaKariery.toString();
     }
 
     @FromJson

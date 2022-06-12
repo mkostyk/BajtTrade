@@ -1,12 +1,8 @@
 package main.symulacja.utils;
 
-import com.sun.source.tree.Tree;
 import main.symulacja.Symulacja;
-import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.produkty.Produkt;
-
 import java.util.Arrays;
-import java.util.Map;
 import java.util.TreeMap;
 
 public class PodsumowanieDnia {
@@ -64,7 +60,7 @@ public class PodsumowanieDnia {
 
         int id = Symulacja.ID_PRODUKTU.get(produkt);
         return ofertySprzedażyRobotników[id];
-    };
+    }
 
     public int podajLiczbęOfertSprzedaży(Symulacja.TypyProduktów produkt) {
         if (produkt == Symulacja.TypyProduktów.DIAMENTY) {
@@ -73,7 +69,7 @@ public class PodsumowanieDnia {
 
         int id = Symulacja.ID_PRODUKTU.get(produkt);
         return ofertySprzedażyRobotników[id] + ofertySprzedażySpekulantów[id];
-    };
+    }
 
     @Override
     public String toString() {

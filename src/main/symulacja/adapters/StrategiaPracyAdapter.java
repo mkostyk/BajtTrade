@@ -4,7 +4,6 @@ import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
 import main.symulacja.fabryka.Fabryka;
 import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
-import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji;
 
 public class StrategiaPracyAdapter {
     private static class StrategiaPracyJson {
@@ -17,8 +16,7 @@ public class StrategiaPracyAdapter {
 
     @ToJson
     private String toJson(StrategiaPracy praca) {
-        // TODO
-        return null;
+        return praca.toString();
     }
 
     @FromJson

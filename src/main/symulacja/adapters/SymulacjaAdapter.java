@@ -19,14 +19,11 @@ public class SymulacjaAdapter {
 
     @ToJson
     private String toJson(Symulacja symulacja) {
-        // TODO
         return symulacja.toString();
     }
 
     @FromJson
     private Symulacja fromJson(SymulacjaJson symulacja) {
-        // TODO - użyć bazowych informacji
-        return new Symulacja(symulacja.info.podajDługość(), symulacja.info.podajGiełdę(), symulacja.info.podajKaręZaBrakUbrań(),
-                             symulacja.info.podajCeny(), symulacja.robotnicy, symulacja.spekulanci);
+        return new Symulacja(symulacja.info, symulacja.robotnicy, symulacja.spekulanci);
     }
 }

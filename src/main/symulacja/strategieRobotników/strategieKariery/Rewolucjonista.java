@@ -1,7 +1,6 @@
 package main.symulacja.strategieRobotników.strategieKariery;
 
 import main.symulacja.Symulacja;
-import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.utils.PodsumowanieDnia;
 
 import static main.symulacja.Symulacja.ILE_PRODUKTÓW;

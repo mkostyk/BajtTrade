@@ -14,8 +14,7 @@ public class StrategiaKupnaAdapter {
 
     @ToJson
     private String toJson(StrategiaKupna zakupy) {
-        // TODO
-        return null;
+        return zakupy.toString();
     }
 
     @FromJson

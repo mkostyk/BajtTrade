@@ -6,6 +6,7 @@ import main.symulacja.agenci.spekulanci.Spekulant;
 import main.symulacja.fabryka.Fabryka;
 import main.symulacja.giełda.Giełda;
 import main.symulacja.produkty.Produkt;
+import main.symulacja.utils.BazoweInformacje;
 
 import java.util.*;
 
@@ -13,6 +14,7 @@ import static main.symulacja.Symulacja.TypyProduktów.*;
 import static main.symulacja.Symulacja.Zawody.*;
 
 public class Symulacja {
+    // TODO - przerzucić do maina
     public static int DZIENNE_ZUŻYCIE_UBRAŃ = 100;
     public static int ILE_PRODUKTÓW = 5;
     public static int ILE_ZAWODÓW = 5;
@@ -44,16 +46,15 @@ public class Symulacja {
     private final Giełda giełda;
 
 
-    public Symulacja (int długosc, String giełda, int kara_za_brak_ubrań, Map<String, Double> ceny,
-                      List<Robotnik> robotnicy, List<Spekulant> spekulanci) {
+    public Symulacja (BazoweInformacje info, List<Robotnik> robotnicy, List<Spekulant> spekulanci) {
         // TODO
-        this.długość = długosc;
+        this.długość = info.podajDługość();
         this.robotnicy = (ArrayList<Robotnik>) robotnicy;
         this.spekulanci = (ArrayList<Spekulant>) spekulanci;
         // TODO
-        TreeMap<Produkt, Double> cenyZerowe = Main.stwórzMapęCen(ceny);
+        TreeMap<Produkt, Double> cenyZerowe = Main.stwórzMapęCen(info.podajCeny());
         //System.out.println(giełda);
-        this.giełda = Fabryka.stwórzGiełdę(giełda, cenyZerowe, kara_za_brak_ubrań);
+        this.giełda = Fabryka.stwórzGiełdę(info.podajGiełdę(), cenyZerowe, info.podajKaręZaBrakUbrań());
 
         for (Robotnik robotnik: this.robotnicy) {
             robotnik.ustawGiełdę(this.giełda);

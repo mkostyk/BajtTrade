@@ -14,9 +14,8 @@ public class Średni extends Spekulant {
         this.ileDni = ileDni;
     }
 
-
     @Override
-    public void wystawOfertęProduktu(Produkt produkt) {
+    protected void wystawOfertęProduktu(Produkt produkt) {
         double średniaCena = podajGiełdę().podajŚredniąCenęProduktu(ileDni, produkt);
         if (this.ileProduktów(produkt) == 0) {
             this.dodajOfertęKupna(produkt, średniaCena, 0.05);

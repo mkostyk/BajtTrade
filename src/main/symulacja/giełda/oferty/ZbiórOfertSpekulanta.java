@@ -7,15 +7,20 @@ import java.util.*;
 
 import static main.symulacja.Symulacja.INFINITY;
 
+/*
+    ArrayList, ale z dodatkowymi opcjami.
+ */
 public class ZbiórOfertSpekulanta {
-    private ArrayList<OfertaSpekulanta> listaOfert = new ArrayList<>();
+    private final ArrayList<OfertaSpekulanta> listaOfert = new ArrayList<>();
 
     public int znajdźNajlepsząOfertęKupna(OfertaRobotnika oferta) {
+        // Cena INFINITY gwarantuje, że znajdziemy najwyższą cenę za którą możemy sprzedać produkty.
         OfertaSpekulanta tmp = new OfertaSpekulanta(oferta.produkt, oferta.podajIle(), INFINITY, oferta.podajTwórcę());
-        return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertKupnaSpekulantów()) + 2); // TODO nie jestem pewien tego +2
+        return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertKupnaSpekulantów()) + 2);
     }
 
     public int znajdźNajlepsząOfertęSprzedaży(OfertaRobotnika oferta) {
+        // Analogicznie cena 0 gwarantuje znalezienie najniższej ceny.
         OfertaSpekulanta tmp = new OfertaSpekulanta(oferta.produkt, oferta.podajIle(), 0, oferta.podajTwórcę());
         return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertSprzedażySpekulantów()) + 2);
     }

@@ -15,13 +15,9 @@ import java.util.TreeMap;
 
 public class Main {
     // TODO - widoczności
-    // TODO - konstruktory klas abstrakcyjnych protected
     // TODO - produkty czy enum produktów?
-    // TODO - konstruktory in general
     // TODO - zgadzające się nazwy parametrów
     // TODO - kolejność produktów
-    // TODO - czy diaxy osobno? wtedy pozbywamy się troche castów
-    // TODO - lista produktów bez i z poziomami?
     // TODO - jak najmniej .get, jak najwięcej ileProduktów
     // TODO - string zamiast enum chyba jest lepsze
 

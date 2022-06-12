@@ -15,8 +15,7 @@ public class StrategiaProdukcjiAdapter {
 
     @ToJson
     private String toJson(StrategiaProdukcji produkcja) {
-        // TODO
-        return null;
+        return produkcja.toString();
     }
 
     @FromJson

@@ -13,8 +13,8 @@ public class Regulujący extends Spekulant {
     }
 
     @Override
-    public void wystawOfertęProduktu(Produkt produkt) {
-        if (this.podajDzień() == 1) {
+    protected void wystawOfertęProduktu(Produkt produkt) {
+        if (podajGiełdę().podajDzień() == 1) {
             return;
         }
 

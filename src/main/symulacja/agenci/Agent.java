@@ -1,20 +1,25 @@
 package main.symulacja.agenci;
 
+import main.Main;
 import main.symulacja.Symulacja;
 import main.symulacja.giełda.Giełda;
-import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.produkty.Produkt;
 
-import static main.symulacja.Symulacja.ILE_PRODUKTÓW;
 import static main.symulacja.Symulacja.TypyProduktów.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 public abstract class Agent {
-    protected ArrayList<TreeMap<Produkt, Double>> produkty = new ArrayList<>(); // TODO - FIX
+    protected ArrayList<TreeMap<Produkt, Double>> produkty;
     protected Giełda giełda;
     protected int id;
+
+    protected Agent(int id, Map<String, Double> produkty) {
+        this.id = id;
+        this.produkty = Main.stwórzListęMapProduktów(produkty);
+    }
 
     public void ustawGiełdę(Giełda giełda) {
         this.giełda = giełda;
@@ -68,7 +73,7 @@ public abstract class Agent {
     }
     public int podajID() {
         return id;
-    };
+    }
 
     @Override
     public String toString() {

@@ -11,12 +11,12 @@ import java.util.TreeMap;
 
 public abstract class StrategiaProdukcji extends Strategia {
     public abstract void wyprodukuj();
-    public void użyjProgramówIWystawProdukty(Produkt produkt, int ile) {
+    protected void użyjProgramówIWystawProdukty(Produkt produkt, int ile) {
         System.out.println(produkt + " " + ile);
         robotnik.ustawDzisiejsząProdukcję(ile);
         if (produkt.podajTyp() == JEDZENIE || produkt.podajTyp() == DIAMENTY) {
             robotnik.dodajProdukty(ile, produkt);
-            wystawProdukty(produkt, ile);
+            wystawProdukty(ile, produkt);
             return;
         }
 
@@ -27,9 +27,9 @@ public abstract class StrategiaProdukcji extends Strategia {
             Produkt nowyProdukt = new Produkt(produkt.podajTyp(), program.podajPoziom());
 
             programy.put(program, programy.get(program) - zużyte);
-            robotnik.dodajProdukty(zużyte, nowyProdukt); // TODO - zamiana argumentów
+            robotnik.dodajProdukty(zużyte, nowyProdukt);
             robotnik.zużyjProdukty(zużyte, program);
-            wystawProdukty(nowyProdukt, zużyte);
+            wystawProdukty(zużyte, nowyProdukt);
             ileZużytychProgramów += zużyte;
 
             if (ileZużytychProgramów >= ile) {
@@ -38,10 +38,10 @@ public abstract class StrategiaProdukcji extends Strategia {
         }
 
         robotnik.dodajProdukty(ile - ileZużytychProgramów, produkt);
-        wystawProdukty(produkt, ile - ileZużytychProgramów);
+        wystawProdukty(ile - ileZużytychProgramów, produkt);
     }
 
-    private void wystawProdukty(Produkt produkt, int ile) {
+    private void wystawProdukty(int ile, Produkt produkt) {
         if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
             robotnik.dodajDiamenty(ile);
             //robotnik.dodajProdukty(ile, produkt);

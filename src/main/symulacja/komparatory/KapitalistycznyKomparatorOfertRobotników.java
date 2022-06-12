@@ -4,6 +4,8 @@ import main.symulacja.giełda.oferty.OfertaRobotnika;
 
 import java.util.Comparator;
 
+// TODO - komparatory do kminy i poprawki bo są zjebane
+
 public class KapitalistycznyKomparatorOfertRobotników implements Comparator<OfertaRobotnika> {
     public int compare(OfertaRobotnika pierwszaOferta, OfertaRobotnika drugaOferta) {
         // Sortowanie po diamentach - malejąco

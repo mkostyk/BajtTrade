@@ -1,7 +1,5 @@
 package main.symulacja.strategieRobotników.strategiePracy;
 
-import main.symulacja.agenci.robotnicy.Robotnik;
-
 import static main.symulacja.Symulacja.TypyProduktów.*;
 
 public class Student extends StrategiaPracy {

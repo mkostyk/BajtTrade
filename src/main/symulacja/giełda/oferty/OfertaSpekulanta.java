@@ -4,7 +4,7 @@ import main.symulacja.agenci.Agent;
 import main.symulacja.produkty.Produkt;
 
 public class OfertaSpekulanta extends Oferta {
-    private double cena;
+    private final double cena;
 
     public OfertaSpekulanta (Produkt produkt, int ile, double cena, Agent twórca) {
         super(produkt, ile, twórca);
@@ -23,10 +23,8 @@ public class OfertaSpekulanta extends Oferta {
     @Override
     public String toString() {
         return "OfertaSpekulanta{" +
-                "produkt=" + produkt +
-                ", ile=" + this.podajIle() +
-                ", twórca=" + this.podajTwórcę() +
-                ", cena=" + cena +
+                super.toString() + ", " +
+                "cena=" + cena +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package main.symulacja.giełda;
 
+import com.sun.source.tree.Tree;
 import main.symulacja.Symulacja;
 import main.symulacja.giełda.oferty.Oferta;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
@@ -24,7 +25,7 @@ public abstract class Giełda {
     private ZbiórOfertSpekulanta ofertySprzedażySpekulantów = new ZbiórOfertSpekulanta();
     private final TreeMap<Produkt, Double> cenyZerowe;
     private final ArrayList <PodsumowanieDnia> historia = new ArrayList<>();
-    private final ArrayList <OfertaSpekulanta> dokonaneSprzedaże = new ArrayList<>();
+    private ArrayList <OfertaSpekulanta> dokonaneSprzedaże = new ArrayList<>();
 
     private int dzień;
     private final int karaZaUbrania; // Nie chcemy, żeby robotnik miał dostęp do całej symulacji.
@@ -231,7 +232,7 @@ public abstract class Giełda {
                     średnie.put(produkt, podajHistorięOstatnichDni(dzień)[0].podajŚredniąCenę(typ, poziom));
                 } else {
                     średnie.put(produkt, obrót.get(produkt) / ile.get(produkt));
-                    //System.out.println(produkt + " " + obrót.get(produkt) + " " + ile.get(produkt) + " " + obrót.get(produkt) / ile.get(produkt));
+                    System.out.println(produkt + " " + obrót.get(produkt) + " " + ile.get(produkt) + " " + obrót.get(produkt) / ile.get(produkt));
                 }
             }
         }
@@ -244,6 +245,7 @@ public abstract class Giełda {
         ofertySprzedażyRobotników = new ArrayList<>();
         ofertyKupnaSpekulantów = new ZbiórOfertSpekulanta();
         ofertySprzedażySpekulantów = new ZbiórOfertSpekulanta();
+        dokonaneSprzedaże = new ArrayList<>();
 
         dzień++;
     }

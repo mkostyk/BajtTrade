@@ -1,22 +1,19 @@
 package main.symulacja.utils;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 public class BazoweInformacje {
-    private int dlugosc;
-    private int kara_za_brak_ubran;
+    private final int dlugosc;
+    private final int kara_za_brak_ubran;
     private Map<String, Double> ceny;
     private String gielda;
 
-    public BazoweInformacje(int dlugosc, int kara_za_brak_ubran, Map<String, Double> ceny) {
+    public BazoweInformacje(int dlugosc, int kara_za_brak_ubran, Map<String, Double> ceny, String gielda) {
         this.dlugosc = dlugosc;
         this.kara_za_brak_ubran = kara_za_brak_ubran;
-
-        // TODO - ceny bazowe
+        this.ceny = ceny;
+        this.gielda = gielda;
     }
-
-    // TODO
 
     public int podajDługość() {
         return dlugosc;

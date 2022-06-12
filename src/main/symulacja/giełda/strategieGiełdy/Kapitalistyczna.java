@@ -1,7 +1,6 @@
 package main.symulacja.giełda.strategieGiełdy;
 
 import main.symulacja.giełda.Giełda;
-import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.komparatory.KapitalistycznyKomparatorOfertRobotników;
 import main.symulacja.produkty.Produkt;
 
@@ -14,9 +13,7 @@ public class Kapitalistyczna extends Giełda {
 
     @Override
     public void posortujOferty() {
-        //System.out.println("Sortowanie: " + ofertyKupnaRobotników);
         ofertyKupnaRobotników.sort(new KapitalistycznyKomparatorOfertRobotników());
         ofertySprzedażyRobotników.sort(new KapitalistycznyKomparatorOfertRobotników());
-        //System.out.println(ofertyKupnaRobotników);
     }
 }

@@ -14,7 +14,7 @@ public class Wypukły extends Spekulant {
     }
 
     @Override
-    public void wystawOfertęProduktu(Produkt produkt) {
+    protected void wystawOfertęProduktu(Produkt produkt) {
         if (giełda.podajDzień() < 3) {
             return;
         }

@@ -1,6 +1,5 @@
 package main.symulacja.strategieRobotników.strategieKupna;
 
-import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
 
 import static main.symulacja.Symulacja.TypyProduktów.*;

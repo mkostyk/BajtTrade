@@ -14,8 +14,7 @@ public class Zrównoważona extends Giełda {
 
     @Override
     public void posortujOferty() {
-        // TODO - od którego zaczynamy?
-        if (this.podajDzień() % 2 == 0) {
+        if (this.podajDzień() % 2 == 1) {
             ofertyKupnaRobotników.sort(new SocjalistycznyKomparatorOfertRobotników());
             ofertySprzedażyRobotników.sort(new SocjalistycznyKomparatorOfertRobotników());
         } else {

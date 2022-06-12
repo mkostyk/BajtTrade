@@ -7,15 +7,14 @@ import main.symulacja.agenci.robotnicy.scieżkiKariery.ŚcieżkaKariery;
 import main.symulacja.fabryka.Fabryka;
 
 public class ŚcieżkaKarieryAdapter {
-    private class ŚcieżkaKarieryJson {
+    private static class ŚcieżkaKarieryJson {
         private String typ;
         private int poziom = 0;
     }
 
     @ToJson
     private String toJson(ŚcieżkaKariery kariera) {
-        // TODO
-        return null;
+        return kariera.toString();
     }
 
     @FromJson

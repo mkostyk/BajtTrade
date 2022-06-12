@@ -9,14 +9,13 @@ public abstract class Oferta {
     private int ile;
     private final Agent twórca;
 
-    public Oferta(Produkt produkt, int ile, Agent twórca) {
+    protected Oferta(Produkt produkt, int ile, Agent twórca) {
         this.produkt = produkt;
         this.ile = ile;
         this.twórca = twórca;
     }
 
-    // TODO
-    public Oferta(Produkt produkt, int ile) {
+    protected Oferta(Produkt produkt, int ile) {
         this.produkt = produkt;
         this.ile = ile;
         this.twórca = null;
@@ -25,12 +24,11 @@ public abstract class Oferta {
     public int podajIle() {
         return ile;
     }
-    public Symulacja.TypyProduktów podajTyp() {
-        return produkt.podajTyp();
-    }
+
     public int podajPoziom() {
         return produkt.podajPoziom();
     }
+
     public Produkt podajProdukt() {
         return produkt;
     }
@@ -42,14 +40,16 @@ public abstract class Oferta {
     public int typID() {
         return Symulacja.ID_PRODUKTU.get(produkt.podajTyp());
     }
+
     public Agent podajTwórcę() {return twórca;}
 
     @Override
     public String toString() {
+        assert twórca != null;
         return "Oferta{" +
                 "produkt=" + produkt +
                 ", ile=" + ile +
-                ", twórca=" + twórca +
+                ", twórca=" + twórca.podajID() +
                 '}';
     }
 }

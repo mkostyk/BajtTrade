@@ -15,7 +15,6 @@ public class KomparatorProduktów implements Comparator<Produkt> {
             return -1;
         }
 
-        // TODO - w którą stronę
         if (pierwszyProdukt.podajWytrzymałość() > drugiProdukt.podajWytrzymałość()) {
             return 1;
         } else if (drugiProdukt.podajWytrzymałość() > pierwszyProdukt.podajWytrzymałość()) {

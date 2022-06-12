@@ -34,11 +34,11 @@ public class Robotnik extends Agent {
     public Robotnik (int idRobotnika, int poziom, String kariera, StrategiaKupna strategiaKupna,
                      StrategiaProdukcji strategiaProdukcji, StrategiaPracy strategiaPracy, String strategiaKariery,
                      Map<String, Integer> produktywność, Map<String, Double> zasoby) {
-
+        super(idRobotnika, zasoby);
         this.ścieżki = new ŚcieżkaKariery[ILE_ZAWODÓW];
         for (Symulacja.Zawody zawód: Symulacja.Zawody.values()) {
             int id = Symulacja.ID_KARIERY.get(zawód);
-            // TODO - temp fix
+            // TODO - temp fix stringa
 
             if (Objects.equals(kariera, zawód.toString().toLowerCase(Locale.ROOT))) {
                 this.ścieżki[id] = Fabryka.stwórzŚcieżkęKariery(kariera, poziom);
@@ -52,13 +52,9 @@ public class Robotnik extends Agent {
         this.strategiaKupna = strategiaKupna;
         this.strategiaPracy = strategiaPracy;
         this.strategiaProdukcji = strategiaProdukcji;
-        this.id = idRobotnika;
-        this.giełda = giełda;
-        // TODO
         this.produktywność = produktywność;
         this.licznikGłodu = 0;
         this.produkcjaWObecnejTurze = 0;
-        this.produkty = Main.stwórzListęMapProduktów(zasoby); // TODO - wrzucić do Agenta
 
         this.strategiaKariery.ustawRobotnika(this);
         this.strategiaKupna.ustawRobotnika(this);
@@ -95,7 +91,7 @@ public class Robotnik extends Agent {
         return Math.max(0, ileUbrań);
     };
 
-    public int sumaUbrań() {
+    private int sumaUbrań() {
         int ileUbrań = 0;
         TreeMap<Produkt, Double> ubrania = podajProdukty(UBRANIA);
 
@@ -126,6 +122,7 @@ public class Robotnik extends Agent {
         return wynik;
     }
 
+    // BONUSY
     private int podajBonusZNarzędzi() {
         int bonus = 0;
         TreeMap<Produkt, Double> narzędzia = produkty.get(Symulacja.ID_PRODUKTU.get(NARZEDZIA));
@@ -155,7 +152,6 @@ public class Robotnik extends Agent {
         }
     }
 
-    // TODO - narzędzia są zjebane
     private void policzProduktywność() {
         for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
             String typString = typ.toString().toLowerCase(Locale.ROOT);
@@ -168,7 +164,7 @@ public class Robotnik extends Agent {
     public void pracuj() {
         policzProduktywność();
         strategiaProdukcji.wyprodukuj();
-        // TODO - wyprodukowane rzeczy znikną zaraz
+        zużyjNarzędzia();
         strategiaKupna.dokonajZakupów();
 
         czyPracował = true;
@@ -185,20 +181,6 @@ public class Robotnik extends Agent {
         }
 
         czyPracował = false;
-    }
-
-    public boolean przeżyjDzień() {
-        if (licznikGłodu == 3) {
-            return false;
-        }
-
-        if (strategiaPracy.czyPracuje()) {
-            pracuj();
-        } else {
-            uczSię();
-        }
-
-        return true;
     }
 
     private void zużyjJedzenie() {
@@ -242,7 +224,7 @@ public class Robotnik extends Agent {
         produkty.set(Symulacja.ID_PRODUKTU.get(UBRANIA), ubraniaKopia);
     }
 
-    public void zużyjNarzędzia() {
+    private void zużyjNarzędzia() {
         // Wyrzucamy wszystko tworząc nową mapę
         produkty.set(Symulacja.ID_PRODUKTU.get(NARZEDZIA), new TreeMap<>(new KomparatorProduktów()));
     }
@@ -252,11 +234,24 @@ public class Robotnik extends Agent {
         if (czyPracował) {
             zużyjJedzenie();
             zużyjUbrania();
-            zużyjNarzędzia();
-            // Programy komputerowe są zużywane na bieżąco podczas produkcji
+            // Narzędzia i programy komputerowe są zużywane na bieżąco podczas produkcji
+            // dla uproszczenia kodu.
         }
     };
 
+    public boolean przeżyjDzień() {
+        if (licznikGłodu == 3) {
+            return false;
+        }
+
+        if (strategiaPracy.czyPracuje()) {
+            pracuj();
+        } else {
+            uczSię();
+        }
+
+        return true;
+    }
     @Override
     public String toString() {
         return "Robotnik{" +
