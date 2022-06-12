@@ -6,7 +6,6 @@ import main.symulacja.Symulacja;
 import main.symulacja.adapters.*;
 import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.produkty.Produkt;
-import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,12 +14,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Main {
+    // TODO - widoczności
     // TODO - konstruktory klas abstrakcyjnych protected
     // TODO - produkty czy enum produktów?
     // TODO - konstruktory in general
-    // TODO - JSON
     // TODO - zgadzające się nazwy parametrów
-    // TODO - kolejność
+    // TODO - kolejność produktów
     // TODO - czy diaxy osobno? wtedy pozbywamy się troche castów
     // TODO - lista produktów bez i z poziomami?
     // TODO - jak najmniej .get, jak najwięcej ileProduktów
@@ -41,7 +40,7 @@ public class Main {
     }
 
     public static ArrayList<TreeMap<Produkt, Double>> stwórzListęMapProduktów(Map<String, Double> mapa) {
-        ArrayList<TreeMap<Produkt, Double>> wynik = new ArrayList();
+        ArrayList<TreeMap<Produkt, Double>> wynik = new ArrayList<>();
         for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
             TreeMap<Produkt, Double> mapaProduktu = new TreeMap<>(new KomparatorProduktów());
             mapaProduktu.put(new Produkt(typ, 1), mapa.get(typToString(typ)));
@@ -51,8 +50,9 @@ public class Main {
         return wynik;
     }
 
-    private static String readFile(String name) {
-        try(BufferedReader br = new BufferedReader(new FileReader(name))) {
+    // TODO - nazwy po polsku
+    private static String readFile() {
+        try(BufferedReader br = new BufferedReader(new FileReader("input.json"))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -70,7 +70,9 @@ public class Main {
 
     // TODO - exception
     public static void main(String[] args) throws IOException {
-        String json = readFile("input.json");
+        String json = readFile();
+        assert json != null;
+
         Moshi moshi = new Moshi.Builder()
                 .add(new SymulacjaAdapter())
                 .add(new RobotnikAdapter())
@@ -84,7 +86,9 @@ public class Main {
 
         JsonAdapter<Symulacja> jsonAdapter = moshi.adapter(Symulacja.class);
         Symulacja symulacja = jsonAdapter.fromJson(json);
+        assert symulacja != null;
         System.out.println(symulacja);
+
         symulacja.symuluj();
         String jsonWyjście = jsonAdapter.toJson(symulacja);
         System.out.println(jsonWyjście);

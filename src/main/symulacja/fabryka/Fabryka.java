@@ -40,7 +40,6 @@ public class Fabryka {
         };
     }
 
-
     // STRATEGIE KUPNA
 
     public static StrategiaKupna stwórzStrategięKupna(String strategia, int ile_narzędzi) {

@@ -28,8 +28,8 @@ public class Robotnik extends Agent {
     private Map<String, Integer> produktywność;
     private int produkcjaWObecnejTurze;
     private int licznikGłodu;
-    private boolean czySięUbrał;
     private boolean czyPracował;
+    private int ileUbrań;
 
     public Robotnik (int idRobotnika, int poziom, String kariera, StrategiaKupna strategiaKupna,
                      StrategiaProdukcji strategiaProdukcji, StrategiaPracy strategiaPracy, String strategiaKariery,
@@ -57,7 +57,6 @@ public class Robotnik extends Agent {
         // TODO
         this.produktywność = produktywność;
         this.licznikGłodu = 0;
-        this.czySięUbrał = true;
         this.produkcjaWObecnejTurze = 0;
         this.produkty = Main.stwórzListęMapProduktów(zasoby); // TODO - wrzucić do Agenta
 
@@ -96,6 +95,17 @@ public class Robotnik extends Agent {
         return Math.max(0, ileUbrań);
     };
 
+    public int sumaUbrań() {
+        int ileUbrań = 0;
+        TreeMap<Produkt, Double> ubrania = podajProdukty(UBRANIA);
+
+        for (Produkt ubranie: ubrania.keySet()) {
+            ileUbrań += ileProduktów(ubranie);
+        }
+
+        return ileUbrań;
+    }
+
     public int ileProgramówBrakuje() {
         int ileProgramów = 0;
         TreeMap<Produkt, Double> programy = podajProdukty(PROGRAMY);
@@ -105,7 +115,7 @@ public class Robotnik extends Agent {
         }
 
         return Math.max(0, produkcjaWObecnejTurze - ileProgramów);
-    };
+    }
 
     public int[] podajPoziomyŚcieżek() {
         int[] wynik = new int[ILE_ZAWODÓW];
@@ -137,10 +147,11 @@ public class Robotnik extends Agent {
     }
 
     private int podajBonusZUbrań() {
-        if (czySięUbrał) {
+        System.out.println(sumaUbrań());
+        if (sumaUbrań() >= 100) {
             return 0;
         } else {
-            return -this.podajGiełdę().podajKaręZaUbrania();
+            return -podajGiełdę().podajKaręZaUbrania();
         }
     }
 
@@ -157,6 +168,7 @@ public class Robotnik extends Agent {
     public void pracuj() {
         policzProduktywność();
         strategiaProdukcji.wyprodukuj();
+        // TODO - wyprodukowane rzeczy znikną zaraz
         strategiaKupna.dokonajZakupów();
 
         czyPracował = true;
@@ -226,8 +238,6 @@ public class Robotnik extends Agent {
             }
         }
 
-        czySięUbrał = licznikZużytych >= 100;
-
         // Podmieniamy mapę.
         produkty.set(Symulacja.ID_PRODUKTU.get(UBRANIA), ubraniaKopia);
     }
@@ -262,7 +272,6 @@ public class Robotnik extends Agent {
                 ", produktywność=" + produktywność +
                 ", produkcjaWObecnejTurze=" + produkcjaWObecnejTurze +
                 ", licznikGłodu=" + licznikGłodu +
-                ", czySięUbrał=" + czySięUbrał +
                 '}';
     }
 }

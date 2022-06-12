@@ -12,6 +12,7 @@ import java.util.TreeMap;
 public abstract class StrategiaProdukcji extends Strategia {
     public abstract void wyprodukuj();
     public void użyjProgramówIWystawProdukty(Produkt produkt, int ile) {
+        System.out.println(produkt + " " + ile);
         robotnik.ustawDzisiejsząProdukcję(ile);
         if (produkt.podajTyp() == JEDZENIE || produkt.podajTyp() == DIAMENTY) {
             robotnik.dodajProdukty(ile, produkt);

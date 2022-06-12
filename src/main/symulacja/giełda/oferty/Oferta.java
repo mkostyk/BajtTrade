@@ -15,6 +15,13 @@ public abstract class Oferta {
         this.twórca = twórca;
     }
 
+    // TODO
+    public Oferta(Produkt produkt, int ile) {
+        this.produkt = produkt;
+        this.ile = ile;
+        this.twórca = null;
+    }
+
     public int podajIle() {
         return ile;
     }

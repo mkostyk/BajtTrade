@@ -11,10 +11,10 @@ import main.symulacja.utils.PodsumowanieDnia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.TreeMap;
 
 import static main.symulacja.Symulacja.ILE_PRODUKTÓW;
+import static main.symulacja.Symulacja.INFINITY;
 
 public abstract class Giełda {
     protected ArrayList <OfertaRobotnika> ofertyKupnaRobotników = new ArrayList<>();
@@ -22,19 +22,19 @@ public abstract class Giełda {
 
     private ZbiórOfertSpekulanta ofertyKupnaSpekulantów = new ZbiórOfertSpekulanta();
     private ZbiórOfertSpekulanta ofertySprzedażySpekulantów = new ZbiórOfertSpekulanta();
-    private TreeMap<Produkt, Double> cenyZerowe;
-    private ArrayList <PodsumowanieDnia> historia = new ArrayList<>();
-    private ArrayList <OfertaSpekulanta> dokonaneSprzedaże = new ArrayList<>();
+    private final TreeMap<Produkt, Double> cenyZerowe;
+    private final ArrayList <PodsumowanieDnia> historia = new ArrayList<>();
+    private final ArrayList <OfertaSpekulanta> dokonaneSprzedaże = new ArrayList<>();
 
     private int dzień;
-    private int karaZaUbrania; // Nie chcemy, żeby robotnik miał dostęp do całej symulacji.
-    private int[] ileOfertSprzedażySpekulantów;
-    private int[] ileOfertSprzedażyRobotników;
+    private final int karaZaUbrania; // Nie chcemy, żeby robotnik miał dostęp do całej symulacji.
+    private final int[] ileOfertSprzedażySpekulantów;
+    private final int[] ileOfertSprzedażyRobotników;
 
     protected Giełda(TreeMap<Produkt, Double> cenyZerowe, int karaZaUbrania) {
         int[] sprzedażDniaZerowego = new int[ILE_PRODUKTÓW];
         Arrays.fill(sprzedażDniaZerowego, 0);
-        PodsumowanieDnia p = new PodsumowanieDnia(cenyZerowe, cenyZerowe, sprzedażDniaZerowego, sprzedażDniaZerowego);
+        PodsumowanieDnia p = new PodsumowanieDnia(cenyZerowe, cenyZerowe, sprzedażDniaZerowego, sprzedażDniaZerowego, cenyZerowe);
 
         historia.add(p);
         ileOfertSprzedażyRobotników = sprzedażDniaZerowego;
@@ -84,6 +84,10 @@ public abstract class Giełda {
         return Arrays.copyOfRange(tablicaHistorii, początkowyDzień, końcowyDzień + 1);
     }
 
+    private double podajNajniższąCenęProduktu(Produkt produkt) {
+        return podajHistorięOstatnichDni(1)[0].podajNajniższąCenę(produkt);
+    }
+
     public double podajŚredniąCenęProduktu(int ileDni, Symulacja.TypyProduktów typ, int poziom) {
         double suma = 0;
         PodsumowanieDnia[] dane = podajHistorięOstatnichDni(ileDni);
@@ -122,15 +126,16 @@ public abstract class Giełda {
         ofertaZakupu.zmniejszWielkość(zakup);
         ofertaSprzedaży.zmniejszWielkość(zakup);
 
-        // TODO
-        //System.out.println(ofertaZakupu.podajTwórcę().ileDiamentów() + " " + ofertaSprzedaży.podajTwórcę().ileDiamentów());
+        dokonaneSprzedaże.add(new OfertaSpekulanta(produkt, zakup, cena));
 
         return zakup > 0;
     }
 
 
     public void dopasujOferty() {
+        wypisz();
         posortujOferty();
+        wypisz();
         ofertyKupnaSpekulantów.posortujOferty();
         ofertySprzedażySpekulantów.posortujOferty();
 
@@ -160,7 +165,7 @@ public abstract class Giełda {
             }
         }
 
-        // TODO - dwie funkcje
+        // TODO - funkcja
 
         // Zakupy robotników
         for (OfertaRobotnika oferta: ofertyKupnaRobotników) {
@@ -191,7 +196,7 @@ public abstract class Giełda {
 
     public void skupOferty() {
         for (OfertaRobotnika pozostałeOferty: ofertySprzedażyRobotników) {
-            double cena = podajŚredniąCenęProduktu(1, pozostałeOferty.podajTyp(), pozostałeOferty.podajPoziom());
+            double cena = podajNajniższąCenęProduktu(pozostałeOferty.podajProdukt());
             pozostałeOferty.podajTwórcę().dodajDiamenty(cena * pozostałeOferty.podajIle());
             pozostałeOferty.podajTwórcę().zużyjProdukty(pozostałeOferty.podajIle(), pozostałeOferty.podajProdukt());
         }
@@ -203,13 +208,19 @@ public abstract class Giełda {
         TreeMap<Produkt, Double> obrót = new TreeMap<>(new KomparatorProduktów());
         TreeMap<Produkt, Double> ile = new TreeMap<>(new KomparatorProduktów());
         TreeMap<Produkt, Double> średnie = new TreeMap<>(new KomparatorProduktów());
+        TreeMap<Produkt, Double> najniższeCeny = new TreeMap<>(new KomparatorProduktów());
 
         for (OfertaSpekulanta oferta: dokonaneSprzedaże) {
             double wzrostObrotu = oferta.podajIle() * oferta.podajCenę();
             Produkt produkt = oferta.podajProdukt();
 
+            obrót.putIfAbsent(produkt, 0.0);
+            ile.putIfAbsent(produkt, 0.0);
+            najniższeCeny.putIfAbsent(produkt, INFINITY);
+
             obrót.put(produkt, obrót.get(produkt) + wzrostObrotu);
             ile.put(produkt, ile.get(produkt) + oferta.podajIle());
+            najniższeCeny.put(produkt, Math.min(najniższeCeny.get(produkt), oferta.podajCenę()));
         }
 
         for (int poziom = 1; poziom <= podajMaksymalnyPoziom(); poziom++) {
@@ -220,12 +231,13 @@ public abstract class Giełda {
                     średnie.put(produkt, podajHistorięOstatnichDni(dzień)[0].podajŚredniąCenę(typ, poziom));
                 } else {
                     średnie.put(produkt, obrót.get(produkt) / ile.get(produkt));
+                    //System.out.println(produkt + " " + obrót.get(produkt) + " " + ile.get(produkt) + " " + obrót.get(produkt) / ile.get(produkt));
                 }
             }
         }
 
 
-        historia.add(new PodsumowanieDnia(średnie, cenyZerowe, ileOfertSprzedażySpekulantów, ileOfertSprzedażyRobotników));
+        historia.add(new PodsumowanieDnia(średnie, cenyZerowe, ileOfertSprzedażySpekulantów, ileOfertSprzedażyRobotników, najniższeCeny));
 
         // Czyszczenie ofert
         ofertyKupnaRobotników = new ArrayList<>();

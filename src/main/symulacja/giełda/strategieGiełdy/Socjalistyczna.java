@@ -14,5 +14,6 @@ public class Socjalistyczna extends Giełda {
     @Override
     public void posortujOferty() {
         ofertyKupnaRobotników.sort(new SocjalistycznyKomparatorOfertRobotników());
+        ofertySprzedażyRobotników.sort(new SocjalistycznyKomparatorOfertRobotników());
     }
 }

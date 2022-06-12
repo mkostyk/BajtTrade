@@ -9,8 +9,8 @@ import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji
 public class StrategiaProdukcjiAdapter {
     private static class StrategiaProdukcjiJson {
         private String typ;
-        private final int historia_sredniej_produkcji = -1;
-        private final int historia_perspektywy = -1;
+        private int historia_sredniej_produkcji = -1;
+        private int historia_perspektywy = -1;
     }
 
     @ToJson

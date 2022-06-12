@@ -11,15 +11,19 @@ import java.util.TreeMap;
 
 public class PodsumowanieDnia {
     private final TreeMap<Produkt, Double> średnie;
-    private TreeMap<Produkt, Double> cenyZerowe;
+    private final TreeMap<Produkt, Double> cenyZerowe;
+    private final TreeMap<Produkt, Double> najniższeCeny;
     private final int[] ofertySprzedażySpekulantów;
     private final int[] ofertySprzedażyRobotników;
 
-    public PodsumowanieDnia(TreeMap<Produkt, Double> średnie, TreeMap<Produkt, Double> cenyZerowe, int[] ofertySprzedażySpekulantów, int[] ofertySprzedażyRobotników) {
+    public PodsumowanieDnia(TreeMap<Produkt, Double> średnie, TreeMap<Produkt, Double> cenyZerowe,
+                            int[] ofertySprzedażySpekulantów, int[] ofertySprzedażyRobotników,
+                            TreeMap<Produkt, Double> najniższeCeny) {
         this.średnie = średnie;
         this.cenyZerowe = cenyZerowe;
         this.ofertySprzedażySpekulantów = ofertySprzedażySpekulantów;
         this.ofertySprzedażyRobotników = ofertySprzedażyRobotników;
+        this.najniższeCeny = najniższeCeny;
     }
 
     public double podajŚredniąCenę(Symulacja.TypyProduktów typ, int poziom) {
@@ -39,6 +43,18 @@ public class PodsumowanieDnia {
     // TODO - standaryzacja
     public double podajŚredniąCenę(Produkt produkt) {
         return podajŚredniąCenę(produkt.podajTyp(), produkt.podajPoziom());
+    }
+
+    public double podajNajniższąCenę(Produkt produkt) {
+        if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
+            return 0;
+        }
+
+        if (najniższeCeny.get(produkt) == null) {
+            return cenyZerowe.get(new Produkt(produkt.podajTyp(), 1));
+        } else {
+            return najniższeCeny.get(produkt);
+        }
     }
 
     public int podajLiczbęOfertSprzedażyRobotników(Symulacja.TypyProduktów produkt) {

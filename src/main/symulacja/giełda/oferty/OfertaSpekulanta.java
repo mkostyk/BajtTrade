@@ -11,6 +11,11 @@ public class OfertaSpekulanta extends Oferta {
         this.cena = cena;
     }
 
+    public OfertaSpekulanta (Produkt produkt, int ile, double cena) {
+        super(produkt, ile);
+        this.cena = cena;
+    }
+
     public double podajCenę() {
         return cena;
     }

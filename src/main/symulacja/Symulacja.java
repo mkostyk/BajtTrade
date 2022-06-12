@@ -1,13 +1,10 @@
 package main.symulacja;
 
-import com.squareup.moshi.FromJson;
-import com.squareup.moshi.ToJson;
 import main.Main;
 import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.agenci.spekulanci.Spekulant;
 import main.symulacja.fabryka.Fabryka;
 import main.symulacja.giełda.Giełda;
-import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.produkty.Produkt;
 
 import java.util.*;
@@ -21,14 +18,6 @@ public class Symulacja {
     public static int ILE_ZAWODÓW = 5;
     public enum TypyProduktów {NARZEDZIA, PROGRAMY, JEDZENIE, UBRANIA, DIAMENTY}
     public enum Zawody {INZYNIER, PROGRAMISTA, ROLNIK, RZEMIESLNIK, GORNIK}
-
-    public static Map <String, TypyProduktów> PRODUKT_TO_ENUM = Map.ofEntries(
-            Map.entry("narzedzia", NARZEDZIA),
-            Map.entry("programy", PROGRAMY),
-            Map.entry("jedzenie", JEDZENIE),
-            Map.entry("ubrania", UBRANIA),
-            Map.entry("diamenty", DIAMENTY)
-    );
 
     public static Map <Zawody, Integer> ID_KARIERY = Map.ofEntries(
             Map.entry(INZYNIER, 0),
@@ -49,10 +38,10 @@ public class Symulacja {
     public static int MAX_POZIOM = Integer.MAX_VALUE;
     public static Random RNG = new Random();
 
-    private int długość;
-    private ArrayList<Robotnik> robotnicy;
-    private ArrayList<Spekulant> spekulanci;
-    private Giełda giełda;
+    private final int długość;
+    private final ArrayList<Robotnik> robotnicy;
+    private final ArrayList<Spekulant> spekulanci;
+    private final Giełda giełda;
 
 
     public Symulacja (int długosc, String giełda, int kara_za_brak_ubrań, Map<String, Double> ceny,
@@ -81,33 +70,20 @@ public class Symulacja {
 
     private void dzień() {
         // Robotnicy (pkt 1)
-        boolean[] umarł = new boolean[robotnicy.size()];
-        int indeks = 0;
-
-        for (Robotnik robotnik: robotnicy) {
-            if (!robotnik.przeżyjDzień()) {
-                umarł[indeks] = true;
-            }
-            indeks++;
-        }
-
-        for (int i = 0; i < umarł.length; i++) {
-            if(umarł[i]) {
-                robotnicy.remove(i);
-            }
-        }
+        // Wywołujemy przeżyjDzień() oraz usuwamy robotników jeśli nie udało im się przeżyć
+        robotnicy.removeIf(robotnik -> !robotnik.przeżyjDzień());
 
         // Spekulanci (pkt 2)
         for (Spekulant spekulant: spekulanci) {
             spekulant.wystawOferty();
         }
 
-        giełda.wypisz();
+        //giełda.wypisz();
 
         // Giełda (pkt 3 i 4)
         giełda.dopasujOferty();
 
-        giełda.wypisz();
+        //giełda.wypisz();
 
         giełda.skupOferty();
         giełda.podsumujDzień();
