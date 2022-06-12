@@ -93,7 +93,7 @@ public class Fabryka {
     public static Spekulant stwórzSpekulanta(int id, String strategia,
                                              Map<String, Double> zasoby, int historiaSpekulantaŚredniego) {
         return switch (strategia) {
-            case "regulujacy" -> new Regulujący(id, zasoby);
+            case "regulujacy_rynek" -> new Regulujący(id, zasoby);
             case "wypukly" -> new Wypukły(id, zasoby);
             case "sredni" -> new Średni(id, zasoby, historiaSpekulantaŚredniego);
             default -> null;

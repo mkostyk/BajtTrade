@@ -4,12 +4,21 @@ import main.symulacja.giełda.oferty.OfertaRobotnika;
 
 import java.util.Comparator;
 
+// TODO - pozbyć się duplikatów może...
+
 public class SocjalistycznyKomparatorOfertRobotników implements Comparator<OfertaRobotnika> {
     public int compare(OfertaRobotnika pierwszaOferta, OfertaRobotnika drugaOferta) {
         // Sortowanie po diamentach - rosnąco
         if (pierwszaOferta.podajTwórcę().ileDiamentów() > drugaOferta.podajTwórcę().ileDiamentów()) {
             return 1;
         } else if (pierwszaOferta.podajTwórcę().ileDiamentów() < drugaOferta.podajTwórcę().ileDiamentów()) {
+            return -1;
+        }
+
+        // Sortowanie po id - rosnąco
+        if (pierwszaOferta.podajTwórcę().podajID() > drugaOferta.podajTwórcę().podajID()) {
+            return 1;
+        } else if (pierwszaOferta.podajTwórcę().podajID() < drugaOferta.podajTwórcę().podajID()) {
             return -1;
         }
 
@@ -21,6 +30,6 @@ public class SocjalistycznyKomparatorOfertRobotników implements Comparator<Ofer
         }
 
         // Sortowanie po poziomie produktu w ofercie - malejąco
-        return Integer.compare(pierwszaOferta.podajPoziom(), drugaOferta.podajPoziom());
+        return -Integer.compare(pierwszaOferta.podajPoziom(), drugaOferta.podajPoziom());
     }
 }

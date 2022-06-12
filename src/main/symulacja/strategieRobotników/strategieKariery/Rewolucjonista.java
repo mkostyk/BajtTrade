@@ -29,7 +29,7 @@ public class Rewolucjonista extends StrategiaKariery {
 
         for (Symulacja.TypyProduktów produkt: Symulacja.TypyProduktów.values()) {
             int id = Symulacja.ID_PRODUKTU.get(produkt);
-            if (oferty[id] > maksimumSprzedaży) {
+            if (oferty[id] >= maksimumSprzedaży) {
                 maksimumSprzedaży = oferty[id];
                 nowyProduktID = id;
             }

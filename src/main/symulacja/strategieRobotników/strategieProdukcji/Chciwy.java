@@ -15,7 +15,7 @@ public class Chciwy extends StrategiaProdukcji {
         for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
             int poziom = robotnik.podajPoziomyŚcieżek()[Symulacja.ID_PRODUKTU.get(typ)];
             double zysk = ostatniDzień.podajŚredniąCenę(typ, poziom) * robotnik.podajProduktywność(typ);
-            if (zysk > największyZysk) {
+            if (zysk >= największyZysk) {
                 największyZysk = zysk;
                 najlepszyProdukt = new Produkt(typ, poziom);
             }

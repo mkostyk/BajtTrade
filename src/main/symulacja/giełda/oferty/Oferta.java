@@ -48,6 +48,7 @@ public abstract class Oferta {
         assert twórca != null;
         return "Oferta{" +
                 "produkt=" + produkt +
+                "produktID=" + typID() +
                 ", ile=" + ile +
                 ", twórca=" + twórca.podajID() +
                 '}';

@@ -6,6 +6,8 @@ import main.symulacja.giełda.oferty.Oferta;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.giełda.oferty.OfertaSpekulanta;
 import main.symulacja.giełda.oferty.ZbiórOfertSpekulanta;
+import main.symulacja.komparatory.KomparatorOfertKupnaSpekulantów;
+import main.symulacja.komparatory.KomparatorOfertSprzedażySpekulantów;
 import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.produkty.Produkt;
 import main.symulacja.utils.PodsumowanieDnia;
@@ -34,8 +36,9 @@ public abstract class Giełda {
 
     protected Giełda(TreeMap<Produkt, Double> cenyZerowe, int karaZaUbrania) {
         int[] sprzedażDniaZerowego = new int[ILE_PRODUKTÓW];
-        Arrays.fill(sprzedażDniaZerowego, 0);
-        PodsumowanieDnia p = new PodsumowanieDnia(cenyZerowe, cenyZerowe, sprzedażDniaZerowego, sprzedażDniaZerowego, cenyZerowe);
+        Arrays.fill(sprzedażDniaZerowego, 1);
+        PodsumowanieDnia p = new PodsumowanieDnia(cenyZerowe, cenyZerowe, sprzedażDniaZerowego,
+                                                  sprzedażDniaZerowego, cenyZerowe, cenyZerowe);
 
         historia.add(p);
         ileOfertSprzedażyRobotników = sprzedażDniaZerowego;
@@ -109,12 +112,12 @@ public abstract class Giełda {
         return ileOfertSprzedażyRobotników[Symulacja.ID_PRODUKTU.get(produkt)];
     }
 
-    public boolean wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, Produkt produkt, double cena) {
+    public void wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, Produkt produkt, double cena) {
         double dostępneDiamenty = ofertaZakupu.podajTwórcę().ileDiamentów();
 
         int zakup = Math.min(ofertaZakupu.podajIle(), ofertaSprzedaży.podajIle());
         zakup = (int) Math.min(zakup, Math.floor(dostępneDiamenty / cena));
-        zakup = (int) Math.min(zakup, ofertaSprzedaży.podajTwórcę().ileProduktów(produkt));
+        //zakup = (int) Math.min(zakup, ofertaSprzedaży.podajTwórcę().ileProduktów(produkt));
 
         double wartośćZakupu = zakup * cena;
 
@@ -128,17 +131,15 @@ public abstract class Giełda {
         ofertaSprzedaży.zmniejszWielkość(zakup);
 
         dokonaneSprzedaże.add(new OfertaSpekulanta(produkt, zakup, cena));
-
-        return zakup > 0;
     }
 
 
     public void dopasujOferty() {
         wypisz();
         posortujOferty();
+        ofertyKupnaSpekulantów.posortujOferty(new KomparatorOfertKupnaSpekulantów());
+        ofertySprzedażySpekulantów.posortujOferty(new KomparatorOfertSprzedażySpekulantów());
         wypisz();
-        ofertyKupnaSpekulantów.posortujOferty();
-        ofertySprzedażySpekulantów.posortujOferty();
 
         // Sprzedaż robotników
         for (OfertaRobotnika oferta: ofertySprzedażyRobotników) {
@@ -154,9 +155,7 @@ public abstract class Giełda {
                    && oferta.podajPoziom() == ofertaZakupu.podajPoziom() &&
                    obecnaPozycja < ofertyKupnaSpekulantów.size()) {
                 // Wykonujemy ofertę
-                if (!wykonajOfertę(ofertaZakupu, oferta, ofertaZakupu.podajProdukt(), ofertaZakupu.podajCenę())) {
-                    break;
-                }
+                wykonajOfertę(ofertaZakupu, oferta, ofertaZakupu.podajProdukt(), ofertaZakupu.podajCenę());
 
                 // Oferty wcześniejsze są niezgodne z obecną
                 obecnaPozycja++;
@@ -182,9 +181,7 @@ public abstract class Giełda {
                 //System.out.println("Pozycja kupna: " + obecnaPozycja);
                 //System.out.println(oferta.podajTwórcę());
 
-                if(!wykonajOfertę(oferta, ofertaSprzedaży, ofertaSprzedaży.podajProdukt(), ofertaSprzedaży.podajCenę())) {
-                    break;
-                }
+                wykonajOfertę(oferta, ofertaSprzedaży, ofertaSprzedaży.podajProdukt(), ofertaSprzedaży.podajCenę());
 
                 // Oferty wcześniejsze są niezgodne z obecną
                 obecnaPozycja++;
@@ -210,6 +207,7 @@ public abstract class Giełda {
         TreeMap<Produkt, Double> ile = new TreeMap<>(new KomparatorProduktów());
         TreeMap<Produkt, Double> średnie = new TreeMap<>(new KomparatorProduktów());
         TreeMap<Produkt, Double> najniższeCeny = new TreeMap<>(new KomparatorProduktów());
+        TreeMap<Produkt, Double> najwyższeCeny = new TreeMap<>(new KomparatorProduktów());
 
         for (OfertaSpekulanta oferta: dokonaneSprzedaże) {
             double wzrostObrotu = oferta.podajIle() * oferta.podajCenę();
@@ -218,17 +216,19 @@ public abstract class Giełda {
             obrót.putIfAbsent(produkt, 0.0);
             ile.putIfAbsent(produkt, 0.0);
             najniższeCeny.putIfAbsent(produkt, INFINITY);
+            najwyższeCeny.putIfAbsent(produkt, 0.0);
 
             obrót.put(produkt, obrót.get(produkt) + wzrostObrotu);
             ile.put(produkt, ile.get(produkt) + oferta.podajIle());
             najniższeCeny.put(produkt, Math.min(najniższeCeny.get(produkt), oferta.podajCenę()));
+            najwyższeCeny.put(produkt, Math.max(najwyższeCeny.get(produkt), oferta.podajCenę()));
         }
 
         for (int poziom = 1; poziom <= podajMaksymalnyPoziom(); poziom++) {
             for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
                 Produkt produkt = new Produkt(typ, poziom);
-                if (ile.get(produkt) == null) {
-                    // Cena z dnia zerowego.
+                if (ile.get(produkt) == null || ile.get(produkt) == 0) {
+                    // Cena z dnia zerowego. // TODO - użyć cen zerowych
                     średnie.put(produkt, podajHistorięOstatnichDni(dzień)[0].podajŚredniąCenę(typ, poziom));
                 } else {
                     średnie.put(produkt, obrót.get(produkt) / ile.get(produkt));
@@ -238,7 +238,8 @@ public abstract class Giełda {
         }
 
 
-        historia.add(new PodsumowanieDnia(średnie, cenyZerowe, ileOfertSprzedażySpekulantów, ileOfertSprzedażyRobotników, najniższeCeny));
+        historia.add(new PodsumowanieDnia(średnie, cenyZerowe, ileOfertSprzedażySpekulantów,
+                                          ileOfertSprzedażyRobotników, najniższeCeny, najwyższeCeny));
 
         // Czyszczenie ofert
         ofertyKupnaRobotników = new ArrayList<>();

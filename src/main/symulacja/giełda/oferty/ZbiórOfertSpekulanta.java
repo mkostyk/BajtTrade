@@ -14,15 +14,17 @@ public class ZbiórOfertSpekulanta {
     private final ArrayList<OfertaSpekulanta> listaOfert = new ArrayList<>();
 
     public int znajdźNajlepsząOfertęKupna(OfertaRobotnika oferta) {
-        // Cena INFINITY gwarantuje, że znajdziemy najwyższą cenę za którą możemy sprzedać produkty.
+        // Cena INFINITY gwarantuje, że znajdziemy najwyższą cenę, za którą możemy sprzedać produkty.
         OfertaSpekulanta tmp = new OfertaSpekulanta(oferta.produkt, oferta.podajIle(), INFINITY, oferta.podajTwórcę());
-        return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertKupnaSpekulantów()) + 2);
+        //System.out.println("Pozycja kupno: " + Collections.binarySearch(listaOfert, tmp, new KomparatorOfertKupnaSpekulantów()));
+        return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertKupnaSpekulantów()) + 1);
     }
 
     public int znajdźNajlepsząOfertęSprzedaży(OfertaRobotnika oferta) {
         // Analogicznie cena 0 gwarantuje znalezienie najniższej ceny.
         OfertaSpekulanta tmp = new OfertaSpekulanta(oferta.produkt, oferta.podajIle(), 0, oferta.podajTwórcę());
-        return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertSprzedażySpekulantów()) + 2);
+        //System.out.println("Pozycja sprzedaż: " + Collections.binarySearch(listaOfert, tmp, new KomparatorOfertSprzedażySpekulantów()));
+        return Math.abs(Collections.binarySearch(listaOfert, tmp, new KomparatorOfertSprzedażySpekulantów()) + 1);
     }
 
     public OfertaSpekulanta podajOfertę(int pozycja) {
@@ -33,8 +35,8 @@ public class ZbiórOfertSpekulanta {
         listaOfert.add(oferta);
     }
 
-    public void posortujOferty() {
-        listaOfert.sort(new KomparatorOfertKupnaSpekulantów());
+    public void posortujOferty(Comparator<OfertaSpekulanta> comparator) {
+        listaOfert.sort(comparator);
     }
 
     public int size() {

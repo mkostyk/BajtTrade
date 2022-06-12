@@ -14,7 +14,7 @@ public abstract class StrategiaProdukcji extends Strategia {
         System.out.println(produkt + " " + ile);
         robotnik.ustawDzisiejsząProdukcję(ile);
         if (produkt.podajTyp() == JEDZENIE || produkt.podajTyp() == DIAMENTY) {
-            robotnik.dodajProdukty(ile, produkt);
+            //robotnik.dodajProdukty(ile, produkt);
             wystawProdukty(ile, produkt);
             return;
         }
@@ -26,7 +26,7 @@ public abstract class StrategiaProdukcji extends Strategia {
             Produkt nowyProdukt = new Produkt(produkt.podajTyp(), program.podajPoziom());
 
             programy.put(program, programy.get(program) - zużyte);
-            robotnik.dodajProdukty(zużyte, nowyProdukt);
+            //robotnik.dodajProdukty(zużyte, nowyProdukt);
             robotnik.zużyjProdukty(zużyte, program);
             wystawProdukty(zużyte, nowyProdukt);
             ileZużytychProgramów += zużyte;
@@ -36,7 +36,7 @@ public abstract class StrategiaProdukcji extends Strategia {
             }
         }
 
-        robotnik.dodajProdukty(ile - ileZużytychProgramów, produkt);
+        //robotnik.dodajProdukty(ile - ileZużytychProgramów, produkt);
         wystawProdukty(ile - ileZużytychProgramów, produkt);
     }
 

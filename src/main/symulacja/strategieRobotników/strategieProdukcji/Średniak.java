@@ -21,7 +21,7 @@ public class Średniak extends StrategiaProdukcji {
         for (PodsumowanieDnia dzień: dane) {
             for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
                 int poziom = robotnik.podajPoziomyŚcieżek()[Symulacja.ID_PRODUKTU.get(typ)];
-                if (dzień.podajŚredniąCenę(typ, poziom) > najlepszaCena) {
+                if (dzień.podajŚredniąCenę(typ, poziom) >= najlepszaCena) {
                     najlepszaCena = dzień.podajŚredniąCenę(typ, poziom);
                     najlepszyProdukt = new Produkt(typ, poziom);
                 }

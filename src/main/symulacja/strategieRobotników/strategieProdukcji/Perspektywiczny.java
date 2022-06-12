@@ -27,7 +27,7 @@ public class Perspektywiczny extends StrategiaProdukcji {
         for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
             int poziom = robotnik.podajPoziomyŚcieżek()[Symulacja.ID_PRODUKTU.get(typ)];
             double wzrost = noweCeny.podajŚredniąCenę(typ, poziom) - stareCeny.podajŚredniąCenę(typ, poziom);
-            if (wzrost > największyWzrost) {
+            if (wzrost >= największyWzrost) {
                 największyWzrost = wzrost;
                 najlepszyProdukt = new Produkt(typ, poziom);
             }

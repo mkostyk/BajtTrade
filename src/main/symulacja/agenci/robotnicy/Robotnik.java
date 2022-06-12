@@ -29,7 +29,6 @@ public class Robotnik extends Agent {
     private int produkcjaWObecnejTurze;
     private int licznikGłodu;
     private boolean czyPracował;
-    private int ileUbrań;
 
     public Robotnik (int idRobotnika, int poziom, String kariera, StrategiaKupna strategiaKupna,
                      StrategiaProdukcji strategiaProdukcji, StrategiaPracy strategiaPracy, String strategiaKariery,
@@ -70,28 +69,21 @@ public class Robotnik extends Agent {
         return produktywność.get(produkt.toString().toLowerCase(Locale.ROOT));
     }
 
-    public int ileUbrańJutro() {
+    private int ileUbrańZWytrzymałościąJeden() {
         int ileUbrań = 0;
         TreeMap<Produkt, Double> ubrania = podajProdukty(UBRANIA);
 
         for (Produkt ubranie: ubrania.keySet()) {
-            // Ubrania będą posortowane po wytrzymałości więc kiedy dojdziemy do wytrzymałości 1 to następne
-            // mają na pewno nie lepszą wytrzymałość
             if (ubranie.podajWytrzymałość() == 1) {
-                break;
-            } else {
                 ileUbrań += ileProduktów(ubranie);
-            }
-
-            if (ileUbrań >= 100) {
-                break;
+                System.out.println(ubranie + " " + ileUbrań);
             }
         }
 
-        return Math.max(0, ileUbrań);
-    };
+        return ileUbrań;
+    }
 
-    private int sumaUbrań() {
+    private int ileUbrań() {
         int ileUbrań = 0;
         TreeMap<Produkt, Double> ubrania = podajProdukty(UBRANIA);
 
@@ -100,6 +92,15 @@ public class Robotnik extends Agent {
         }
 
         return ileUbrań;
+    }
+
+    public int ileUbrańPotrzebneNaJutro() {
+        int ileUbrańZWytrzymałościąPonadJeden = ileUbrań() - ileUbrańZWytrzymałościąJeden();
+        System.out.println(ileUbrańZWytrzymałościąPonadJeden + " " + ileUbrańZWytrzymałościąJeden());
+        // Następnego dnia rano na pewno będziemy mieli ileUbrańZWytrzymałościąPonadJeden ubrań. Pozostałe musimy
+        // dokupić. Możemy jednak pechowo zakupić ubrania poziomu 1, które zostaną zużyte jeszcze dzisiaj, więc
+        // aby zabezpieczyć się przed tym przypadkiem, musimy mieć co najmniej dwu krotność brakującej nam liczby ubrań.
+        return Math.max(2 * (100 - ileUbrańZWytrzymałościąPonadJeden) - ileUbrańZWytrzymałościąJeden(), 0);
     }
 
     public int ileProgramówBrakuje() {
@@ -144,8 +145,7 @@ public class Robotnik extends Agent {
     }
 
     private int podajBonusZUbrań() {
-        System.out.println(sumaUbrań());
-        if (sumaUbrań() >= 100) {
+        if (ileUbrań() >= 100) {
             return 0;
         } else {
             return -podajGiełdę().podajKaręZaUbrania();
@@ -208,7 +208,7 @@ public class Robotnik extends Agent {
         // Tworzymy kopię, aby móc od razu dodawać zużyte ubrania na mapę. Jeśli byśmy tego nie zrobili, to
         // takie zużyte ubranie mogłoby zostać ponownie rozpatrzone i zużyte wielokrotnie.
         TreeMap<Produkt, Double> ubrania = podajProdukty(UBRANIA);
-        TreeMap<Produkt, Double> ubraniaKopia = new TreeMap<Produkt, Double>(ubrania);
+        TreeMap<Produkt, Double> ubraniaKopia = new TreeMap<>(ubrania);
 
         for (Produkt ubranie: ubrania.keySet()) {
             int zużyte = Math.min(DZIENNE_ZUŻYCIE_UBRAŃ - licznikZużytych, ubrania.get(ubranie).intValue());
@@ -237,7 +237,7 @@ public class Robotnik extends Agent {
             // Narzędzia i programy komputerowe są zużywane na bieżąco podczas produkcji
             // dla uproszczenia kodu.
         }
-    };
+    }
 
     public boolean przeżyjDzień() {
         if (licznikGłodu == 3) {

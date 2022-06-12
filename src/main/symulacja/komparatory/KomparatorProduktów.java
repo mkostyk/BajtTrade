@@ -15,13 +15,14 @@ public class KomparatorProduktów implements Comparator<Produkt> {
             return -1;
         }
 
+        // Sortowanie po wytrzymałości - malejąco
         if (pierwszyProdukt.podajWytrzymałość() > drugiProdukt.podajWytrzymałość()) {
-            return 1;
-        } else if (drugiProdukt.podajWytrzymałość() > pierwszyProdukt.podajWytrzymałość()) {
             return -1;
+        } else if (drugiProdukt.podajWytrzymałość() > pierwszyProdukt.podajWytrzymałość()) {
+            return 1;
         }
 
-        // Sortowanie po poziomie produktu w ofercie - malejąco
-        return Integer.compare(pierwszyProdukt.podajPoziom(), drugiProdukt.podajPoziom());
+        // Sortowanie po poziomie produktu - malejąco
+        return -Integer.compare(pierwszyProdukt.podajPoziom(), drugiProdukt.podajPoziom());
     }
 }

@@ -17,7 +17,7 @@ public class Main {
     // TODO - widoczności
     // TODO - produkty czy enum produktów?
     // TODO - zgadzające się nazwy parametrów
-    // TODO - kolejność produktów
+    // TODO - kolejność produktów - WAŻNE
     // TODO - jak najmniej .get, jak najwięcej ileProduktów
     // TODO - string zamiast enum chyba jest lepsze
 
@@ -47,15 +47,15 @@ public class Main {
     }
 
     // TODO - nazwy po polsku
-    private static String readFile() {
-        try(BufferedReader br = new BufferedReader(new FileReader("input.json"))) {
+    private static String readFile(String nazwa) {
+        try(BufferedReader br = new BufferedReader(new FileReader(nazwa))) {
             StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
+            String linia = br.readLine();
 
-            while (line != null) {
-                sb.append(line);
+            while (linia != null) {
+                sb.append(linia);
                 sb.append(System.lineSeparator());
-                line = br.readLine();
+                linia = br.readLine();
             }
 
             return sb.toString();
@@ -66,7 +66,7 @@ public class Main {
 
     // TODO - exception
     public static void main(String[] args) throws IOException {
-        String json = readFile();
+        String json = readFile("input.json");
         assert json != null;
 
         Moshi moshi = new Moshi.Builder()

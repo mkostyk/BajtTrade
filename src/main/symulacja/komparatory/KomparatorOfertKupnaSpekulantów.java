@@ -14,14 +14,14 @@ public class KomparatorOfertKupnaSpekulantów implements Comparator<OfertaSpekul
             return -1;
         }
 
-        // Sortowanie po poziomie produktu w ofercie
+        // Sortowanie po poziomie produktu w ofercie - malejąco
         if (pierwszaOferta.podajPoziom() > drugaOferta.podajPoziom()) {
-            return 1;
-        } else if (pierwszaOferta.podajPoziom() < drugaOferta.podajPoziom()) {
             return -1;
+        } else if (pierwszaOferta.podajPoziom() < drugaOferta.podajPoziom()) {
+            return 1;
         }
 
-        // Sortowanie po cenie
-        return Double.compare(pierwszaOferta.podajCenę(), drugaOferta.podajCenę());
+        // Sortowanie po cenie - malejąco
+        return -Double.compare(pierwszaOferta.podajCenę(), drugaOferta.podajCenę());
     }
 }

@@ -9,17 +9,19 @@ public class PodsumowanieDnia {
     private final TreeMap<Produkt, Double> średnie;
     private final TreeMap<Produkt, Double> cenyZerowe;
     private final TreeMap<Produkt, Double> najniższeCeny;
+    private final TreeMap<Produkt, Double> najwyższeCeny;
     private final int[] ofertySprzedażySpekulantów;
     private final int[] ofertySprzedażyRobotników;
 
     public PodsumowanieDnia(TreeMap<Produkt, Double> średnie, TreeMap<Produkt, Double> cenyZerowe,
                             int[] ofertySprzedażySpekulantów, int[] ofertySprzedażyRobotników,
-                            TreeMap<Produkt, Double> najniższeCeny) {
+                            TreeMap<Produkt, Double> najniższeCeny, TreeMap<Produkt, Double> najwyższeCeny) {
         this.średnie = średnie;
         this.cenyZerowe = cenyZerowe;
         this.ofertySprzedażySpekulantów = ofertySprzedażySpekulantów;
         this.ofertySprzedażyRobotników = ofertySprzedażyRobotników;
         this.najniższeCeny = najniższeCeny;
+        this.najwyższeCeny = najwyższeCeny;
     }
 
     public double podajŚredniąCenę(Symulacja.TypyProduktów typ, int poziom) {
@@ -74,7 +76,10 @@ public class PodsumowanieDnia {
     @Override
     public String toString() {
         return "PodsumowanieDnia{" +
-                "średnie=" + średnie.toString() +
+                "średnie=" + średnie +
+                ", cenyZerowe=" + cenyZerowe +
+                ", najniższeCeny=" + najniższeCeny +
+                ", najwyższeCeny=" + najwyższeCeny +
                 ", ofertySprzedażySpekulantów=" + Arrays.toString(ofertySprzedażySpekulantów) +
                 ", ofertySprzedażyRobotników=" + Arrays.toString(ofertySprzedażyRobotników) +
                 '}';
