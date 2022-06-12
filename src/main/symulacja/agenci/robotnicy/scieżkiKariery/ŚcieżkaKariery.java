@@ -33,4 +33,12 @@ public abstract class ŚcieżkaKariery {
     }
 
     public abstract Symulacja.Zawody podajZawód();
+
+    @Override
+    public String toString() {
+        return "ŚcieżkaKariery{" +
+                "typ=" + this.getClass().getSimpleName() + ", " +
+                "poziom=" + poziom +
+                '}';
+    }
 }

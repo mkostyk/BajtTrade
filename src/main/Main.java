@@ -3,7 +3,8 @@ package main;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import main.symulacja.Symulacja;
-import main.symulacja.adapters.SymulacjaAdapter;
+import main.symulacja.adapters.*;
+import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
 
 import java.io.*;
 
@@ -34,10 +35,18 @@ public class Main {
         }
     }
 
+    // TODO - exception
     public static void main(String[] args) throws IOException {
-        String json = readFile("input.json");
+        String json = readFile("wejście_v_1_0_1.json");
         Moshi moshi = new Moshi.Builder()
                 .add(new SymulacjaAdapter())
+                .add(new RobotnikAdapter())
+                .add(new ŚcieżkaKarieryAdapter())
+                .add(new StrategiaKupnaAdapter())
+                .add(new StrategiaProdukcjiAdapter())
+                .add(new StrategiaPracyAdapter())
+                .add(new StrategiaKarieryAdapter())
+                .add(new SpekulantAdapter())
                 .build();
 
         JsonAdapter<Symulacja> jsonAdapter = moshi.adapter(Symulacja.class);

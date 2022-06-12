@@ -2,7 +2,7 @@ package main.symulacja.agenci.robotnicy.scieżkiKariery;
 
 import main.symulacja.Symulacja;
 
-import static main.symulacja.Symulacja.Zawody.RZEMIEŚLNIK;
+import static main.symulacja.Symulacja.Zawody.RZEMIESLNIK;
 
 public class Rzemieślnik extends ŚcieżkaKariery {
     public Rzemieślnik(int poziom) {
@@ -10,6 +10,6 @@ public class Rzemieślnik extends ŚcieżkaKariery {
     }
 
     public Symulacja.Zawody podajZawód() {
-        return RZEMIEŚLNIK;
+        return RZEMIESLNIK;
     }
 }

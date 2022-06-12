@@ -3,20 +3,15 @@ package main.symulacja.agenci.robotnicy;
 import main.symulacja.Symulacja;
 import main.symulacja.agenci.Agent;
 import main.symulacja.agenci.robotnicy.scieżkiKariery.ŚcieżkaKariery;
-import main.symulacja.giełda.Giełda;
 import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
 import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
 import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
 import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji;
 import main.symulacja.fabryka.Fabryka;
-import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.produkty.Produkt;
 
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static main.symulacja.Symulacja.*;
 import static main.symulacja.Symulacja.TypyProduktów.*;
@@ -34,15 +29,15 @@ public class Robotnik extends Agent {
     private boolean czySięUbrał;
 
     public Robotnik (int idRobotnika, int poziom, String kariera, StrategiaKupna strategiaKupna,
-                     StrategiaProdukcji strategiaProdukcji, StrategiaPracy strategiaPracy, StrategiaKariery strategiaKariery,
-                     Map<Zawody, Integer> produktywność, Map<Produkt, Double> zasoby, Giełda giełda) {
+                     StrategiaProdukcji strategiaProdukcji, StrategiaPracy strategiaPracy, String strategiaKariery,
+                     Map<String, Integer> produktywność, Map<String, Double> zasoby) {
 
         this.ścieżki = new ŚcieżkaKariery[ILE_ZAWODÓW];
         for (Symulacja.Zawody zawód: Symulacja.Zawody.values()) {
             int id = Symulacja.ID_KARIERY.get(zawód);
             // TODO - temp fix
 
-            if (kariera == zawód.toString().toLowerCase(Locale.ROOT)) {
+            if (Objects.equals(kariera, zawód.toString().toLowerCase(Locale.ROOT))) {
                 this.ścieżki[id] = Fabryka.stwórzŚcieżkęKariery(kariera, poziom);
                 this.obecnaŚcieżka = this.ścieżki[id];
             } else {
@@ -50,12 +45,13 @@ public class Robotnik extends Agent {
             }
         }
 
-        this.strategiaKariery = strategiaKariery;
+        this.strategiaKariery = Fabryka.stwórzStrategięKariery(strategiaKariery);
         this.strategiaKupna = strategiaKupna;
         this.strategiaPracy = strategiaPracy;
         this.strategiaProdukcji = strategiaProdukcji;
         this.id = idRobotnika;
         this.giełda = giełda;
+        // TODO
         this.produktywność = new int[ILE_PRODUKTÓW];
         this.licznikGłodu = 0;
         this.czySięUbrał = true;
@@ -243,7 +239,19 @@ public class Robotnik extends Agent {
     @Override
     public String toString() {
         return "Robotnik{" +
-                "idRobotnika=" + id +
+                "produkty=" + produkty +
+                ", giełda=" + giełda +
+                ", id=" + id +
+                ", ścieżki=" + Arrays.toString(ścieżki) +
+                ", obecnaŚcieżka=" + obecnaŚcieżka +
+                ", strategiaKariery=" + strategiaKariery +
+                ", strategiaKupna=" + strategiaKupna +
+                ", strategiaPracy=" + strategiaPracy +
+                ", strategiaProdukcji=" + strategiaProdukcji +
+                ", produktywność=" + Arrays.toString(produktywność) +
+                ", produkcjaWObecnejTurze=" + produkcjaWObecnejTurze +
+                ", licznikGłodu=" + licznikGłodu +
+                ", czySięUbrał=" + czySięUbrał +
                 '}';
     }
 }

@@ -2,10 +2,14 @@ package main.symulacja.agenci.spekulanci;
 
 import main.symulacja.Symulacja;
 import main.symulacja.giełda.Giełda;
+import main.symulacja.produkty.Produkt;
+
+import java.util.Map;
 
 public class Regulujący extends Spekulant {
-    public Regulujący(Giełda giełda) {
-        super(giełda);
+
+    public Regulujący(int id, Map<String, Double> zasoby) {
+        super(id, zasoby);
     }
 
     @Override

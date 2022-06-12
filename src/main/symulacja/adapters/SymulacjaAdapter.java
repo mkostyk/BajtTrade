@@ -5,29 +5,28 @@ import com.squareup.moshi.ToJson;
 import main.symulacja.Symulacja;
 import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.agenci.spekulanci.Spekulant;
+import main.symulacja.utils.BazoweInformacje;
 
 import java.util.List;
 import java.util.Map;
 
 public class SymulacjaAdapter {
     private static class SymulacjaJson {
-        private int dlugosc;
-        private int kara_za_brak_ubran;
-        private Map<String, Double> ceny;
+        private BazoweInformacje info;
         private List<Robotnik> robotnicy;
         private List<Spekulant> spekulanci;
-        private String gielda;
     }
 
     @ToJson
-    public String toJson(Symulacja symulacja) {
+    private String toJson(Symulacja symulacja) {
         // TODO
         return null;
     }
 
     @FromJson
-    public Symulacja fromJson(SymulacjaJson symulacja) {
-        return new Symulacja(symulacja.dlugosc, symulacja.gielda, symulacja.kara_za_brak_ubran,
-                             symulacja.ceny, symulacja.robotnicy, symulacja.spekulanci);
+    private Symulacja fromJson(SymulacjaJson symulacja) {
+        // TODO - użyć bazowych informacji
+        return new Symulacja(symulacja.info.podajDługość(), symulacja.info.podajGiełdę(), symulacja.info.podajKaręZaBrakUbrań(),
+                             symulacja.info.podajCeny(), symulacja.robotnicy, symulacja.spekulanci);
     }
 }

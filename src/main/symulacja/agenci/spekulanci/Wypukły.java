@@ -2,11 +2,15 @@ package main.symulacja.agenci.spekulanci;
 
 import main.symulacja.Symulacja;
 import main.symulacja.giełda.Giełda;
+import main.symulacja.produkty.Produkt;
 import main.symulacja.utils.PodsumowanieDnia;
 
+import java.util.Map;
+
 public class Wypukły extends Spekulant {
-    public Wypukły(Giełda giełda) {
-        super(giełda);
+
+    public Wypukły(int id, Map<String, Double> zasoby) {
+        super(id, zasoby);
     }
 
     @Override

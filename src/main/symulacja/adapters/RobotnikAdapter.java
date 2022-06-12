@@ -23,19 +23,19 @@ public class RobotnikAdapter {
         private StrategiaKupna kupowanie;
         private StrategiaProdukcji produkcja;
         private StrategiaPracy uczenie;
-        private StrategiaKariery zmiana;
-        private Map<Symulacja.Zawody, Integer> produktywnosc;
-        private Map<Produkt, Double> zasoby;
+        private String zmiana;
+        private Map<String, Integer> produktywnosc;
+        private Map<String, Double> zasoby;
     }
 
     @ToJson
-    public String toJson(Symulacja symulacja) {
+    private String toJson(Robotnik robotnik) {
         // TODO
         return null;
     }
 
     @FromJson
-    public Robotnik fromJson(RobotnikJson robotnik) {
+    private Robotnik fromJson(RobotnikJson robotnik) {
         return new Robotnik(robotnik.id, robotnik.poziom, robotnik.kariera, robotnik.kupowanie, robotnik.produkcja,
                             robotnik.uczenie, robotnik.zmiana, robotnik.produktywnosc, robotnik.zasoby);
     }

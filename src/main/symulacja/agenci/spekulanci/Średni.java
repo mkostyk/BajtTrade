@@ -4,13 +4,16 @@ import main.symulacja.Symulacja;
 import main.symulacja.giełda.Giełda;
 import main.symulacja.produkty.Produkt;
 
+import java.util.Map;
+
 public class Średni extends Spekulant {
     private final int ileDni;
 
-    public Średni(Giełda giełda, int ileDni) {
-        super(giełda);
+    public Średni(int id, Map<String, Double> zasoby, int ileDni) {
+        super(id, zasoby);
         this.ileDni = ileDni;
     }
+
 
     @Override
     public void wystawOferty() {

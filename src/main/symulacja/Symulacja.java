@@ -19,14 +19,14 @@ public class Symulacja {
     public static int ILE_PRODUKTÓW = 5;
     public static int ILE_ZAWODÓW = 5;
     public enum TypyProduktów {NARZĘDZIA, PROGRAMY, JEDZENIE, UBRANIA, DIAMENTY}
-    public enum Zawody {INŻYNIER, PROGRAMISTA, ROLNIK, RZEMIEŚLNIK, GÓRNIK}
+    public enum Zawody {INZYNIER, PROGRAMISTA, ROLNIK, RZEMIESLNIK, GORNIK}
 
     public static Map <Zawody, Integer> ID_KARIERY = Map.ofEntries(
-            Map.entry(INŻYNIER, 0),
+            Map.entry(INZYNIER, 0),
             Map.entry(PROGRAMISTA, 1),
             Map.entry(ROLNIK, 2),
-            Map.entry(RZEMIEŚLNIK, 3),
-            Map.entry(GÓRNIK, 4)
+            Map.entry(RZEMIESLNIK, 3),
+            Map.entry(GORNIK, 4)
             );
 
     public static Map <TypyProduktów, Integer> ID_PRODUKTU = Map.ofEntries(
@@ -53,7 +53,9 @@ public class Symulacja {
         this.długość = długosc;
         this.robotnicy = (ArrayList<Robotnik>) robotnicy;
         this.spekulanci = (ArrayList<Spekulant>) spekulanci;
+        // TODO
         TreeMap<Produkt, Double> cenyZerowe = new TreeMap<Produkt, Double>(new KomparatorProduktów());
+        //System.out.println(giełda);
         this.giełda = Fabryka.stwórzGiełdę(giełda, cenyZerowe, kara_za_brak_ubrań);
     }
 

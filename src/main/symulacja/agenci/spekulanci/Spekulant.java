@@ -6,10 +6,15 @@ import main.symulacja.giełda.Giełda;
 import main.symulacja.giełda.oferty.OfertaSpekulanta;
 import main.symulacja.produkty.Produkt;
 
+import java.util.Map;
+
 public abstract class Spekulant extends Agent {
-    protected Spekulant(Giełda giełda) {
+    protected Spekulant(int id, Map<String, Double> zasoby) {
+        // TODO - zasoby
+        this.id = id;
         this.giełda = giełda;
     }
+
     public abstract void wystawOferty();
 
     public void dodajOfertęKupna(Symulacja.TypyProduktów typ, int poziom, double cenaBazowa, double marża) {

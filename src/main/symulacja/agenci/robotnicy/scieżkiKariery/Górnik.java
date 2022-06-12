@@ -2,7 +2,7 @@ package main.symulacja.agenci.robotnicy.scieżkiKariery;
 
 import main.symulacja.Symulacja;
 
-import static main.symulacja.Symulacja.Zawody.GÓRNIK;
+import static main.symulacja.Symulacja.Zawody.GORNIK;
 
 public class Górnik extends ŚcieżkaKariery {
     public Górnik(int poziom) {
@@ -10,6 +10,6 @@ public class Górnik extends ŚcieżkaKariery {
     }
 
     public Symulacja.Zawody podajZawód() {
-        return GÓRNIK;
+        return GORNIK;
     }
 }
