@@ -1,26 +1,27 @@
 package main.symulacja.strategieRobotników.strategieProdukcji;
 
+import main.Main;
 import main.symulacja.Symulacja;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.produkty.Produkt;
 import main.symulacja.strategieRobotników.Strategia;
-import static main.symulacja.Symulacja.TypyProduktów.*;
+import static main.Main.TypyProduktów.*;
 
-import java.util.TreeMap;
+import java.util.Map;
 
 public abstract class StrategiaProdukcji extends Strategia {
     public abstract void wyprodukuj();
     protected void użyjProgramówIWystawProdukty(Produkt produkt, int ile) {
         System.out.println(produkt + " " + ile);
         robotnik.ustawDzisiejsząProdukcję(ile);
-        if (produkt.podajTyp() == JEDZENIE || produkt.podajTyp() == DIAMENTY) {
+        if (!Main.PRODUKTY_Z_POZIOMEM.contains(produkt.podajTyp())) {
             //robotnik.dodajProdukty(ile, produkt);
             wystawProdukty(ile, produkt);
             return;
         }
 
         int ileZużytychProgramów = 0;
-        TreeMap<Produkt, Double> programy = robotnik.podajProdukty(PROGRAMY);
+        Map<Produkt, Double> programy = robotnik.podajProdukty(PROGRAMY);
         for (Produkt program: programy.keySet()) {
             int zużyte = (int) Math.min(ile - ileZużytychProgramów, programy.get(program));
             Produkt nowyProdukt = new Produkt(produkt.podajTyp(), program.podajPoziom());
@@ -41,9 +42,8 @@ public abstract class StrategiaProdukcji extends Strategia {
     }
 
     private void wystawProdukty(int ile, Produkt produkt) {
-        if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
+        if (produkt.podajTyp() == DIAMENTY) {
             robotnik.dodajDiamenty(ile);
-            //robotnik.dodajProdukty(ile, produkt);
         } else {
             robotnik.podajGiełdę().dodajOfertęSprzedażyRobotnika(new OfertaRobotnika(produkt, ile, this.robotnik));
         }

@@ -1,25 +1,11 @@
 package main;
 
 
-import main.symulacja.fabryka.Fabryka;
-import main.symulacja.giełda.Giełda;
-import main.symulacja.komparatory.KomparatorProduktów;
-import main.symulacja.produkty.Produkt;
-import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
-import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
-import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
-import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji;
-
-
-import java.util.TreeMap;
-
 import java.io.IOException;
 
-import static main.symulacja.Symulacja.TypyProduktów.*;
-
 public class Test {
-    public static void main(String[] args) throws IOException {
-        /*TreeMap<Produkt, Double> ceny = new TreeMap<>(new KomparatorProduktów());
+    public static void java(String[] args) throws IOException {
+        /*Map<Produkt, Double> ceny = new TreeMap<>(new KomparatorProduktów());
         ceny.put(new Produkt(NARZEDZIA, 1), 2.0);
         ceny.put(new Produkt(PROGRAMY, 1), 1.3);
         ceny.put(new Produkt(JEDZENIE, 1), 0.5);

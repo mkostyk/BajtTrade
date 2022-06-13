@@ -1,14 +1,15 @@
 package main.symulacja.agenci.robotnicy.scieżkiKariery;
 
-import main.symulacja.Symulacja;
-
+import static main.Main.Zawody;
+import static main.Main.Zawody.*;
+import static main.Main.TypyProduktów;
 import java.util.Objects;
 
 public abstract class ŚcieżkaKariery {
     protected int poziom;
 
-    public int podajBonus(Symulacja.TypyProduktów produkt) {
-        if (Objects.equals(Symulacja.ID_PRODUKTU.get(produkt), Symulacja.ID_KARIERY.get(this.podajZawód()))) {
+    public int podajBonus(TypyProduktów produkt) {
+        if (Objects.equals(produkt.ordinal(), this.podajZawód().ordinal())) {
             return switch (poziom) {
                 case 1 -> 50;
                 case 2 -> 150;
@@ -27,7 +28,7 @@ public abstract class ŚcieżkaKariery {
         return poziom;
     }
 
-    public abstract Symulacja.Zawody podajZawód();
+    public abstract Zawody podajZawód();
 
     @Override
     public String toString() {

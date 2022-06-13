@@ -4,8 +4,6 @@ import main.symulacja.giełda.oferty.OfertaRobotnika;
 
 import java.util.Comparator;
 
-// TODO - pozbyć się duplikatów może...
-
 public class SocjalistycznyKomparatorOfertRobotników implements Comparator<OfertaRobotnika> {
     public int compare(OfertaRobotnika pierwszaOferta, OfertaRobotnika drugaOferta) {
         // Sortowanie po diamentach - rosnąco

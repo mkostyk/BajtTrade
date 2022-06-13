@@ -1,41 +1,39 @@
 package main.symulacja.produkty;
 
-import main.symulacja.Symulacja;
-
-import static main.symulacja.Symulacja.TypyProduktów.*;
+import static main.Main.PRODUKTY_Z_POZIOMEM;
+import static main.Main.TypyProduktów;
 
 public class Produkt {
-    private final Symulacja.TypyProduktów typ;
+    private final TypyProduktów typ;
     private final int poziom;
     private final int wytrzymałość;
 
-    // TODO - osobne klasy?
-    public Produkt(Symulacja.TypyProduktów typ, int poziom) {
+    public Produkt(TypyProduktów typ, int poziom) {
         this.typ = typ;
-        if (typ == UBRANIA) {
+        if (typ == TypyProduktów.UBRANIA) {
             this.wytrzymałość = poziom * poziom;
         } else {
             this.wytrzymałość = 1;
         }
 
-        if (typ == JEDZENIE || typ == DIAMENTY) {
+        if (!PRODUKTY_Z_POZIOMEM.contains(typ)) {
             this.poziom = 1;
         } else {
             this.poziom = poziom;
         }
     }
 
-    public Produkt(Symulacja.TypyProduktów typ, int poziom, int wytrzymałość) {
+    public Produkt(TypyProduktów typ, int poziom, int wytrzymałość) {
         this.typ = typ;
         this.poziom = poziom;
         this.wytrzymałość = wytrzymałość;
     }
 
-    public Symulacja.TypyProduktów podajTyp() {
+    public TypyProduktów podajTyp() {
         return typ;
     }
     public int typID() {
-        return Symulacja.ID_PRODUKTU.get(podajTyp());
+        return podajTyp().ordinal();
     }
     public int podajPoziom() {
         return poziom;

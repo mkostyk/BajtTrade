@@ -1,10 +1,9 @@
 package main.symulacja.agenci.robotnicy;
 
+import main.symulacja.agenci.robotnicy.scieżkiKariery.ŚcieżkaKariery;
 import main.Main;
 import main.symulacja.Symulacja;
 import main.symulacja.agenci.Agent;
-import main.symulacja.agenci.robotnicy.scieżkiKariery.ŚcieżkaKariery;
-import main.symulacja.giełda.Giełda;
 import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
 import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
@@ -15,8 +14,9 @@ import main.symulacja.produkty.Produkt;
 
 import java.util.*;
 
-import static main.symulacja.Symulacja.*;
-import static main.symulacja.Symulacja.TypyProduktów.*;
+import static main.Main.*;
+import static main.Main.TypyProduktów.*;
+import static main.Main.Zawody.*;
 
 public class Robotnik extends Agent {
     private ŚcieżkaKariery[] ścieżki;
@@ -25,6 +25,7 @@ public class Robotnik extends Agent {
     private StrategiaKupna strategiaKupna;
     private StrategiaPracy strategiaPracy;
     private StrategiaProdukcji strategiaProdukcji;
+    private Map<String, Integer> bazowaProduktywność;
     private Map<String, Integer> produktywność;
     private int produkcjaWObecnejTurze;
     private int licznikGłodu;
@@ -35,15 +36,14 @@ public class Robotnik extends Agent {
                      Map<String, Integer> produktywność, Map<String, Double> zasoby) {
         super(idRobotnika, zasoby);
         this.ścieżki = new ŚcieżkaKariery[ILE_ZAWODÓW];
-        for (Symulacja.Zawody zawód: Symulacja.Zawody.values()) {
-            int id = Symulacja.ID_KARIERY.get(zawód);
-            // TODO - temp fix stringa
+        for (Zawody zawód: Zawody.values()) {
+            int id = zawód.ordinal();
 
-            if (Objects.equals(kariera, zawód.toString().toLowerCase(Locale.ROOT))) {
+            if (Objects.equals(kariera, Main.enumToString(zawód))) {
                 this.ścieżki[id] = Fabryka.stwórzŚcieżkęKariery(kariera, poziom);
                 this.obecnaŚcieżka = this.ścieżki[id];
             } else {
-                this.ścieżki[id] = Fabryka.stwórzŚcieżkęKariery(zawód.toString().toLowerCase(Locale.ROOT), 1);
+                this.ścieżki[id] = Fabryka.stwórzŚcieżkęKariery(Main.enumToString(zawód), 1);
             }
         }
 
@@ -51,7 +51,8 @@ public class Robotnik extends Agent {
         this.strategiaKupna = strategiaKupna;
         this.strategiaPracy = strategiaPracy;
         this.strategiaProdukcji = strategiaProdukcji;
-        this.produktywność = produktywność;
+        this.bazowaProduktywność = produktywność;
+        this.produktywność = new TreeMap<>(produktywność);
         this.licznikGłodu = 0;
         this.produkcjaWObecnejTurze = 0;
 
@@ -61,17 +62,45 @@ public class Robotnik extends Agent {
         this.strategiaProdukcji.ustawRobotnika(this);
     }
 
+    public int[] podajPoziomyŚcieżek() {
+        int[] wynik = new int[ILE_ZAWODÓW];
+        for (Zawody zawód: Zawody.values()) {
+            int id = zawód.ordinal();
+            wynik[id] = ścieżki[id].podajPoziom();
+        }
+        return wynik;
+    }
+    public ŚcieżkaKariery podajKarierę() {
+        return obecnaŚcieżka;
+    }
+    public StrategiaKupna podajStrategięKupna() {
+        return strategiaKupna;
+    }
+    public StrategiaProdukcji podajStrategięProdukcji() {
+        return strategiaProdukcji;
+    }
+    public StrategiaPracy podajStrategięPracy() {
+        return strategiaPracy;
+    }
+    public StrategiaKariery podajStrategięKariery() {
+        return strategiaKariery;
+    }
+    public int podajProduktywność(TypyProduktów produkt) {
+        return produktywność.get(Main.enumToString(produkt));
+    }
+    public Map<String, Integer> podajBazoweProduktywności() {
+        return bazowaProduktywność;
+    }
+
     public void ustawDzisiejsząProdukcję(int ileWyprodukował) {
         this.produkcjaWObecnejTurze = ileWyprodukował;
     }
 
-    public int podajProduktywność(Symulacja.TypyProduktów produkt) {
-        return produktywność.get(produkt.toString().toLowerCase(Locale.ROOT));
-    }
+
 
     private int ileUbrańZWytrzymałościąJeden() {
         int ileUbrań = 0;
-        TreeMap<Produkt, Double> ubrania = podajProdukty(UBRANIA);
+        Map<Produkt, Double> ubrania = podajProdukty(UBRANIA);
 
         for (Produkt ubranie: ubrania.keySet()) {
             if (ubranie.podajWytrzymałość() == 1) {
@@ -85,7 +114,7 @@ public class Robotnik extends Agent {
 
     private int ileUbrań() {
         int ileUbrań = 0;
-        TreeMap<Produkt, Double> ubrania = podajProdukty(UBRANIA);
+        Map<Produkt, Double> ubrania = podajProdukty(UBRANIA);
 
         for (Produkt ubranie: ubrania.keySet()) {
             ileUbrań += ileProduktów(ubranie);
@@ -100,12 +129,12 @@ public class Robotnik extends Agent {
         // Następnego dnia rano na pewno będziemy mieli ileUbrańZWytrzymałościąPonadJeden ubrań. Pozostałe musimy
         // dokupić. Możemy jednak pechowo zakupić ubrania poziomu 1, które zostaną zużyte jeszcze dzisiaj, więc
         // aby zabezpieczyć się przed tym przypadkiem, musimy mieć co najmniej dwu krotność brakującej nam liczby ubrań.
-        return Math.max(2 * (100 - ileUbrańZWytrzymałościąPonadJeden) - ileUbrańZWytrzymałościąJeden(), 0);
+        return Math.max(2 * (DZIENNE_ZUŻYCIE_UBRAŃ - ileUbrańZWytrzymałościąPonadJeden) - ileUbrańZWytrzymałościąJeden(), 0);
     }
 
     public int ileProgramówBrakuje() {
         int ileProgramów = 0;
-        TreeMap<Produkt, Double> programy = podajProdukty(PROGRAMY);
+        Map<Produkt, Double> programy = podajProdukty(PROGRAMY);
 
         for (Produkt program: programy.keySet()) {
             ileProgramów += ileProduktów(program);
@@ -114,21 +143,12 @@ public class Robotnik extends Agent {
         return Math.max(0, produkcjaWObecnejTurze - ileProgramów);
     }
 
-    public int[] podajPoziomyŚcieżek() {
-        int[] wynik = new int[ILE_ZAWODÓW];
-        for (Symulacja.Zawody zawód: Symulacja.Zawody.values()) {
-            int id = Symulacja.ID_KARIERY.get(zawód);
-            wynik[id] = ścieżki[id].podajPoziom();
-        }
-        return wynik;
-    }
-
     // BONUSY
     private int podajBonusZNarzędzi() {
         int bonus = 0;
-        TreeMap<Produkt, Double> narzędzia = produkty.get(Symulacja.ID_PRODUKTU.get(NARZEDZIA));
+        Map<Produkt, Double> narzędzia = produkty.get(NARZEDZIA.ordinal());
         for (Produkt produkt: narzędzia.keySet()) {
-            if (produkt.podajTyp() == Symulacja.TypyProduktów.NARZEDZIA) {
+            if (produkt.podajTyp() == NARZEDZIA) {
                 bonus += narzędzia.get(produkt) * produkt.podajPoziom();
             }
         }
@@ -153,10 +173,10 @@ public class Robotnik extends Agent {
     }
 
     private void policzProduktywność() {
-        for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
-            String typString = typ.toString().toLowerCase(Locale.ROOT);
+        for (TypyProduktów typ: TypyProduktów.values()) {
+            String typString = Main.enumToString(typ);
             //System.out.println(obecnaŚcieżka.podajBonus(typ) + " " + podajBonusZNarzędzi() + " " + podajBonusZGłodu() + " " + podajBonusZUbrań());
-            produktywność.put(typString, 100 + obecnaŚcieżka.podajBonus(typ) + podajBonusZNarzędzi() + podajBonusZGłodu() + podajBonusZUbrań());
+            produktywność.put(typString, bazowaProduktywność.get(typString) + obecnaŚcieżka.podajBonus(typ) + podajBonusZNarzędzi() + podajBonusZGłodu() + podajBonusZUbrań());
         }
     }
 
@@ -172,10 +192,10 @@ public class Robotnik extends Agent {
 
     public void uczSię() {
         if (strategiaKariery.czyZmienia()) {
-            int idNowejKariery = Symulacja.ID_KARIERY.get(strategiaKariery.podajNowyZawód());
+            int idNowejKariery = strategiaKariery.podajNowyZawód().ordinal();
             obecnaŚcieżka = ścieżki[idNowejKariery];
         } else {
-            int idObecnejKariery = Symulacja.ID_KARIERY.get(obecnaŚcieżka.podajZawód());
+            int idObecnejKariery = obecnaŚcieżka.podajZawód().ordinal();
             obecnaŚcieżka.dodajPoziom();
             ścieżki[idObecnejKariery] = obecnaŚcieżka;
         }
@@ -189,7 +209,7 @@ public class Robotnik extends Agent {
         }
     }
 
-    private void zużyjUbranie(int ile, Produkt ubranie, TreeMap<Produkt, Double> ubraniaKopia) {
+    private void zużyjUbranie(int ile, Produkt ubranie, Map<Produkt, Double> ubraniaKopia) {
         int wytrzymałość = ubranie.podajWytrzymałość();
 
         // Usuwamy zużyte ubrania
@@ -207,8 +227,9 @@ public class Robotnik extends Agent {
         int licznikZużytych = 0;
         // Tworzymy kopię, aby móc od razu dodawać zużyte ubrania na mapę. Jeśli byśmy tego nie zrobili, to
         // takie zużyte ubranie mogłoby zostać ponownie rozpatrzone i zużyte wielokrotnie.
-        TreeMap<Produkt, Double> ubrania = podajProdukty(UBRANIA);
-        TreeMap<Produkt, Double> ubraniaKopia = new TreeMap<>(ubrania);
+        Map<Produkt, Double> ubrania = podajProdukty(UBRANIA);
+        Map<Produkt, Double> ubraniaKopia = new TreeMap<>(new KomparatorProduktów());
+        ubraniaKopia.putAll(ubrania);
 
         for (Produkt ubranie: ubrania.keySet()) {
             int zużyte = Math.min(DZIENNE_ZUŻYCIE_UBRAŃ - licznikZużytych, ubrania.get(ubranie).intValue());
@@ -221,12 +242,12 @@ public class Robotnik extends Agent {
         }
 
         // Podmieniamy mapę.
-        produkty.set(Symulacja.ID_PRODUKTU.get(UBRANIA), ubraniaKopia);
+        produkty.set(UBRANIA.ordinal(), ubraniaKopia);
     }
 
     private void zużyjNarzędzia() {
         // Wyrzucamy wszystko tworząc nową mapę
-        produkty.set(Symulacja.ID_PRODUKTU.get(NARZEDZIA), new TreeMap<>(new KomparatorProduktów()));
+        produkty.set(NARZEDZIA.ordinal(), new TreeMap<>(new KomparatorProduktów()));
     }
 
     public void zużyjPrzedmioty() {

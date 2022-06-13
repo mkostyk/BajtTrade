@@ -3,7 +3,7 @@ package main.symulacja.strategieRobotników.strategieKariery;
 import main.symulacja.Symulacja;
 import main.symulacja.utils.PodsumowanieDnia;
 
-import static main.symulacja.Symulacja.ILE_PRODUKTÓW;
+import static main.Main.*;
 
 public class Rewolucjonista extends StrategiaKariery {
     @Override
@@ -12,29 +12,34 @@ public class Rewolucjonista extends StrategiaKariery {
     }
 
     @Override
-    public Symulacja.Zawody podajNowyZawód() {
+    public Zawody podajNowyZawód() {
         int dni = Math.max(1, robotnik.podajID() % 17);
         PodsumowanieDnia[] dane = robotnik.podajGiełdę().podajHistorięOstatnichDni(dni);
         int[] oferty = new int[ILE_PRODUKTÓW];
 
         for (PodsumowanieDnia dzień: dane) {
-            for (Symulacja.TypyProduktów produkt: Symulacja.TypyProduktów.values()) {
-                int id = Symulacja.ID_PRODUKTU.get(produkt);
-                oferty[id] += dzień.podajLiczbęOfertSprzedaży(produkt);
+            for (TypyProduktów typ: TypyProduktów.values()) {
+                int id = typ.ordinal();
+                oferty[id] += dzień.podajLiczbęOfertSprzedaży(typ);
             }
         }
 
         int maksimumSprzedaży = 0;
         int nowyProduktID = 0;
 
-        for (Symulacja.TypyProduktów produkt: Symulacja.TypyProduktów.values()) {
-            int id = Symulacja.ID_PRODUKTU.get(produkt);
+        for (TypyProduktów typ: TypyProduktów.values()) {
+            int id = typ.ordinal();
             if (oferty[id] >= maksimumSprzedaży) {
                 maksimumSprzedaży = oferty[id];
                 nowyProduktID = id;
             }
         }
 
-        return Symulacja.Zawody.values()[nowyProduktID];
+        return Zawody.values()[nowyProduktID];
+    }
+
+    @Override
+    public String toString() {
+        return "rewolucjonista";
     }
 }

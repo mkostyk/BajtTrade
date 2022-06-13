@@ -1,19 +1,19 @@
 package main.symulacja.agenci;
 
+import main.symulacja.giełda.Giełda;
 import main.Main;
 import main.symulacja.Symulacja;
-import main.symulacja.giełda.Giełda;
 import main.symulacja.produkty.Produkt;
 
-import static main.symulacja.Symulacja.TypyProduktów.*;
+import static main.Main.TypyProduktów;
+import static main.Main.TypyProduktów.*;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public abstract class Agent {
-    protected ArrayList<TreeMap<Produkt, Double>> produkty;
-    protected Giełda giełda;
+    protected List<Map<Produkt, Double>> produkty;
+    protected transient Giełda giełda;
     protected int id;
 
     protected Agent(int id, Map<String, Double> produkty) {
@@ -25,19 +25,22 @@ public abstract class Agent {
         this.giełda = giełda;
     }
 
-    public TreeMap<Produkt, Double> podajProdukty(Symulacja.TypyProduktów typ) {
-        return produkty.get(Symulacja.ID_PRODUKTU.get(typ));
+    public List<Map<Produkt, Double>> podajWszystkieProdukty() {
+        return produkty;
     }
+
+    public Map<Produkt, Double> podajProdukty(TypyProduktów typ) {
+        return produkty.get(typ.ordinal());
+    }
+
+    // TODO - czy zostawić osobne funkcje na diamenty?
 
     public double ileDiamentów() {
         return ileProduktów(new Produkt(DIAMENTY, 1));
     }
 
     public double ileProduktów(Produkt produkt) {
-        if (produkty.get(produkt.typID()).get(produkt) == null) {
-            return 0;
-        }
-
+        produkty.get(produkt.typID()).putIfAbsent(produkt, 0.0);
         return produkty.get(produkt.typID()).get(produkt);
     }
 
@@ -64,6 +67,20 @@ public abstract class Agent {
             return true;
         }
     }
+
+    public void usuńZbędneProdukty() {
+        for (TypyProduktów typ: TypyProduktów.values()) {
+            produkty.get(typ.ordinal()).values().removeIf(value -> value <= 0);
+        }
+    }
+
+    /*public String produktyToString() {
+        Map<String, Double[]> produkty = java.stwórzMapęTablicProduktów(this);
+        StringBuilder sb = new StringBuilder();
+        for(String nazwa: produkty.keySet()) {
+            sb.append(nazwa)
+        }
+    }*/
 
     public Giełda podajGiełdę() {
         return giełda;

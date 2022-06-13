@@ -1,6 +1,5 @@
 package main.symulacja.komparatory;
 
-import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.produkty.Produkt;
 
 import java.util.Comparator;

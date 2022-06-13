@@ -4,7 +4,8 @@ import main.symulacja.Symulacja;
 import main.symulacja.agenci.Agent;
 import main.symulacja.produkty.Produkt;
 
-import static main.symulacja.Symulacja.MAX_POZIOM;
+import static main.Main.TypyProduktów;
+import static main.Main.MAX_POZIOM;
 
 public class OfertaRobotnika extends Oferta {
     // Oferty sprzedaży
@@ -13,7 +14,7 @@ public class OfertaRobotnika extends Oferta {
     }
 
     // Oferty kupna
-    public OfertaRobotnika(Symulacja.TypyProduktów typ, int ile, Agent twórca) {
+    public OfertaRobotnika(TypyProduktów typ, int ile, Agent twórca) {
         super(new Produkt(typ, MAX_POZIOM), ile, twórca);
     }
 }

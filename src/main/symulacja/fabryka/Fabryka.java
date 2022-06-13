@@ -6,17 +6,18 @@ import main.symulacja.agenci.spekulanci.Spekulant;
 import main.symulacja.agenci.spekulanci.Wypukły;
 import main.symulacja.agenci.spekulanci.Średni;
 import main.symulacja.giełda.Giełda;
-import main.symulacja.giełda.strategieGiełdy.Kapitalistyczna;
-import main.symulacja.giełda.strategieGiełdy.Socjalistyczna;
-import main.symulacja.giełda.strategieGiełdy.Zrównoważona;
 import main.symulacja.produkty.Produkt;
-import main.symulacja.strategieRobotników.strategieKariery.*;
+import main.symulacja.strategieRobotników.strategieKariery.Konserwatysta;
+import main.symulacja.strategieRobotników.strategieKariery.Rewolucjonista;
+import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
 import main.symulacja.strategieRobotników.strategieKupna.*;
 import main.symulacja.strategieRobotników.strategiePracy.*;
 import main.symulacja.strategieRobotników.strategieProdukcji.*;
+import main.symulacja.giełda.strategieGiełdy.Kapitalistyczna;
+import main.symulacja.giełda.strategieGiełdy.Socjalistyczna;
+import main.symulacja.giełda.strategieGiełdy.Zrównoważona;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Fabryka {
     // SCIEŻKI KARIERY
@@ -80,7 +81,7 @@ public class Fabryka {
     }
 
     // GIEŁDA
-    public static Giełda stwórzGiełdę(String strategia, TreeMap<Produkt, Double> ceny, int karaZaUbrania) {
+    public static Giełda stwórzGiełdę(String strategia, Map<Produkt, Double> ceny, int karaZaUbrania) {
         return switch (strategia) {
             case "kapitalistyczna" -> new Kapitalistyczna(ceny, karaZaUbrania);
             case "socjalistyczna" -> new Socjalistyczna(ceny, karaZaUbrania);

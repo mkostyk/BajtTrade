@@ -2,7 +2,7 @@ package main.symulacja.strategieRobotników.strategieKupna;
 
 import main.symulacja.giełda.oferty.OfertaRobotnika;
 
-import static main.symulacja.Symulacja.TypyProduktów.*;
+import static main.Main.TypyProduktów.*;
 
 public class Czyścioszek extends Technofob {
     @Override

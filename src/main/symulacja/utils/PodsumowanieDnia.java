@@ -1,21 +1,26 @@
 package main.symulacja.utils;
 
+import main.Main;
 import main.symulacja.Symulacja;
 import main.symulacja.produkty.Produkt;
 import java.util.Arrays;
-import java.util.TreeMap;
+import java.util.Map;
+
+import static main.Main.PRODUKTY_NA_GIEŁDZIE;
+import static main.Main.TypyProduktów;
+import static main.Main.TypyProduktów.*;
 
 public class PodsumowanieDnia {
-    private final TreeMap<Produkt, Double> średnie;
-    private final TreeMap<Produkt, Double> cenyZerowe;
-    private final TreeMap<Produkt, Double> najniższeCeny;
-    private final TreeMap<Produkt, Double> najwyższeCeny;
+    private final Map<Produkt, Double> średnie;
+    private final Map<Produkt, Double> cenyZerowe;
+    private final Map<Produkt, Double> najniższeCeny;
+    private final Map<Produkt, Double> najwyższeCeny;
     private final int[] ofertySprzedażySpekulantów;
     private final int[] ofertySprzedażyRobotników;
 
-    public PodsumowanieDnia(TreeMap<Produkt, Double> średnie, TreeMap<Produkt, Double> cenyZerowe,
+    public PodsumowanieDnia(Map<Produkt, Double> średnie, Map<Produkt, Double> cenyZerowe,
                             int[] ofertySprzedażySpekulantów, int[] ofertySprzedażyRobotników,
-                            TreeMap<Produkt, Double> najniższeCeny, TreeMap<Produkt, Double> najwyższeCeny) {
+                            Map<Produkt, Double> najniższeCeny, Map<Produkt, Double> najwyższeCeny) {
         this.średnie = średnie;
         this.cenyZerowe = cenyZerowe;
         this.ofertySprzedażySpekulantów = ofertySprzedażySpekulantów;
@@ -24,53 +29,40 @@ public class PodsumowanieDnia {
         this.najwyższeCeny = najwyższeCeny;
     }
 
-    public double podajŚredniąCenę(Symulacja.TypyProduktów typ, int poziom) {
-        // TODO - ładniej to
-        if (typ == Symulacja.TypyProduktów.DIAMENTY) {
+    public double podajŚredniąCenę(Produkt produkt) {
+        System.out.println(produkt.podajTyp() + " " + produkt.podajPoziom() + " " + cenyZerowe.get(new Produkt(produkt.podajTyp(), 1)));
+        if (PRODUKTY_NA_GIEŁDZIE.contains(produkt.podajTyp())) {
+            średnie.putIfAbsent(produkt, cenyZerowe.get(new Produkt(produkt.podajTyp(), 1)));
+            return średnie.get(produkt);
+        } else {
             return 0;
         }
-
-        Produkt produkt = new Produkt(typ, poziom);
-        if (średnie.get(produkt) == null) {
-            return cenyZerowe.get(new Produkt(typ, 1));
-        } else {
-            return średnie.get(produkt);
-        }
-    }
-
-    // TODO - standaryzacja
-    public double podajŚredniąCenę(Produkt produkt) {
-        return podajŚredniąCenę(produkt.podajTyp(), produkt.podajPoziom());
     }
 
     public double podajNajniższąCenę(Produkt produkt) {
-        if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
-            return 0;
-        }
-
-        if (najniższeCeny.get(produkt) == null) {
-            return cenyZerowe.get(new Produkt(produkt.podajTyp(), 1));
-        } else {
+        if (PRODUKTY_NA_GIEŁDZIE.contains(produkt.podajTyp())) {
+            najniższeCeny.putIfAbsent(produkt, cenyZerowe.get(new Produkt(produkt.podajTyp(), 1)));
             return najniższeCeny.get(produkt);
+        } else {
+            return 0;
         }
     }
 
-    public int podajLiczbęOfertSprzedażyRobotników(Symulacja.TypyProduktów produkt) {
-        if (produkt == Symulacja.TypyProduktów.DIAMENTY) {
+    public int podajLiczbęOfertSprzedażyRobotników(TypyProduktów typ) {
+        if (PRODUKTY_NA_GIEŁDZIE.contains(typ)) {
+            return ofertySprzedażyRobotników[typ.ordinal()];
+        } else {
             return 0;
         }
-
-        int id = Symulacja.ID_PRODUKTU.get(produkt);
-        return ofertySprzedażyRobotników[id];
     }
 
-    public int podajLiczbęOfertSprzedaży(Symulacja.TypyProduktów produkt) {
-        if (produkt == Symulacja.TypyProduktów.DIAMENTY) {
+    public int podajLiczbęOfertSprzedaży(TypyProduktów typ) {
+        if (PRODUKTY_NA_GIEŁDZIE.contains(typ)) {
+            int id = typ.ordinal();
+            return ofertySprzedażyRobotników[id] + ofertySprzedażySpekulantów[id];
+        } else {
             return 0;
         }
-
-        int id = Symulacja.ID_PRODUKTU.get(produkt);
-        return ofertySprzedażyRobotników[id] + ofertySprzedażySpekulantów[id];
     }
 
     @Override

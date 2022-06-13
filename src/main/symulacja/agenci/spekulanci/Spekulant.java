@@ -1,11 +1,12 @@
 package main.symulacja.agenci.spekulanci;
 
 import main.Main;
-import main.symulacja.Symulacja;
 import main.symulacja.agenci.Agent;
-import main.symulacja.giełda.Giełda;
 import main.symulacja.giełda.oferty.OfertaSpekulanta;
 import main.symulacja.produkty.Produkt;
+
+import static main.Main.TypyProduktów;
+import static main.Main.TypyProduktów.*;
 
 import java.util.Map;
 
@@ -18,11 +19,8 @@ public abstract class Spekulant extends Agent {
 
     public void wystawOferty() {
         for (int poziom = 1; poziom <= giełda.podajMaksymalnyPoziom(); poziom++) {
-            for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
-                // TODO - nie podoba mi się to
-                if (poziom > 1 && typ == Symulacja.TypyProduktów.JEDZENIE) {
-                    continue;
-                } else {
+            for (TypyProduktów typ: TypyProduktów.values()) {
+                if ((poziom > 1 && Main.PRODUKTY_Z_POZIOMEM.contains(typ)) || poziom == 1) {
                     wystawOfertęProduktu(new Produkt(typ, poziom));
                 }
             }
@@ -30,7 +28,7 @@ public abstract class Spekulant extends Agent {
     }
 
     protected void dodajOfertęKupna(Produkt produkt, double cenaBazowa, double marża) {
-        if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
+        if (!Main.PRODUKTY_NA_GIEŁDZIE.contains(produkt.podajTyp())) {
             return;
         }
 
@@ -39,7 +37,7 @@ public abstract class Spekulant extends Agent {
     }
 
     protected void dodajOfertęSprzedaży(Produkt produkt, double cenaBazowa, double marża) {
-        if (produkt.podajTyp() == Symulacja.TypyProduktów.DIAMENTY) {
+        if (!Main.PRODUKTY_NA_GIEŁDZIE.contains(produkt.podajTyp())  || (int) this.ileProduktów(produkt) == 0) {
             return;
         }
 

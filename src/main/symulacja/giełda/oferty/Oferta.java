@@ -1,6 +1,6 @@
 package main.symulacja.giełda.oferty;
 
-import main.symulacja.Symulacja;
+import main.Main.TypyProduktów;
 import main.symulacja.agenci.Agent;
 import main.symulacja.produkty.Produkt;
 
@@ -38,7 +38,7 @@ public abstract class Oferta {
     }
 
     public int typID() {
-        return Symulacja.ID_PRODUKTU.get(produkt.podajTyp());
+        return produkt.podajTyp().ordinal();
     }
 
     public Agent podajTwórcę() {return twórca;}

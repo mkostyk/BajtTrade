@@ -17,8 +17,14 @@ public class SpekulantAdapter {
     }
 
     @ToJson
-    private String toJson(Spekulant spekulant) {
-        return spekulant.toString();
+    private SpekulantJson toJson(Spekulant spekulant) {
+        SpekulantJson json = new SpekulantJson();
+        json.id = spekulant.podajID();
+        json.kariera = spekulant.toString();
+        //json.zasoby = TODO
+        //json.historia_spekulanta_sredniego TODO
+
+        return json;
     }
 
     @FromJson

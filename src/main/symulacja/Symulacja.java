@@ -1,59 +1,25 @@
 package main.symulacja;
 
-import main.Main;
 import main.symulacja.agenci.robotnicy.Robotnik;
 import main.symulacja.agenci.spekulanci.Spekulant;
-import main.symulacja.fabryka.Fabryka;
 import main.symulacja.giełda.Giełda;
-import main.symulacja.produkty.Produkt;
 import main.symulacja.utils.BazoweInformacje;
+import main.Main;
+import main.symulacja.fabryka.Fabryka;
+import main.symulacja.produkty.Produkt;
 
 import java.util.*;
 
-import static main.symulacja.Symulacja.TypyProduktów.*;
-import static main.symulacja.Symulacja.Zawody.*;
-
 public class Symulacja {
-    // TODO - przerzucić do maina
-    public static int DZIENNE_ZUŻYCIE_UBRAŃ = 100;
-    public static int ILE_PRODUKTÓW = 5;
-    public static int ILE_ZAWODÓW = 5;
-    public enum TypyProduktów {NARZEDZIA, PROGRAMY, JEDZENIE, UBRANIA, DIAMENTY}
-    public enum Zawody {INZYNIER, PROGRAMISTA, ROLNIK, RZEMIESLNIK, GORNIK}
-
-    public static Map <Zawody, Integer> ID_KARIERY = Map.ofEntries(
-            Map.entry(INZYNIER, 0),
-            Map.entry(PROGRAMISTA, 1),
-            Map.entry(ROLNIK, 2),
-            Map.entry(RZEMIESLNIK, 3),
-            Map.entry(GORNIK, 4)
-            );
-
-    public static Map <TypyProduktów, Integer> ID_PRODUKTU = Map.ofEntries(
-            Map.entry(NARZEDZIA, 0),
-            Map.entry(PROGRAMY, 1),
-            Map.entry(JEDZENIE, 2),
-            Map.entry(UBRANIA, 3),
-            Map.entry(DIAMENTY, 4)
-    );
-    public static double INFINITY = 1e300;
-    public static int MAX_POZIOM = Integer.MAX_VALUE;
-    public static Random RNG = new Random();
-
     private final int długość;
-    private final ArrayList<Robotnik> robotnicy;
-    private final ArrayList<Spekulant> spekulanci;
+    private final List<Robotnik> robotnicy;
+    private final List<Spekulant> spekulanci;
     private final Giełda giełda;
-
-
     public Symulacja (BazoweInformacje info, List<Robotnik> robotnicy, List<Spekulant> spekulanci) {
-        // TODO
         this.długość = info.podajDługość();
-        this.robotnicy = (ArrayList<Robotnik>) robotnicy;
-        this.spekulanci = (ArrayList<Spekulant>) spekulanci;
-        // TODO
-        TreeMap<Produkt, Double> cenyZerowe = Main.stwórzMapęCen(info.podajCeny());
-        //System.out.println(giełda);
+        this.robotnicy = robotnicy;
+        this.spekulanci = spekulanci;
+        Map<Produkt, Double> cenyZerowe = Main.stwórzMapęCen(info.podajCeny());
         this.giełda = Fabryka.stwórzGiełdę(info.podajGiełdę(), cenyZerowe, info.podajKaręZaBrakUbrań());
 
         for (Robotnik robotnik: this.robotnicy) {
@@ -65,13 +31,25 @@ public class Symulacja {
         }
     }
 
+    public BazoweInformacje podajInformacje() {
+        return new BazoweInformacje(długość, giełda.podajKaręZaUbrania(), new TreeMap<>(), giełda.toString());
+    }
+
+    public List<Robotnik> podajRobotników() {
+        return robotnicy;
+    }
+
+    public List<Spekulant> podajSpekulantów() {
+        return spekulanci;
+    }
+
     private void wypiszDzień() {
         System.out.println(this);
     }
 
     private void dzień() {
         // Robotnicy (pkt 1)
-        // Wywołujemy przeżyjDzień() oraz usuwamy robotników jeśli nie udało im się przeżyć
+        // Wywołujemy przeżyjDzień() oraz usuwamy robotników, jeśli nie udało im się przeżyć
         robotnicy.removeIf(robotnik -> !robotnik.przeżyjDzień());
 
         // Spekulanci (pkt 2)
@@ -79,13 +57,9 @@ public class Symulacja {
             spekulant.wystawOferty();
         }
 
-        //giełda.wypisz();
 
         // Giełda (pkt 3 i 4)
         giełda.dopasujOferty();
-
-        //giełda.wypisz();
-
         giełda.skupOferty();
         giełda.podsumujDzień();
 
@@ -93,6 +67,12 @@ public class Symulacja {
         // Zużywanie przedmiotów (pkt 5)
         for (Robotnik robotnik: robotnicy) {
             robotnik.zużyjPrzedmioty();
+            robotnik.usuńZbędneProdukty();
+        }
+
+        // Czyszczenie zasobów spekulantów
+        for (Spekulant spekulant: spekulanci) {
+            spekulant.usuńZbędneProdukty();
         }
 
         wypiszDzień();

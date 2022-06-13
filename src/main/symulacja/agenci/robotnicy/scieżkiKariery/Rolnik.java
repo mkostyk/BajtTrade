@@ -1,15 +1,14 @@
 package main.symulacja.agenci.robotnicy.scieżkiKariery;
 
-import main.symulacja.Symulacja;
-
-import static main.symulacja.Symulacja.Zawody.ROLNIK;
+import static main.Main.Zawody;
+import static main.Main.Zawody.*;
 
 public class Rolnik extends ŚcieżkaKariery {
     public Rolnik(int poziom) {
         this.poziom = poziom;
     }
 
-    public Symulacja.Zawody podajZawód() {
+    public Zawody podajZawód() {
         return ROLNIK;
     }
 }

@@ -1,7 +1,5 @@
 package main.symulacja.agenci.spekulanci;
 
-import main.symulacja.Symulacja;
-import main.symulacja.giełda.Giełda;
 import main.symulacja.produkty.Produkt;
 import main.symulacja.utils.PodsumowanieDnia;
 
@@ -29,5 +27,10 @@ public class Wypukły extends Spekulant {
             this.dodajOfertęSprzedaży(produkt, najnowszaCena, 0.1);
         }
 
+    }
+
+    @Override
+    public String toString() {
+        return "wypukly";
     }
 }

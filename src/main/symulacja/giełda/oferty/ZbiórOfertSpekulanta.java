@@ -1,17 +1,18 @@
 package main.symulacja.giełda.oferty;
 
+import main.symulacja.Symulacja;
 import main.symulacja.komparatory.KomparatorOfertKupnaSpekulantów;
 import main.symulacja.komparatory.KomparatorOfertSprzedażySpekulantów;
 
 import java.util.*;
 
-import static main.symulacja.Symulacja.INFINITY;
+import static main.Main.INFINITY;
 
 /*
-    ArrayList, ale z dodatkowymi opcjami.
+    List, ale z dodatkowymi opcjami.
  */
 public class ZbiórOfertSpekulanta {
-    private final ArrayList<OfertaSpekulanta> listaOfert = new ArrayList<>();
+    private final List<OfertaSpekulanta> listaOfert = new ArrayList<>();
 
     public int znajdźNajlepsząOfertęKupna(OfertaRobotnika oferta) {
         // Cena INFINITY gwarantuje, że znajdziemy najwyższą cenę, za którą możemy sprzedać produkty.
@@ -43,7 +44,7 @@ public class ZbiórOfertSpekulanta {
         return listaOfert.size();
     }
 
-    public ArrayList<OfertaSpekulanta> podajWszystkieOferty() {
+    public List<OfertaSpekulanta> podajWszystkieOferty() {
         return listaOfert;
     }
 }

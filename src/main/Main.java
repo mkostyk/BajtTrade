@@ -2,52 +2,98 @@ package main;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;
 import main.symulacja.Symulacja;
+import main.symulacja.agenci.Agent;
 import main.symulacja.adapters.*;
 import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.produkty.Produkt;
+import main.symulacja.strategieRobotników.strategieKupna.*;
+import main.symulacja.strategieRobotników.strategiePracy.*;
+import main.symulacja.strategieRobotników.strategieProdukcji.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Locale;
+import java.util.*;
 import java.util.Map;
-import java.util.TreeMap;
+
+import static main.Main.TypyProduktów.*;
 
 public class Main {
-    // TODO - widoczności
-    // TODO - produkty czy enum produktów?
-    // TODO - zgadzające się nazwy parametrów
-    // TODO - kolejność produktów - WAŻNE
     // TODO - jak najmniej .get, jak najwięcej ileProduktów
-    // TODO - string zamiast enum chyba jest lepsze
+    // TODO - pozbyć się typID()
+    // TODO - poczyścić komentarze
+    public static int DZIENNE_ZUŻYCIE_UBRAŃ = 100;
+    public static int ILE_PRODUKTÓW = 5;
+    public static int ILE_ZAWODÓW = 5;
+    public enum TypyProduktów {JEDZENIE, UBRANIA, NARZEDZIA, DIAMENTY, PROGRAMY}
+    public enum Zawody {ROLNIK, RZEMIESLNIK, INZYNIER, GORNIK, PROGRAMISTA}
 
-    public static String typToString(Symulacja.TypyProduktów typ) {
-        return typ.toString().toLowerCase(Locale.ROOT);
+    public static final Set<TypyProduktów> PRODUKTY_Z_POZIOMEM = Set.of(
+            UBRANIA, NARZEDZIA, PROGRAMY
+    );
+
+    public static final Set<TypyProduktów> PRODUKTY_NA_GIEŁDZIE = Set.of(
+            JEDZENIE, UBRANIA, NARZEDZIA, PROGRAMY
+    );
+
+    public static double INFINITY = 1e300;
+    public static int MAX_POZIOM = Integer.MAX_VALUE;
+    public static Random RNG = new Random();
+
+
+    public static String enumToString(Object enumerator) {
+        return enumerator.toString().toLowerCase(Locale.ROOT);
     }
 
-    public static TreeMap<Produkt, Double> stwórzMapęCen(Map<String, Double> mapa) {
-        TreeMap<Produkt, Double> wynik = new TreeMap<>(new KomparatorProduktów());
+    private static Double[] stwórzTablicęProduktów(Map<Produkt, Double> mapaCen) {
+        if (mapaCen.size() == 0) {
+            return new Double[0];
+        } else {
+            // TODO - do przetestowania
+            Produkt pierwszy = mapaCen.keySet().stream().findFirst().get();
+            Double[] wynik = new Double[pierwszy.podajPoziom()];
+            TypyProduktów typ = pierwszy.podajTyp();
 
-        for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
-            wynik.put(new Produkt(typ, 1), mapa.get(typToString(typ)));
+            for (int poziom = wynik.length; poziom > 0; poziom--) {
+                // TODO
+                wynik[poziom - 1] = mapaCen.getOrDefault(new Produkt(typ, poziom), 0.0);
+            }
+
+            return wynik;
+        }
+    }
+
+    public static Map<String, Double[]> stwórzMapęTablicProduktów(Agent właściciel) {
+        Map<String, Double[]> wynik = new TreeMap<>();
+        for (TypyProduktów typ: TypyProduktów.values()) {
+            wynik.put(enumToString(typ), stwórzTablicęProduktów(właściciel.podajProdukty(typ)));
         }
 
         return wynik;
     }
 
-    public static ArrayList<TreeMap<Produkt, Double>> stwórzListęMapProduktów(Map<String, Double> mapa) {
-        ArrayList<TreeMap<Produkt, Double>> wynik = new ArrayList<>();
-        for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
-            TreeMap<Produkt, Double> mapaProduktu = new TreeMap<>(new KomparatorProduktów());
-            mapaProduktu.put(new Produkt(typ, 1), mapa.get(typToString(typ)));
+    public static Map<Produkt, Double> stwórzMapęCen(Map<String, Double> mapa) {
+        Map<Produkt, Double> wynik = new TreeMap<>(new KomparatorProduktów());
+
+        for (TypyProduktów typ: TypyProduktów.values()) {
+            wynik.put(new Produkt(typ, 1), mapa.get(enumToString(typ)));
+        }
+
+        return wynik;
+    }
+
+    public static List<Map<Produkt, Double>> stwórzListęMapProduktów(Map<String, Double> mapa) {
+        List<Map<Produkt, Double>> wynik = new ArrayList<>();
+        for (TypyProduktów typ: TypyProduktów.values()) {
+            Map<Produkt, Double> mapaProduktu = new TreeMap<>(new KomparatorProduktów());
+            mapaProduktu.put(new Produkt(typ, 1), mapa.get(enumToString(typ)));
             wynik.add(mapaProduktu);
         }
 
         return wynik;
     }
 
-    // TODO - nazwy po polsku
-    private static String readFile(String nazwa) {
+    private static String wczytajPlik(String nazwa) {
         try(BufferedReader br = new BufferedReader(new FileReader(nazwa))) {
             StringBuilder sb = new StringBuilder();
             String linia = br.readLine();
@@ -60,22 +106,43 @@ public class Main {
 
             return sb.toString();
         } catch (IOException e) {
+            System.out.println(e);
             return null;
         }
     }
 
-    // TODO - exception
     public static void main(String[] args) throws IOException {
-        String json = readFile("input.json");
+        String json = wczytajPlik("src/main/input.json");
         assert json != null;
 
         Moshi moshi = new Moshi.Builder()
+                // TODO - osobne klasy
+                .add(PolymorphicJsonAdapterFactory.of(StrategiaPracy.class, "typ")
+                        .withSubtype(Okresowy.class, "okresowy")
+                        .withSubtype(Oszczędny.class, "oszczedny")
+                        .withSubtype(Pracuś.class, "pracus")
+                        .withSubtype(Rozkładowy.class, "rozkladowy")
+                        .withSubtype(Student.class, "student")
+                )
+
+                .add(PolymorphicJsonAdapterFactory.of(StrategiaKupna.class, "typ")
+                        .withSubtype(Czyścioszek.class, "czyscioszek")
+                        .withSubtype(Gadżeciarz.class, "gadzeciarz")
+                        .withSubtype(Technofob.class, "technofob")
+                        .withSubtype(Zmechanizowany.class, "zmechanizowany")
+                )
+
+                .add(PolymorphicJsonAdapterFactory.of(StrategiaProdukcji.class, "typ")
+                        .withSubtype(Chciwy.class, "chciwy")
+                        .withSubtype(Krótkowzroczny.class, "krotkowzroczny")
+                        .withSubtype(Losowy.class, "losowy")
+                        .withSubtype(Perspektywiczny.class, "perspektywiczny")
+                        .withSubtype(Średniak.class, "sredniak")
+                )
+
                 .add(new SymulacjaAdapter())
                 .add(new RobotnikAdapter())
                 .add(new ŚcieżkaKarieryAdapter())
-                .add(new StrategiaKupnaAdapter())
-                .add(new StrategiaProdukcjiAdapter())
-                .add(new StrategiaPracyAdapter())
                 .add(new StrategiaKarieryAdapter())
                 .add(new SpekulantAdapter())
                 .build();
@@ -86,11 +153,11 @@ public class Main {
         System.out.println(symulacja);
 
         symulacja.symuluj();
-        String jsonWyjście = jsonAdapter.toJson(symulacja);
+        String jsonWyjście = jsonAdapter.indent("  ").toJson(symulacja);
         System.out.println(jsonWyjście);
 
 
-        /*TreeMap<Produkt, Double> ceny = new TreeMap<>(new KomparatorProduktów());
+        /*Map<Produkt, Double> ceny = new TreeMap<>(new KomparatorProduktów());
         ceny.put(new Produkt(NARZĘDZIA, 1), 2.0);
         ceny.put(new Produkt(PROGRAMY, 1), 1.3);
         ceny.put(new Produkt(JEDZENIE, 1), 0.5);

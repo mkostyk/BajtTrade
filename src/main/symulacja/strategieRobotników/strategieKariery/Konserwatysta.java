@@ -1,6 +1,6 @@
 package main.symulacja.strategieRobotników.strategieKariery;
 
-import main.symulacja.Symulacja;
+import static main.Main.Zawody;
 
 public class Konserwatysta extends StrategiaKariery {
     @Override
@@ -9,7 +9,12 @@ public class Konserwatysta extends StrategiaKariery {
     }
 
     @Override
-    public Symulacja.Zawody podajNowyZawód() {
+    public Zawody podajNowyZawód() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "konserwatysta";
     }
 }

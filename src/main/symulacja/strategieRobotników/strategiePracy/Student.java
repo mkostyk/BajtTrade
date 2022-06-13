@@ -1,6 +1,8 @@
 package main.symulacja.strategieRobotników.strategiePracy;
 
-import static main.symulacja.Symulacja.TypyProduktów.*;
+import main.symulacja.produkty.Produkt;
+
+import static main.Main.TypyProduktów.*;
 
 public class Student extends StrategiaPracy {
     private final int zapas;
@@ -13,7 +15,7 @@ public class Student extends StrategiaPracy {
 
     @Override
     public boolean czyPracuje() {
-        double cenaJedzenia = robotnik.podajGiełdę().podajŚredniąCenęProduktu(okres, JEDZENIE, 1);
+        double cenaJedzenia = robotnik.podajGiełdę().podajŚredniąCenęProduktu(okres, new Produkt(JEDZENIE, 1));
         return (robotnik.ileDiamentów() <= zapas * 100 * cenaJedzenia);
     }
 }

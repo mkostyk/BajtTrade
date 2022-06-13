@@ -18,8 +18,13 @@ public class SymulacjaAdapter {
     }
 
     @ToJson
-    private String toJson(Symulacja symulacja) {
-        return symulacja.toString();
+    private SymulacjaJson toJson(Symulacja symulacja) {
+        SymulacjaJson json = new SymulacjaJson();
+        json.info = symulacja.podajInformacje();
+        json.robotnicy = symulacja.podajRobotników();
+        json.spekulanci = symulacja.podajSpekulantów();
+
+        return json;
     }
 
     @FromJson

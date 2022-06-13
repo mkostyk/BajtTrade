@@ -4,10 +4,10 @@ import main.symulacja.giełda.Giełda;
 import main.symulacja.komparatory.KapitalistycznyKomparatorOfertRobotników;
 import main.symulacja.produkty.Produkt;
 
-import java.util.TreeMap;
+import java.util.Map;
 
 public class Kapitalistyczna extends Giełda {
-    public Kapitalistyczna(TreeMap<Produkt, Double> cenyZerowe, int karaZaUbrania) {
+    public Kapitalistyczna(Map<Produkt, Double> cenyZerowe, int karaZaUbrania) {
         super(cenyZerowe, karaZaUbrania);
     }
 
@@ -15,5 +15,10 @@ public class Kapitalistyczna extends Giełda {
     public void posortujOferty() {
         ofertyKupnaRobotników.sort(new KapitalistycznyKomparatorOfertRobotników());
         ofertySprzedażyRobotników.sort(new KapitalistycznyKomparatorOfertRobotników());
+    }
+
+    @Override
+    public String toString() {
+        return "kapitalistyczna";
     }
 }

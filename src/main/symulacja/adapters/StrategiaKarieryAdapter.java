@@ -2,8 +2,8 @@ package main.symulacja.adapters;
 
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
-import main.symulacja.fabryka.Fabryka;
 import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
+import main.symulacja.fabryka.Fabryka;
 
 @SuppressWarnings("UnusedDeclaration")
 public class StrategiaKarieryAdapter {
@@ -12,8 +12,8 @@ public class StrategiaKarieryAdapter {
     }
 
     @ToJson
-    private String toJson(StrategiaKariery strategiaKariery) {
-        return strategiaKariery.toString();
+    private String toJson(StrategiaKariery kariera) {
+        return null;
     }
 
     @FromJson

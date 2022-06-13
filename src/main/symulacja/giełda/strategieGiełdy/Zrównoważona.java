@@ -5,10 +5,10 @@ import main.symulacja.komparatory.KapitalistycznyKomparatorOfertRobotników;
 import main.symulacja.komparatory.SocjalistycznyKomparatorOfertRobotników;
 import main.symulacja.produkty.Produkt;
 
-import java.util.TreeMap;
+import java.util.Map;
 
 public class Zrównoważona extends Giełda {
-    public Zrównoważona(TreeMap<Produkt, Double> cenyZerowe, int karaZaUbrania) {
+    public Zrównoważona(Map<Produkt, Double> cenyZerowe, int karaZaUbrania) {
         super(cenyZerowe, karaZaUbrania);
     }
 
@@ -21,5 +21,10 @@ public class Zrównoważona extends Giełda {
             ofertyKupnaRobotników.sort(new KapitalistycznyKomparatorOfertRobotników());
             ofertySprzedażyRobotników.sort(new KapitalistycznyKomparatorOfertRobotników());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "zrownowazona";
     }
 }

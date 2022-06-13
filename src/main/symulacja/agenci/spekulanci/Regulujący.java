@@ -1,6 +1,5 @@
 package main.symulacja.agenci.spekulanci;
 
-import main.symulacja.Symulacja;
 import main.symulacja.giełda.Giełda;
 import main.symulacja.produkty.Produkt;
 
@@ -27,6 +26,10 @@ public class Regulujący extends Spekulant {
 
         this.dodajOfertęKupna(produkt, cenaBazowa, 0.1);
         this.dodajOfertęSprzedaży(produkt, cenaBazowa, 0.1);
+    }
 
+    @Override
+    public String toString() {
+        return "regulujacy_rynek";
     }
 }

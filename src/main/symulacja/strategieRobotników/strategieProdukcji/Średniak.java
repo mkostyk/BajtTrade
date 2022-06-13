@@ -1,10 +1,13 @@
 package main.symulacja.strategieRobotników.strategieProdukcji;
 
-import main.symulacja.Symulacja;
-import main.symulacja.produkty.Produkt;
+import com.squareup.moshi.Json;
 import main.symulacja.utils.PodsumowanieDnia;
+import main.symulacja.produkty.Produkt;
+
+import static main.Main.TypyProduktów;
 
 public class Średniak extends StrategiaProdukcji {
+    @Json(name = "historia_sredniej_produkcji")
     private final int ileDni;
 
     public Średniak (int ileDni) {
@@ -19,11 +22,13 @@ public class Średniak extends StrategiaProdukcji {
         Produkt najlepszyProdukt = null;
 
         for (PodsumowanieDnia dzień: dane) {
-            for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
-                int poziom = robotnik.podajPoziomyŚcieżek()[Symulacja.ID_PRODUKTU.get(typ)];
-                if (dzień.podajŚredniąCenę(typ, poziom) >= najlepszaCena) {
-                    najlepszaCena = dzień.podajŚredniąCenę(typ, poziom);
-                    najlepszyProdukt = new Produkt(typ, poziom);
+            for (TypyProduktów typ: TypyProduktów.values()) {
+                int poziom = robotnik.podajPoziomyŚcieżek()[typ.ordinal()];
+                Produkt produkt = new Produkt(typ, poziom);
+
+                if (dzień.podajŚredniąCenę(produkt) >= najlepszaCena) {
+                    najlepszaCena = dzień.podajŚredniąCenę(produkt);
+                    najlepszyProdukt = produkt;
                 }
             }
         }

@@ -1,5 +1,6 @@
 package main.symulacja.adapters;
 
+import main.Main;
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
 import main.symulacja.agenci.robotnicy.Robotnik;
@@ -8,6 +9,8 @@ import main.symulacja.strategieRobotników.strategiePracy.StrategiaPracy;
 import main.symulacja.strategieRobotników.strategieProdukcji.StrategiaProdukcji;
 
 import java.util.Map;
+
+// TODO - WAŻNE - Adaptery do klas i wszelkie gettery wtedy private
 
 @SuppressWarnings("UnusedDeclaration")
 public class RobotnikAdapter {
@@ -24,8 +27,18 @@ public class RobotnikAdapter {
     }
 
     @ToJson
-    private String toJson(Robotnik robotnik) {
-        return robotnik.toString();
+    private RobotnikJson toJson(Robotnik robotnik) {
+        RobotnikJson json = new RobotnikJson();
+        json.id = robotnik.podajID();
+        json.poziom = robotnik.podajKarierę().podajPoziom();
+        json.kariera = Main.enumToString(robotnik.podajKarierę().podajZawód());
+        json.kupowanie = robotnik.podajStrategięKupna();
+        json.produkcja = robotnik.podajStrategięProdukcji();
+        json.uczenie = robotnik.podajStrategięPracy();
+        json.zmiana = robotnik.podajStrategięKariery().toString();
+        json.produktywnosc = robotnik.podajBazoweProduktywności();
+        //json.zasoby = Main.stwórzMapęTablicProduktów(robotnik); TODO
+        return json;
     }
 
     @FromJson

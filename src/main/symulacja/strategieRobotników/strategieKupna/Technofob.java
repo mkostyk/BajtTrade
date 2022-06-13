@@ -1,8 +1,7 @@
 package main.symulacja.strategieRobotników.strategieKupna;
 
+import static main.Main.TypyProduktów.*;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
-
-import static main.symulacja.Symulacja.TypyProduktów.JEDZENIE;
 
 public class Technofob extends StrategiaKupna {
     @Override

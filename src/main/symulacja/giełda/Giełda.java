@@ -1,6 +1,5 @@
 package main.symulacja.giełda;
 
-import com.sun.source.tree.Tree;
 import main.symulacja.Symulacja;
 import main.symulacja.giełda.oferty.Oferta;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
@@ -12,29 +11,28 @@ import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.produkty.Produkt;
 import main.symulacja.utils.PodsumowanieDnia;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.TreeMap;
+import java.util.*;
 
-import static main.symulacja.Symulacja.ILE_PRODUKTÓW;
-import static main.symulacja.Symulacja.INFINITY;
+import static main.Main.ILE_PRODUKTÓW;
+import static main.Main.INFINITY;
+import static main.Main.TypyProduktów;
 
 public abstract class Giełda {
-    protected ArrayList <OfertaRobotnika> ofertyKupnaRobotników = new ArrayList<>();
-    protected ArrayList <OfertaRobotnika> ofertySprzedażyRobotników = new ArrayList<>();
+    protected List <OfertaRobotnika> ofertyKupnaRobotników = new ArrayList<>();
+    protected List <OfertaRobotnika> ofertySprzedażyRobotników = new ArrayList<>();
 
     private ZbiórOfertSpekulanta ofertyKupnaSpekulantów = new ZbiórOfertSpekulanta();
     private ZbiórOfertSpekulanta ofertySprzedażySpekulantów = new ZbiórOfertSpekulanta();
-    private final TreeMap<Produkt, Double> cenyZerowe;
-    private final ArrayList <PodsumowanieDnia> historia = new ArrayList<>();
-    private ArrayList <OfertaSpekulanta> dokonaneSprzedaże = new ArrayList<>();
+    private final Map<Produkt, Double> cenyZerowe;
+    private final List <PodsumowanieDnia> historia = new ArrayList<>();
+    private List <OfertaSpekulanta> dokonaneSprzedaże = new ArrayList<>();
 
     private int dzień;
     private final int karaZaUbrania; // Nie chcemy, żeby robotnik miał dostęp do całej symulacji.
     private final int[] ileOfertSprzedażySpekulantów;
     private final int[] ileOfertSprzedażyRobotników;
 
-    protected Giełda(TreeMap<Produkt, Double> cenyZerowe, int karaZaUbrania) {
+    protected Giełda(Map<Produkt, Double> cenyZerowe, int karaZaUbrania) {
         int[] sprzedażDniaZerowego = new int[ILE_PRODUKTÓW];
         Arrays.fill(sprzedażDniaZerowego, 1);
         PodsumowanieDnia p = new PodsumowanieDnia(cenyZerowe, cenyZerowe, sprzedażDniaZerowego,
@@ -75,7 +73,6 @@ public abstract class Giełda {
     public int podajDzień() {
         return dzień;
     }
-    // TODO - SUS
     public int podajMaksymalnyPoziom() {
         return dzień;
     }
@@ -92,24 +89,19 @@ public abstract class Giełda {
         return podajHistorięOstatnichDni(1)[0].podajNajniższąCenę(produkt);
     }
 
-    public double podajŚredniąCenęProduktu(int ileDni, Symulacja.TypyProduktów typ, int poziom) {
+    public double podajŚredniąCenęProduktu(int ileDni, Produkt produkt) {
         double suma = 0;
         PodsumowanieDnia[] dane = podajHistorięOstatnichDni(ileDni);
 
         for (PodsumowanieDnia dzień: dane) {
-            suma += dzień.podajŚredniąCenę(typ, poziom);
+            suma += dzień.podajŚredniąCenę(produkt);
         }
 
         return suma / (dane.length);
     }
 
-    // TODO - ustandaryzować i używać jednej
-    public double podajŚredniąCenęProduktu(int ileDni, Produkt produkt) {
-        return podajŚredniąCenęProduktu(ileDni, produkt.podajTyp(), produkt.podajPoziom());
-    }
-
-    public int podajObecnąLiczbęOfertSprzedażyRobotników(Symulacja.TypyProduktów produkt) {
-        return ileOfertSprzedażyRobotników[Symulacja.ID_PRODUKTU.get(produkt)];
+    public int podajObecnąLiczbęOfertSprzedażyRobotników(TypyProduktów typ) {
+        return ileOfertSprzedażyRobotników[typ.ordinal()];
     }
 
     public void wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, Produkt produkt, double cena) {
@@ -165,8 +157,6 @@ public abstract class Giełda {
             }
         }
 
-        // TODO - funkcja
-
         // Zakupy robotników
         for (OfertaRobotnika oferta: ofertyKupnaRobotników) {
             int obecnaPozycja = ofertySprzedażySpekulantów.znajdźNajlepsząOfertęSprzedaży(oferta);
@@ -178,8 +168,6 @@ public abstract class Giełda {
 
             while (oferta.podajIle() > 0 && oferta.typID() == ofertaSprzedaży.typID() &&
                    obecnaPozycja < ofertySprzedażySpekulantów.size()) {
-                //System.out.println("Pozycja kupna: " + obecnaPozycja);
-                //System.out.println(oferta.podajTwórcę());
 
                 wykonajOfertę(oferta, ofertaSprzedaży, ofertaSprzedaży.podajProdukt(), ofertaSprzedaży.podajCenę());
 
@@ -203,11 +191,12 @@ public abstract class Giełda {
     }
 
     public void podsumujDzień() {
-        TreeMap<Produkt, Double> obrót = new TreeMap<>(new KomparatorProduktów());
-        TreeMap<Produkt, Double> ile = new TreeMap<>(new KomparatorProduktów());
-        TreeMap<Produkt, Double> średnie = new TreeMap<>(new KomparatorProduktów());
-        TreeMap<Produkt, Double> najniższeCeny = new TreeMap<>(new KomparatorProduktów());
-        TreeMap<Produkt, Double> najwyższeCeny = new TreeMap<>(new KomparatorProduktów());
+        // TODO - wersje bez podziału
+        Map<Produkt, Double> obrót = new TreeMap<>(new KomparatorProduktów());
+        Map<Produkt, Double> ile = new TreeMap<>(new KomparatorProduktów());
+        Map<Produkt, Double> średnie = new TreeMap<>(new KomparatorProduktów());
+        Map<Produkt, Double> najniższeCeny = new TreeMap<>(new KomparatorProduktów());
+        Map<Produkt, Double> najwyższeCeny = new TreeMap<>(new KomparatorProduktów());
 
         for (OfertaSpekulanta oferta: dokonaneSprzedaże) {
             double wzrostObrotu = oferta.podajIle() * oferta.podajCenę();
@@ -225,11 +214,11 @@ public abstract class Giełda {
         }
 
         for (int poziom = 1; poziom <= podajMaksymalnyPoziom(); poziom++) {
-            for (Symulacja.TypyProduktów typ: Symulacja.TypyProduktów.values()) {
+            for (TypyProduktów typ: TypyProduktów.values()) {
                 Produkt produkt = new Produkt(typ, poziom);
                 if (ile.get(produkt) == null || ile.get(produkt) == 0) {
-                    // Cena z dnia zerowego. // TODO - użyć cen zerowych
-                    średnie.put(produkt, podajHistorięOstatnichDni(dzień)[0].podajŚredniąCenę(typ, poziom));
+                    // Cena z dnia zerowego.
+                    średnie.put(produkt, cenyZerowe.get(produkt));
                 } else {
                     średnie.put(produkt, obrót.get(produkt) / ile.get(produkt));
                     System.out.println(produkt + " " + obrót.get(produkt) + " " + ile.get(produkt) + " " + obrót.get(produkt) / ile.get(produkt));
