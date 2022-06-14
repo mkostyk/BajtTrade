@@ -20,8 +20,7 @@ import java.util.*;
 import static main.Main.TypyProduktów.*;
 
 public class Main {
-    // TODO - skrypt w Bashu
-    // TODO - wywalić bibliotekę do testowania w maven, naprawić strukturę plików
+    // TODO - wywalić bibliotekę do testowania w maven
     public static final int DZIENNE_ZUŻYCIE_UBRAŃ = 100;
     public static final int ILE_PRODUKTÓW = 5;
     public static final int ILE_ZAWODÓW = 5;
@@ -129,8 +128,11 @@ public class Main {
         return wynik;
     }
 
-    private static String wczytajPlik(String nazwa) {
-        try(BufferedReader br = new BufferedReader(new FileReader(nazwa))) {
+    private static String plikWejściowy = "";
+    private static String plikWyjściowy = "";
+
+    private static String wczytajPlik() {
+        try(BufferedReader br = new BufferedReader(new FileReader(plikWejściowy))) {
             StringBuilder sb = new StringBuilder();
             String linia = br.readLine();
 
@@ -148,7 +150,7 @@ public class Main {
     }
 
     public static void wypiszDoPliku(ArrayList<String> listaJson) {
-       try(PrintWriter pw = new PrintWriter("src/main/output.json", StandardCharsets.UTF_8)) {
+       try(PrintWriter pw = new PrintWriter(plikWyjściowy, StandardCharsets.UTF_8)) {
            pw.println(listaJson);
        } catch (IOException e) {
            e.printStackTrace();
@@ -156,7 +158,10 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        String json = wczytajPlik("src/main/input.json");
+        plikWejściowy = args[0];
+        plikWyjściowy = args[1];
+
+        String json = wczytajPlik();
         assert json != null;
 
         Symulacja symulacja = jsonAdapter.fromJson(json);

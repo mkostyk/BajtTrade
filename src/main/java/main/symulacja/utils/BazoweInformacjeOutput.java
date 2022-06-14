@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 import static main.Main.*;
 
-@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "FieldCanBeLocal"})
 public class BazoweInformacjeOutput {
     @Json(name = "dzien")
     @SuppressWarnings("UnusedDeclaration")
