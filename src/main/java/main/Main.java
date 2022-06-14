@@ -20,7 +20,6 @@ import java.util.*;
 import static main.Main.TypyProduktów.*;
 
 public class Main {
-    // TODO - wywalić bibliotekę do testowania w maven
     public static final int DZIENNE_ZUŻYCIE_UBRAŃ = 100;
     public static final int ILE_PRODUKTÓW = 5;
     public static final int ILE_ZAWODÓW = 5;

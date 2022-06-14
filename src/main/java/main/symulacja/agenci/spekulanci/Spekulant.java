@@ -16,6 +16,10 @@ public abstract class Spekulant extends Agent {
 
     protected abstract void wystawOfertęProduktu(Produkt produkt);
 
+    public void usuńSprzedaneProdukty(double ile, Produkt produkt) {
+        zużyjProdukty(ile, produkt);
+    }
+
     public void wystawOferty() {
         for (int poziom = 1; poziom <= giełda.podajMaksymalnyPoziom(); poziom++) {
             for (TypyProduktów typ: TypyProduktów.values()) {

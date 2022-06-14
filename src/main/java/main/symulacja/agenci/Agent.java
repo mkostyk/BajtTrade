@@ -74,6 +74,8 @@ public abstract class Agent {
         }
     }
 
+    public abstract void usuńSprzedaneProdukty(double ile, Produkt produkt);
+
     public void usuńZbędneProdukty() {
         for (TypyProduktów typ: TypyProduktów.values()) {
             produkty.get(typ.ordinal()).values().removeIf(value -> value <= 0);

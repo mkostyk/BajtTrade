@@ -39,13 +39,6 @@
             <groupId>com.squareup.moshi</groupId>
             <artifactId>moshi-adapters</artifactId>
             <version>1.13.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>1.5.0</version>
         </dependency>
     </dependencies>
     

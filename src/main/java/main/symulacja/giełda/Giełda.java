@@ -1,6 +1,5 @@
 package main.symulacja.giełda;
 
-import main.symulacja.agenci.spekulanci.Spekulant;
 import main.symulacja.giełda.oferty.Oferta;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.giełda.oferty.OfertaSpekulanta;
@@ -128,9 +127,13 @@ public abstract class Giełda {
         ofertaZakupu.podajTwórcę().dodajProdukty(zakup, produkt);
 
         ofertaSprzedaży.podajTwórcę().dodajDiamenty(wartośćZakupu);
-        if (ofertaSprzedaży.podajTwórcę() instanceof Spekulant) {
-            ofertaSprzedaży.podajTwórcę().zużyjProdukty(zakup, produkt); // TODO
-        }
+
+        // Produkty, które sprzedaje robotnik, nie są mu dodawane do zasobów, ponieważ dzięki temu wie
+        // on, ile produktów będzie miał po całym dniu, co pomaga w wystawieniu odpowiednich ofert zakupu.
+        // Powoduje to jednak, że w czasie wykonywania oferty nie możemy usunąć jego sprzedanych produktów,
+        // ponieważ nigdy ich nie otrzymał. Jednocześnie musimy być w stanie usuwać sprzedane produkty spekulanta.
+        // W celu uniknięcia używania instanceof i pochodnych stosujemy funkcję usuńSprzedaneProdukty().
+        ofertaSprzedaży.podajTwórcę().usuńSprzedaneProdukty(zakup, produkt);
 
         ofertaZakupu.zmniejszWielkość(zakup);
         ofertaSprzedaży.zmniejszWielkość(zakup);

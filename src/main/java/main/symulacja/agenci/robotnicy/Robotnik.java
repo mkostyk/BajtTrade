@@ -3,7 +3,6 @@ package main.symulacja.agenci.robotnicy;
 import main.symulacja.agenci.robotnicy.scieżkiKariery.ŚcieżkaKariery;
 import main.Main;
 import main.symulacja.agenci.Agent;
-import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
 import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
@@ -86,6 +85,8 @@ public class Robotnik extends Agent {
         this.produkcjaWObecnejTurze = ileWyprodukował;
     }
 
+    // Opis znajduje się w klasie Agent
+    public void usuńSprzedaneProdukty(double ile, Produkt produkt) {}
 
     private int ileUbrańZWytrzymałościąJeden() {
         int ileUbrań = 0;
@@ -162,8 +163,8 @@ public class Robotnik extends Agent {
     private void policzProduktywność() {
         for (TypyProduktów typ: TypyProduktów.values()) {
             String typString = Main.enumToString(typ);
-            produktywność.put(typString, bazowaProduktywność.get(typString) + obecnaŚcieżka.podajBonus(typ) +
-                              podajBonusZNarzędzi() + podajBonusZGłodu() + podajBonusZUbrań());
+            int bonus = obecnaŚcieżka.podajBonus(typ) + podajBonusZNarzędzi() + podajBonusZGłodu() + podajBonusZUbrań();
+            produktywność.put(typString, bazowaProduktywność.get(typString) / 100 * (100 + bonus));
         }
     }
 
