@@ -12,6 +12,6 @@ public class Okresowy extends StrategiaPracy {
 
     @Override
     public boolean czyPracuje() {
-        return (robotnik.podajDzień() % okresNauki == 0);
+        return (robotnik.podajDzień() % okresNauki != 0);
     }
 }

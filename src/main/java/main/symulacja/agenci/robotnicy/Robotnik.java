@@ -3,6 +3,7 @@ package main.symulacja.agenci.robotnicy;
 import main.symulacja.agenci.robotnicy.scieżkiKariery.ŚcieżkaKariery;
 import main.Main;
 import main.symulacja.agenci.Agent;
+import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.komparatory.KomparatorProduktów;
 import main.symulacja.strategieRobotników.strategieKariery.StrategiaKariery;
 import main.symulacja.strategieRobotników.strategieKupna.StrategiaKupna;
@@ -167,7 +168,7 @@ public class Robotnik extends Agent {
     }
 
     // Życie
-    public void pracuj() {
+    private void pracuj() {
         policzProduktywność();
         strategiaProdukcji.wyprodukuj();
         zużyjNarzędzia();
@@ -176,14 +177,12 @@ public class Robotnik extends Agent {
         czyPracował = true;
     }
 
-    public void uczSię() {
+    private void uczSię() {
         if (strategiaKariery.czyZmienia()) {
             int idNowejKariery = strategiaKariery.podajNowyZawód().ordinal();
             obecnaŚcieżka = ścieżki[idNowejKariery];
         } else {
-            int idObecnejKariery = obecnaŚcieżka.podajZawód().ordinal();
             obecnaŚcieżka.dodajPoziom();
-            ścieżki[idObecnejKariery] = obecnaŚcieżka;
         }
 
         czyPracował = false;
@@ -222,7 +221,7 @@ public class Robotnik extends Agent {
             this.zużyjUbranie(zużyte, ubranie, ubraniaKopia);
             licznikZużytych += zużyte;
 
-            if (licznikZużytych >= 100) {
+            if (licznikZużytych >= DZIENNE_ZUŻYCIE_UBRAŃ) {
                 break;
             }
         }

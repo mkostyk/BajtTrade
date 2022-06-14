@@ -20,6 +20,7 @@ public abstract class StrategiaProdukcji extends Strategia {
         }
         robotnik.ustawDzisiejsząProdukcję(ile);
 
+        // Jeśli nie możemy użyć programów na danym typie, to po prostu wystawiamy ofertę.
         if (!Main.PRODUKTY_Z_PROGRAMAMI.contains(typ)) {
             wystawProdukty(ile, produkt);
             return;

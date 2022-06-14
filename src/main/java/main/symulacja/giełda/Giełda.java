@@ -1,5 +1,6 @@
 package main.symulacja.giełda;
 
+import main.symulacja.agenci.spekulanci.Spekulant;
 import main.symulacja.giełda.oferty.Oferta;
 import main.symulacja.giełda.oferty.OfertaRobotnika;
 import main.symulacja.giełda.oferty.OfertaSpekulanta;
@@ -61,7 +62,7 @@ public abstract class Giełda {
         return karaZaUbrania;
     }
 
-    public abstract void posortujOferty();
+    protected abstract void posortujOferty();
 
     public void dodajOfertęKupnaRobotnika(OfertaRobotnika ofertaKupna) {
         ofertyKupnaRobotników.add(ofertaKupna);
@@ -115,7 +116,7 @@ public abstract class Giełda {
         return ileOfertSprzedażyRobotników[typ.ordinal()];
     }
 
-    public void wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, Produkt produkt, double cena) {
+    private void wykonajOfertę(Oferta ofertaZakupu, Oferta ofertaSprzedaży, Produkt produkt, double cena) {
         double dostępneDiamenty = ofertaZakupu.podajTwórcę().ileDiamentów();
 
         int zakup = Math.min(ofertaZakupu.podajIle(), ofertaSprzedaży.podajIle());
@@ -127,12 +128,16 @@ public abstract class Giełda {
         ofertaZakupu.podajTwórcę().dodajProdukty(zakup, produkt);
 
         ofertaSprzedaży.podajTwórcę().dodajDiamenty(wartośćZakupu);
-        ofertaSprzedaży.podajTwórcę().zużyjProdukty(zakup, produkt);
+        if (ofertaSprzedaży.podajTwórcę() instanceof Spekulant) {
+            ofertaSprzedaży.podajTwórcę().zużyjProdukty(zakup, produkt); // TODO
+        }
 
         ofertaZakupu.zmniejszWielkość(zakup);
         ofertaSprzedaży.zmniejszWielkość(zakup);
 
-        dokonaneSprzedaże.add(new OfertaSpekulanta(produkt, zakup, cena));
+        if (zakup > 0) {
+            dokonaneSprzedaże.add(new OfertaSpekulanta(produkt, zakup, cena));
+        }
     }
 
 
@@ -192,7 +197,6 @@ public abstract class Giełda {
         for (OfertaRobotnika pozostałeOferty: ofertySprzedażyRobotników) {
             double cena = podajNajniższąCenęProduktu(pozostałeOferty.podajProdukt());
             pozostałeOferty.podajTwórcę().dodajDiamenty(cena * pozostałeOferty.podajIle());
-            pozostałeOferty.podajTwórcę().zużyjProdukty(pozostałeOferty.podajIle(), pozostałeOferty.podajProdukt());
         }
 
         ofertySprzedażyRobotników = new ArrayList<>();
@@ -228,6 +232,8 @@ public abstract class Giełda {
         ofertyKupnaSpekulantów = new ZbiórOfertSpekulanta();
         ofertySprzedażySpekulantów = new ZbiórOfertSpekulanta();
         dokonaneSprzedaże = new ArrayList<>();
+        Arrays.fill(ileOfertSprzedażyRobotników, 0);
+        Arrays.fill(ileOfertSprzedażySpekulantów, 0);
 
         dzień++;
     }

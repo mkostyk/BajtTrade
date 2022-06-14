@@ -60,12 +60,10 @@ public class Symulacja {
             spekulant.wystawOferty();
         }
 
-
         // Giełda (pkt 3 i 4)
         giełda.dopasujOferty();
         giełda.skupOferty();
         giełda.podsumujDzień();
-
 
         // Zużywanie przedmiotów (pkt 5)
         for (Robotnik robotnik: robotnicy) {

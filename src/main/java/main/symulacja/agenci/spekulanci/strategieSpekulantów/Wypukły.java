@@ -13,7 +13,8 @@ public class Wypukły extends Spekulant {
 
     @Override
     protected void wystawOfertęProduktu(Produkt produkt) {
-        if (giełda.podajDzień() < 2) {
+        // Jeśli jesteśmy w dniu pierwszym lub drugim, to nie mamy jeszcze historii trzech dni.
+        if (giełda.podajDzień() < 3) {
             return;
         }
 

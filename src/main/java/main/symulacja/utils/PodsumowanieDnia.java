@@ -86,7 +86,7 @@ public class PodsumowanieDnia {
     public double podajNajniższąCenęTypu(TypyProduktów typ) {
         double najniższa = INFINITY;
         for (Produkt produkt: najniższeCeny.keySet()) {
-            if (produkt.podajTyp() == typ) {
+            if (produkt.podajTyp() == typ && ile.get(produkt) != null && ile.get(produkt) != 0) {
                 najniższa = Math.min(najniższa, najniższeCeny.get(produkt));
             }
         }
@@ -101,7 +101,7 @@ public class PodsumowanieDnia {
     public double podajNajwyższąCenęTypu(TypyProduktów typ) {
         double najwyższa = -INFINITY;
         for (Produkt produkt: najwyższeCeny.keySet()) {
-            if (produkt.podajTyp() == typ) {
+            if (produkt.podajTyp() == typ && ile.get(produkt) != null && ile.get(produkt) != 0) {
                 najwyższa = Math.max(najwyższa, najwyższeCeny.get(produkt));
             }
         }

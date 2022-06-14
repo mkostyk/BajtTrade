@@ -12,7 +12,7 @@ public class Kapitalistyczna extends Giełda {
     }
 
     @Override
-    public void posortujOferty() {
+    protected void posortujOferty() {
         ofertyKupnaRobotników.sort(new KapitalistycznyKomparatorOfertRobotników());
         ofertySprzedażyRobotników.sort(new KapitalistycznyKomparatorOfertRobotników());
     }
